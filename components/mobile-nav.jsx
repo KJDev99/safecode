@@ -5,7 +5,7 @@ import Button from './ui/button'
 import Link from 'next/link'
 import { motion, AnimatePresence } from 'framer-motion'
 
-export default function MobileNav({ show }) {
+export default function MobileNav({ show, setShow }) {
 
   // scroll block
   useEffect(() => {
@@ -43,21 +43,21 @@ export default function MobileNav({ show }) {
               </a>
 
               <div className="flex flex-col mt-8">
-                <Link href={'/'} className='mb-4 text-[#1E1E1E] '>Главная</Link>
-                <Link href={'/advantages'} className='mb-3 text-[#1E1E1E]/60 '>Преимущества</Link>
-                <Link href={'/services'} className='mb-3 text-[#1E1E1E]/60 '>Услуги</Link>
-                <Link href={'/partners'} className='mb-3 text-[#1E1E1E]/60 '>Партнерам</Link>
-                <Link href={'/contacts'} className='mb-3 text-[#1E1E1E]/60 '>Контакты</Link>
+                <Link onClick={() => setShow(false)} href={'/'} className='mb-4 text-[#1E1E1E] '>Главная</Link>
+                <Link onClick={() => setShow(false)} href={'/advantages'} className='mb-3 text-[#1E1E1E]/60 '>Преимущества</Link>
+                <Link onClick={() => setShow(false)} href={'/services'} className='mb-3 text-[#1E1E1E]/60 '>Услуги</Link>
+                <Link onClick={() => setShow(false)} href={'/partners'} className='mb-3 text-[#1E1E1E]/60 '>Партнерам</Link>
+                <Link onClick={() => setShow(false)} href={'/contact'} className='mb-3 text-[#1E1E1E]/60 '>Контакты</Link>
               </div>
 
               <div className="flex flex-col mt-8">
-                <Link href={'/'} className='text-nowrap mb-4 text-[#1E1E1E] '>CRM-сервис</Link>
-                <Link href={'/advantages'} className='text-nowrap mb-3 text-[#1E1E1E]/60 '>Техническая поддержка</Link>
-                <Link href={'/services'} className='text-nowrap text-[#1E1E1E]/60 '>Вход в личный кабинет</Link>
+                <Link onClick={() => setShow(false)} href={'/'} className='text-nowrap mb-4 text-[#1E1E1E] '>CRM-сервис</Link>
+                <Link onClick={() => setShow(false)} href={'/advantages'} className='text-nowrap mb-3 text-[#1E1E1E]/60 '>Техническая поддержка</Link>
+                <Link onClick={() => setShow(false)} href={'/services'} className='text-nowrap text-[#1E1E1E]/60 '>Вход в личный кабинет</Link>
 
                 <div className="mt-8 flex flex-col">
-                  <Link href={'/'} className='text-nowrap mb-4 text-[#1E1E1E] '>QR-коды</Link>
-                  <Link href={'/advantages'} className='text-nowrap mb-3 text-[#1E1E1E]/60 '>Создать QR-код</Link>
+                  <Link onClick={() => setShow(false)} href={'/'} className='text-nowrap mb-4 text-[#1E1E1E] '>QR-коды</Link>
+                  <Link onClick={() => setShow(false)} href={'/advantages'} className='text-nowrap mb-3 text-[#1E1E1E]/60 '>Создать QR-код</Link>
                 </div>
               </div>
             </div>

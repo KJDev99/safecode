@@ -45,7 +45,7 @@ export default function Navbar() {
                             :
                             <IoIosMenu onClick={() => setShowMenu(true)} className='text-white text-3xl cursor-pointer md:hidden' />
                     }
-                    <MobileNav show={showMenu} />
+                    <MobileNav show={showMenu} setShow={setShowMenu} />
                 </div>
             </div>
         </div>

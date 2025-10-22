@@ -20,10 +20,10 @@ export default function Footer() {
                         </a>
                     </div>
                     <div className="flex flex-col">
-                        <h2 className='text-lg text-white mb-6'>Главная</h2>
-                        <p className='mb-4 text-white/60'>Преимущества</p>
-                        <p className='mb-4 text-white/60'>Услуги</p>
-                        <p className='mb-4 text-white/60'>Партнерам</p>
+                        <Link href={'/'} className='text-lg text-white mb-6'>Главная</Link>
+                        <Link href={'/advantages'} className='mb-4 text-white/60'>Преимущества</Link>
+                        <Link href={'/services'} className='mb-4 text-white/60'>Услуги</Link>
+                        <Link href={'/partners'} className='mb-4 text-white/60'>Партнерам</Link>
                     </div>
                     <div className="flex flex-col">
                         <h2 className='text-lg text-white mb-6'>CRM-сервис</h2>
@@ -40,7 +40,7 @@ export default function Footer() {
                     <div className="flex gap-x-8">
                         <p className='text-xs cursor-pointer text-white/60'>Политика конфиденциальности</p>
                         <p className='text-xs cursor-pointer text-white/60'>Правовая информация</p>
-                        <p className='text-xs cursor-pointer text-white/60'>Контакты</p>
+                        <Link href={'/contact'} className='text-xs cursor-pointer text-white/60'>Контакты</Link>
                     </div>
                 </div>
             </div>
@@ -61,7 +61,7 @@ export default function Footer() {
                             <Link href={'/advantages'} className='mb-3 text-[#fff]/60 '>Преимущества</Link >
                             <Link href={'/services'} className='mb-3 text-[#fff]/60 '>Услуги</Link >
                             <Link href={'/partners'} className='mb-3 text-[#fff]/60 '>Партнерам</Link >
-                            <Link href={'/contacts'} className='mb-3 text-[#fff]/60 '>Контакты</Link >
+                            <Link href={'/contact'} className='mb-3 text-[#fff]/60 '>Контакты</Link >
                         </div>
                         <div className="flex flex-col mt-6">
                             <div className="mb-10 flex flex-col">
