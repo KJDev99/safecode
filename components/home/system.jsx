@@ -4,9 +4,9 @@ import SystemCart from '../ui/system-cart'
 
 export default function System() {
     return (
-        <div className='max-w-[1200px] mx-auto mt-[100px] '>
-            <Title text='Ключевые возможности системы' cls="mb-8" />
-            <div className="grid grid-cols-3 gap-6">
+        <div className='max-w-[1200px] mx-auto mt-[100px] max-md:px-6 max-md:mt-[50px]'>
+            <Title text='Ключевые возможности системы' cls="mb-8 max-md:mb-6" />
+            <div className="grid grid-cols-3 gap-6 max-md:grid-cols-1 max-md:gap-4">
                 <SystemCart
                     img="/hero-icons/hero-icon1.svg"
                     title="QR-коды для смартфонов"
