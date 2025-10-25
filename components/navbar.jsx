@@ -15,11 +15,6 @@ export default function Navbar() {
 
                     <ul className="flex gap-5 items-center max-md:hidden">
                         <Link href={'/'} className='text-white/60 '>Главная</Link >
-                        {/* <select className='text-white/60 '>
-                            <option value="Услуги">Услуги</option>
-                            <option value="Услуги">Услуги1</option>
-                            <option value="Услуги">Услуги2</option>
-                        </select > */}
                         <Link href={'/services'} className='text-white/60 '>Услуги</Link >
                         <Link href={'/advantages'} className='text-white/60 '>Преимущества</Link >
                         <Link href={'/partners'} className='text-white/60 '>Партнерам</Link >
@@ -36,7 +31,9 @@ export default function Navbar() {
                                 <p className='text-white'>safecode@sfcrm.ru</p>
                             </a>
                         </div>
-                        <Button text="Регистрация / Вход" className='w-40 h-15 ' />
+                        <Link href={'/auth/login'}>
+                            <Button text="Регистрация / Вход" className='w-40 h-15 ' />
+                        </Link>
                     </div>
 
                     {

@@ -6,6 +6,7 @@ import UserRole from '@/components/home/user-role'
 import WorksHero from '@/components/home/works-hero'
 import PartnersHero from '@/components/home/partners-hero'
 import FinallySection from '@/components/home/finally-section'
+import NavbarTop from '@/components/navbar-top'
 
 export default function Home() {
   return (

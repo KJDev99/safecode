@@ -1,11 +1,11 @@
 import Link from 'next/link'
 import React from 'react'
 
-export default function Badge({ link1 = 'Главная', link2, link3, adress1 = '/', adress2 = '/', className = "" }) {
+export default function Badge({ link1 = 'Главная', link2, link3, adress1 = '/', adress2 = '/', className = "", color }) {
     return (
-        <div className={`text-white/60 tracking-[-1%] flex gap-[2px]  ${className}`}>
+        <div className={`tracking-[-1%] flex text-nowrap overflow-x-hidden ${className} ${color ? color : 'text-white/60 '}`}>
             <Link href={`/${adress1}`}>{link1}</Link>
-            <p>/</p>
+            <p>&nbsp;/&nbsp;</p>
             {
                 adress2
                     ? <Link href={`/${adress2}`}>{link2}</Link>
@@ -13,7 +13,7 @@ export default function Badge({ link1 = 'Главная', link2, link3, adress1 
             }
 
             {
-                link3 && <Link>{link3}</Link>
+                link3 && <Link href={''} className='flex'>&nbsp;<p>/</p>&nbsp;{link3}</Link>
             }
         </div>
     )
