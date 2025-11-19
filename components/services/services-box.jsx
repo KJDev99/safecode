@@ -1,72 +1,159 @@
+'use client'
 import Image from 'next/image'
-import React from 'react'
+import React, { useEffect } from 'react'
 import Title from '../ui/title'
 import Button from '../ui/button'
+import { useApiStore } from '@/store/useApiStore';
 
 export default function ServicesBox() {
+    const { data, loading, error, getData } = useApiStore();
+
+    useEffect(() => {
+        getData("/website/services/");
+    }, []);
+
+    if (loading) return <div className="text-center py-8">Yuklanmoqda...</div>;
+    if (error) return <div className="text-center py-8 text-red-500">Xatolik yuz berdi: {error}</div>;
+    if (!data || !Array.isArray(data)) return <div className="text-center py-8">Ma'lumot topilmadi</div>;
+
     return (
-        <div className='mt-12 mb-[100px] max-w-[1200px] mx-auto max-md:mt-8 max-md:mb-[50px] max-md:px-6' >
-            <div className="grid grid-cols-2 gap-6 max-md:grid-cols-1">
-                <div className="p-6 rounded-[12px]" style={{ boxShadow: '0px 0px 4px 0px #76767626' }}>
-                    <div className="px-2 pt-2 pb-0 max-md:px-0 max-md:pt-0">
-                        <Title text={'Базовый пакет'} size={"text-[24px] max-md:text-[18px]"} color={"text-[#2C5AA0]"} />
-                        <p className='text-[#1E1E1E99] my-4 leading-[120%] max-md:text-sm max-md:my-3'>Подходит для небольших компаний и организаций, где важно вести учёт в простом и удобном формате.</p>
-                        <h3 className='text-[#1E1E1E] mb-2 max-md:text-sm'>Включает в себя:</h3>
-                        <ul>
-                            <li className='text-[#1E1E1E99] list-disc ml-6 max-md:text-sm'>Создание уникальных QR-кодов для систем и объектов;</li>
-                            <li className='text-[#1E1E1E99] list-disc ml-6 max-md:text-sm'>Электронные журналы технического обслуживания (вместо бумажных);</li>
-                            <li className='text-[#1E1E1E99] list-disc ml-6 max-md:text-sm'>Автоматическое формирование актов выполненных работ;</li>
-                            <li className='text-[#1E1E1E99] list-disc ml-6 max-md:text-sm'>Удобный личный кабинет для заказчика и инженеров.</li>
-                        </ul>
-                        <p className='text-[#1E1E1E99] my-4 leading-[120%] max-md:text-sm max-md:my-3'><span className='text-[#1E1E1E]'>Зачем:</span> Экономия времени на документации, упрощение контроля за объектами.</p>
-                        <p className='text-[#1E1E1E99] leading-[120%]'><span className='text-[#1E1E1E]'>Для кого:</span> управляющие компании, небольшие ТЦ, школы, офисы.</p>
-                        <div className="flex justify-between md:items-center h-[66px] mt-6 max-md:flex-col max-md:h-max ">
-                            <p className='text-[#1E1E1E] text-[20px] max-md:text-lg max-md:mb-[18px]'>От 15 000 ₽/месяц</p>
-                            <Button text={"Заказать услугу"} className='w-[324px] h-full max-md:h-[66px] max-md:w-full' />
+        <div className='mt-12 mb-[100px] max-w-[1200px] mx-auto max-md:mt-8 max-md:mb-[50px] max-md:px-6'>
+            {/* Desktop korinishi - grid bilan */}
+            <div className="max-md:hidden grid grid-cols-2 gap-6">
+                {data.map((service, index) => (
+                    <React.Fragment key={service.id}>
+                        {/* Juft indexlarda: text | rasm */}
+                        {index % 2 === 0 ? (
+                            <>
+                                <div className="p-6 rounded-[12px]" style={{ boxShadow: '0px 0px 4px 0px #76767626' }}>
+                                    <div className="px-2 pt-2 pb-0">
+                                        <Title
+                                            text={service.title}
+                                            size={"text-[24px]"}
+                                            color={"text-[#2C5AA0]"}
+                                        />
+                                        <p className='text-[#1E1E1E99] my-4 leading-[120%]'>
+                                            {service.description}
+                                        </p>
+                                        <p className='text-[#1E1E1E99] my-4 leading-[120%]'>
+                                            <span className='text-[#1E1E1E]'>Зачем:</span> {service.why_this_service}
+                                        </p>
+                                        <p className='text-[#1E1E1E99] leading-[120%]'>
+                                            <span className='text-[#1E1E1E]'>Для кого:</span> {service.for_whom}
+                                        </p>
+                                        <div className="flex justify-between items-center h-[66px] mt-6">
+                                            <p className='text-[#1E1E1E] text-[20px]'>
+                                                От {parseFloat(service.price).toLocaleString('ru-RU')} ₽/месяц
+                                            </p>
+                                            <Button
+                                                text={"Заказать услугу"}
+                                                className='w-[324px] h-full'
+                                            />
+                                        </div>
+                                    </div>
+                                </div>
+                                <div>
+                                    <Image
+                                        src={service?.image || '/services/one.png'}
+                                        alt={service.title}
+                                        width={588}
+                                        height={490}
+                                        className='w-full h-auto object-cover rounded-[12px]'
+                                    />
+                                </div>
+                            </>
+                        ) : (
+                            <>
+                                {/* Toq indexlarda: rasm | text */}
+                                <div>
+                                    <Image
+                                        src={service.image}
+                                        alt={service.title}
+                                        width={588}
+                                        height={490}
+                                        className='w-full h-auto object-cover rounded-[12px]'
+                                    />
+                                </div>
+                                <div className="p-6 rounded-[12px]" style={{ boxShadow: '0px 0px 4px 0px #76767626' }}>
+                                    <div className="px-2 pt-2 pb-0">
+                                        <Title
+                                            text={service.title}
+                                            size={"text-[24px]"}
+                                            color={"text-[#2C5AA0]"}
+                                        />
+                                        <p className='text-[#1E1E1E99] my-4 leading-[120%]'>
+                                            {service.description}
+                                        </p>
+                                        <p className='text-[#1E1E1E99] my-4 leading-[120%]'>
+                                            <span className='text-[#1E1E1E]'>Зачем:</span> {service.why_this_service}
+                                        </p>
+                                        <p className='text-[#1E1E1E99] leading-[120%]'>
+                                            <span className='text-[#1E1E1E]'>Для кого:</span> {service.for_whom}
+                                        </p>
+                                        <div className="flex justify-between items-center h-[66px] mt-6">
+                                            <p className='text-[#1E1E1E] text-[20px]'>
+                                                От {parseFloat(service.price).toLocaleString('ru-RU')} ₽/месяц
+                                            </p>
+                                            <Button
+                                                text={"Заказать услугу"}
+                                                className='w-[324px] h-full'
+                                            />
+                                        </div>
+                                    </div>
+                                </div>
+                            </>
+                        )}
+                    </React.Fragment>
+                ))}
+            </div>
+
+            {/* Mobile korinishi - flex column bilan */}
+            <div className="md:hidden flex flex-col gap-6">
+                {data.map((service, index) => (
+                    <React.Fragment key={service.id}>
+                        {/* Mobile: rasm ikkinchi */}
+                        <div>
+                            <Image
+                                src={service?.image || '/services/one.png'}
+                                alt={service.title}
+                                width={588}
+                                height={490}
+                                className='w-full h-auto object-cover rounded-[12px]'
+                            />
                         </div>
-                    </div>
-                </div>
-                <Image src={'/services/one.png'} alt='services' width={588} height={490} className='w-full max-md:' />
-                <Image src={'/services/two.png'} alt='services' width={588} height={490} className='w-full max-md:order-1' />
-                <div className="p-6 rounded-[12px]" style={{ boxShadow: '0px 0px 4px 0px #76767626' }}>
-                    <div className="px-2 pt-2 pb-0 max-md:px-0 max-md:pt-0">
-                        <Title text={'Профессиональный пакет'} size={"text-[24px] max-md:text-[18px]"} color={"text-[#2C5AA0]"} />
-                        <p className='text-[#1E1E1E99] my-4 leading-[120%] max-md:text-sm max-md:my-3'>Решение для компаний со средней инфраструктурой и большим документооборотом.</p>
-                        <h3 className='text-[#1E1E1E] mb-2 max-md:text-sm'>Включает все возможности базового пакета, а также:</h3>
-                        <ul>
-                            <li className='text-[#1E1E1E99] list-disc ml-6 max-md:text-sm'>Облачное хранилище документов (доступ из любой точки, защита данных);</li>
-                            <li className='text-[#1E1E1E99] list-disc ml-6 max-md:text-sm'>Интеграция с электронной подписью (подписание актов и журналов без печати);</li>
-                            <li className='text-[#1E1E1E99] list-disc ml-6 max-md:text-sm'>Многопользовательский доступ (несколько инженеров и заказчиков работают параллельно);</li>
-                            <li className='text-[#1E1E1E99] list-disc ml-6 max-md:text-sm'>Автоматические уведомления о сроках годности средств и датах проверок.</li>
-                        </ul>
-                        <p className='text-[#1E1E1E99] my-4 leading-[120%] max-md:text-sm max-md:my-3'><span className='text-[#1E1E1E]'>Зачем:</span> Избавляет от риска потери документов, ускоряет согласование актов и счетов.</p>
-                        <p className='text-[#1E1E1E99] leading-[120%]'><span className='text-[#1E1E1E]'>Для кого:</span> строительные компании, сети магазинов, крупные бизнес-центры.</p>
-                        <div className="flex justify-between md:items-center h-[66px] mt-6 max-md:flex-col max-md:h-max ">
-                            <p className='text-[#1E1E1E] text-[20px] max-md:text-lg max-md:mb-[18px]'>От 25 000 ₽/месяц</p>
-                            <Button text={"Заказать услугу"} className='w-[324px] h-full max-md:h-[66px] max-md:w-full' />
+
+                        {/* Mobile: text birinchi */}
+                        <div className="p-6 rounded-[12px]" style={{ boxShadow: '0px 0px 4px 0px #76767626' }}>
+                            <div className="px-0 pt-0 pb-0">
+                                <Title
+                                    text={service.title}
+                                    size={"text-[18px]"}
+                                    color={"text-[#2C5AA0]"}
+                                />
+                                <p className='text-[#1E1E1E99] my-3 leading-[120%] text-sm'>
+                                    {service.description}
+                                </p>
+                                <p className='text-[#1E1E1E99] my-3 leading-[120%] text-sm'>
+                                    <span className='text-[#1E1E1E]'>Зачем:</span> {service.why_this_service}
+                                </p>
+                                <p className='text-[#1E1E1E99] leading-[120%] text-sm'>
+                                    <span className='text-[#1E1E1E]'>Для кого:</span> {service.for_whom}
+                                </p>
+                                <div className="flex flex-col h-max mt-6">
+                                    <p className='text-[#1E1E1E] text-lg mb-[18px]'>
+                                        От {parseFloat(service.price).toLocaleString('ru-RU')} ₽/месяц
+                                    </p>
+                                    <Button
+                                        text={"Заказать услугу"}
+                                        className='h-[66px] w-full'
+                                    />
+                                </div>
+                            </div>
                         </div>
-                    </div>
-                </div>
-                <div className="p-6 rounded-[12px] max-md:order-2" style={{ boxShadow: '0px 0px 4px 0px #76767626' }}>
-                    <div className="px-2 pt-2 pb-0 max-md:px-0 max-md:pt-0">
-                        <Title text={'Базовый пакет'} size={"text-[24px] max-md:text-[18px]"} color={"text-[#2C5AA0]"} />
-                        <p className='text-[#1E1E1E99] my-4 leading-[120%] max-md:text-sm max-md:my-3'>Подходит для небольших компаний и организаций, где важно вести учёт в простом и удобном формате.</p>
-                        <h3 className='text-[#1E1E1E] mb-2 max-md:text-sm'>Включает в себя:</h3>
-                        <ul>
-                            <li className='text-[#1E1E1E99] list-disc ml-6 max-md:text-sm'>Создание уникальных QR-кодов для систем и объектов;</li>
-                            <li className='text-[#1E1E1E99] list-disc ml-6 max-md:text-sm'>Электронные журналы технического обслуживания (вместо бумажных);</li>
-                            <li className='text-[#1E1E1E99] list-disc ml-6 max-md:text-sm'>Автоматическое формирование актов выполненных работ;</li>
-                            <li className='text-[#1E1E1E99] list-disc ml-6 max-md:text-sm'>Удобный личный кабинет для заказчика и инженеров.</li>
-                        </ul>
-                        <p className='text-[#1E1E1E99] my-4 leading-[120%] max-md:text-sm max-md:my-3'><span className='text-[#1E1E1E]'>Зачем:</span> Экономия времени на документации, упрощение контроля за объектами.</p>
-                        <p className='text-[#1E1E1E99] leading-[120%]'><span className='text-[#1E1E1E]'>Для кого:</span> управляющие компании, небольшие ТЦ, школы, офисы.</p>
-                        <div className="flex justify-between md:items-center h-[66px] mt-6 max-md:flex-col max-md:h-max ">
-                            <p className='text-[#1E1E1E] text-[20px] max-md:text-lg max-md:mb-[18px]'>От 15 000 ₽/месяц</p>
-                            <Button text={"Заказать услугу"} className='w-[324px] h-full max-md:h-[66px] max-md:w-full' />
-                        </div>
-                    </div>
-                </div>
-                <Image src={'/services/three.png'} alt='services' width={588} height={490} className='w-full max-md:order-3' />
+
+
+                    </React.Fragment>
+                ))}
             </div>
         </div>
     )

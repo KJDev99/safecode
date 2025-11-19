@@ -3,6 +3,7 @@ import Title from '../ui/title'
 import Services_Cart from '../ui/services-cart'
 
 export default function ServicesHero() {
+
     return (
         <div className='max-w-[1200px] mx-auto my-[100px] max-md:my-[50px] max-md:px-6'>
             <Title text='Услуги' cls="mb-8 max-md:mb-6" />
