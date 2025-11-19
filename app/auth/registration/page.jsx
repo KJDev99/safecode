@@ -69,8 +69,38 @@ export default function Registration() {
             return
         }
 
+        const requiredFields = [
+            { field: 'first_name', name: 'Имя' },
+            { field: 'last_name', name: 'Фамилия' },
+            { field: 'id_organization', name: 'Организация' },
+            { field: 'phone_number', name: 'Номер телефона' },
+            { field: 'email', name: 'Email' },
+            { field: 'password', name: 'Пароль' },
+            { field: 'password_confirm', name: 'Подтверждение пароля' }
+        ]
+
+        for (const { field, name } of requiredFields) {
+            if (!formData[field] || formData[field].trim() === '') {
+                toast.error(`Пожалуйста, заполните все поля`)
+                setLoading(false)
+                return
+            }
+        }
+
         if (!position) {
             toast.error('Пожалуйста, выберите должность')
+            setLoading(false)
+            return
+        }
+
+        if (formData.password !== formData.password_confirm) {
+            toast.error('Пароли не совпадают')
+            setLoading(false)
+            return
+        }
+
+        if (formData.password.length < 6) {
+            toast.error('Пароль должен содержать минимум 6 символов')
             setLoading(false)
             return
         }
@@ -141,7 +171,7 @@ export default function Registration() {
                 //     }
                 // }, 1000);
             } else {
-                toast.error(result?.message || 'Ошибка регистрации')
+                toast.error(result?.response?.data?.message || 'Ошибка входа');
             }
         } catch (error) {
             console.error('Registration error:', error)
