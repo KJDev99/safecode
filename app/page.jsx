@@ -7,6 +7,7 @@ import WorksHero from '@/components/home/works-hero'
 import PartnersHero from '@/components/home/partners-hero'
 import FinallySection from '@/components/home/finally-section'
 import NavbarTop from '@/components/navbar-top'
+import { Toaster } from 'react-hot-toast'
 
 export default function Home() {
   return (
@@ -19,6 +20,10 @@ export default function Home() {
       <UserRole />
       <PartnersHero />
       <FinallySection />
+      <Toaster
+        position="top-center"
+        reverseOrder={false}
+      />
     </>
   )
 }

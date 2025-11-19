@@ -9,10 +9,10 @@ export default function SelectInput({
     label,
     options = [],
     value,
-    onChange
+    onChange,
+    required = false
 }) {
     const [isOpen, setIsOpen] = useState(false);
-    const [selectedValue, setSelectedValue] = useState(value || '');
     const selectRef = useRef(null);
 
     useEffect(() => {
@@ -29,7 +29,6 @@ export default function SelectInput({
     }, []);
 
     const handleSelect = (option) => {
-        setSelectedValue(option.value);
         setIsOpen(false);
         if (onChange) {
             onChange(option.value);
@@ -37,7 +36,7 @@ export default function SelectInput({
     };
 
     const getSelectedLabel = () => {
-        const selectedOption = options.find(opt => opt.value === selectedValue);
+        const selectedOption = options.find(opt => opt.value === value);
         return selectedOption ? selectedOption.label : '';
     };
 
@@ -47,11 +46,12 @@ export default function SelectInput({
 
             <div className="relative">
                 <div
-                    className={`border-1 border-[#1E1E1E]/50 px-6 py-6 rounded-[12px] w-full h-[66px] outline-0 flex items-center cursor-pointer bg-white ${className}`}
+                    className={`border-1 border-[#1E1E1E]/50 px-6 py-6 rounded-[12px] w-full h-[66px] outline-0 flex items-center cursor-pointer bg-white ${className} ${required && !value ? '' : ''
+                        }`}
                     onClick={() => setIsOpen(!isOpen)}
                 >
-                    <span className={`flex-1 ${!selectedValue ? 'text-gray-400' : 'text-black'}`}>
-                        {selectedValue ? getSelectedLabel() : placeholder}
+                    <span className={`flex-1 ${!value ? 'text-gray-400' : 'text-black'}`}>
+                        {value ? getSelectedLabel() : placeholder}
                     </span>
 
                     <IoIosArrowDown
@@ -61,18 +61,23 @@ export default function SelectInput({
                 </div>
 
                 {isOpen && (
-                    <div className="absolute z-[100] top-full left-0 right-0 mt-1 bg-white border-1 border-[#1E1E1E]/50 rounded-[12px] shadow-lg  max-h-60 overflow-y-auto">
-                        {options.map((option, index) => (
-                            <div
-                                key={option.value}
-                                className={`px-6 py-4 cursor-pointer hover:bg-gray-50 transition-colors ${selectedValue === option.value ? 'bg-blue-50 text-blue-600' : ''
-                                    } ${index !== options.length - 1 ? 'border-b border-gray-100' : ''
-                                    }`}
-                                onClick={() => handleSelect(option)}
-                            >
-                                {option.label}
+                    <div className="absolute z-[100] top-full left-0 right-0 mt-1 bg-white border-1 border-[#1E1E1E]/50 rounded-[12px] shadow-lg max-h-60 overflow-y-auto">
+                        {options.length > 0 ? (
+                            options.map((option, index) => (
+                                <div
+                                    key={option.value}
+                                    className={`px-6 py-4 cursor-pointer hover:bg-gray-50 transition-colors ${value === option.value ? 'bg-blue-50 text-blue-600' : ''
+                                        } ${index !== options.length - 1 ? 'border-b border-gray-100' : ''}`}
+                                    onClick={() => handleSelect(option)}
+                                >
+                                    {option.label}
+                                </div>
+                            ))
+                        ) : (
+                            <div className="px-6 py-4 text-gray-500 text-center">
+                                Нет доступных опций
                             </div>
-                        ))}
+                        )}
                     </div>
                 )}
             </div>

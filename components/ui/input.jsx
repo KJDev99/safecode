@@ -2,9 +2,17 @@
 import React, { useState } from 'react';
 import { AiOutlineEye, AiOutlineEyeInvisible } from 'react-icons/ai';
 
-export default function Input({ className, placeholder, text, label, type = 'text' }) {
+export default function Input({
+    className,
+    placeholder,
+    text,
+    label,
+    type = 'text',
+    value,
+    onChange,
+    required = false
+}) {
     const [showPassword, setShowPassword] = useState(false);
-    const [inputValue, setInputValue] = useState('');
 
     const togglePasswordVisibility = () => {
         setShowPassword(!showPassword);
@@ -13,7 +21,7 @@ export default function Input({ className, placeholder, text, label, type = 'tex
     const handleNumberInput = (e) => {
         const value = e.target.value;
         if (/^[0-9+]*$/.test(value)) {
-            setInputValue(value);
+            handleChange(value);
         }
     };
 
@@ -21,27 +29,34 @@ export default function Input({ className, placeholder, text, label, type = 'tex
         if (type === 'password') {
             return showPassword ? 'text' : 'password';
         }
-        return 'text';
+        return type;
+    };
+
+    const handleChange = (newValue) => {
+        if (onChange) {
+            onChange(newValue);
+        }
     };
 
     const handleInputChange = (e) => {
-        if (type === 'number') {
+        if (type === 'number' || type === 'tel') {
             handleNumberInput(e);
         } else {
-            setInputValue(e.target.value);
+            handleChange(e.target.value);
         }
     };
 
     return (
         <div>
-            {label && <label className='mb-4 text-[#1E1E1E80]'>{label}</label>}
+            {label && <label className='mb-4 text-[#1E1E1E80] block'>{label}</label>}
 
             <div className="relative">
                 <input
                     type={getInputType()}
-                    className={`border-1 border-[#1E1E1E]/50 px-6 py-6 rounded-[12px] w-full h-[66px] outline-0 ${className}`}
+                    className={`border-1 border-[#1E1E1E]/50 px-6 py-6 rounded-[12px] w-full h-[66px] outline-0 ${className} ${required && !value ? '' : ''
+                        }`}
                     placeholder={placeholder}
-                    value={inputValue}
+                    value={value || ''}
                     onChange={handleInputChange}
                 />
 

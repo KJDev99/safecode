@@ -27,8 +27,10 @@ export const useApiStore = create((set) => ({
         try {
             const res = await api.post(endpoint, body);
             set({ data: res.data });
+            return res.data;
         } catch (err) {
             set({ error: err?.response?.data || err });
+            return err;
         } finally {
             set({ loading: false });
         }
