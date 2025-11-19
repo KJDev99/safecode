@@ -40,7 +40,6 @@ export default function Customer() {
                                     { id: 'dashboard', text: 'Дашборд' },
                                     { id: 'my-objects', text: 'Мои объекты' },
                                     { id: 'requests', text: 'Заявки' },
-                                    { id: 'qr-codes', text: 'QR-коды' }
                                 ]
                             },
                             {

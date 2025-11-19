@@ -30,10 +30,7 @@ export default function Footer() {
                         <p className='mb-4 text-white/60'>Техническая поддержка</p>
                         <p className='mb-4 text-white/60'>Вход в личный кабинет</p>
                     </div>
-                    <div className="flex flex-col">
-                        <h2 className='text-lg text-white mb-6'>QR-коды</h2>
-                        <p className='mb-4 text-white/60'>Создать QR-код</p>
-                    </div>
+
                 </div>
                 <div className="flex justify-between">
                     <p className='text-xs cursor-pointer text-white/60'>SafeCode © 2025. Все права защищены.</p>
@@ -69,10 +66,7 @@ export default function Footer() {
                                 <Link href={'/advantages'} className='text-nowrap mb-3 text-[#fff]/60 '>Техническая поддержка</Link >
                                 <Link href={'/services'} className='text-nowrap text-[#fff]/60 '>Вход в личный кабинет</Link >
                             </div>
-                            <div className="flex flex-col">
-                                <Link href={'/'} className='text-nowrap mb-4 text-[#fff] '>QR-коды</Link >
-                                <Link href={'/advantages'} className='text-nowrap mb-3 text-[#fff]/60 '>Создать QR-код</Link >
-                            </div>
+
                         </div>
                     </div>
                     <p className='text-sm text-[#fff]/60 mb-6'>SafeCode © 2025. Все права защищены.</p>

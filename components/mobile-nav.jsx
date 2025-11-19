@@ -55,10 +55,7 @@ export default function MobileNav({ show, setShow }) {
                 <Link onClick={() => setShow(false)} href={'/advantages'} className='text-nowrap mb-3 text-[#1E1E1E]/60 '>Техническая поддержка</Link>
                 <Link onClick={() => setShow(false)} href={'/services'} className='text-nowrap text-[#1E1E1E]/60 '>Вход в личный кабинет</Link>
 
-                <div className="mt-8 flex flex-col">
-                  <Link onClick={() => setShow(false)} href={'/'} className='text-nowrap mb-4 text-[#1E1E1E] '>QR-коды</Link>
-                  <Link onClick={() => setShow(false)} href={'/advantages'} className='text-nowrap mb-3 text-[#1E1E1E]/60 '>Создать QR-код</Link>
-                </div>
+
               </div>
             </div>
 

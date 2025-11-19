@@ -7,10 +7,7 @@ export default function System() {
         <div className='max-w-[1200px] mx-auto mt-[100px] max-md:px-6 max-md:mt-[50px]'>
             <Title text='Ключевые возможности системы' cls="mb-8 max-md:mb-6" />
             <div className="grid grid-cols-3 gap-6 max-md:grid-cols-1 max-md:gap-4">
-                <SystemCart
-                    img="/hero-icons/hero-icon1.svg"
-                    title="QR-коды для смартфонов"
-                    text="Создание QR-кодов для быстрого доступа к карточкам объектов и формированию отчетов прямо с мобильного устройства" />
+
                 <SystemCart
                     img="/hero-icons/hero-icon2.svg"
                     title="Электронные журналы"

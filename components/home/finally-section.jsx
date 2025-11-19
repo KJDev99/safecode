@@ -20,7 +20,6 @@ export default function FinallySection() {
                         <Button className='h-[54px] w-[174px] bg-white !text-[#1E1E1E] max-md:w-full max-md:mb-6' text={'Войти'} />
                         <div className="flex gap-6 max-md:flex-col max-md:gap-4">
                             <Button text="Заказать демонстрацию" className='w-[313px] h-[54px] bg-transparent max-md:w-full border border-white' />
-                            <Button text="Создать QR-код" className='w-[250px] h-[54px] bg-transparent max-md:w-full border border-white' />
                         </div>
                     </div>
                 </div>

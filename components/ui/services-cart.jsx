@@ -1,6 +1,7 @@
 import React from 'react'
 import Button from './button'
 import Title from './title'
+import Link from 'next/link'
 
 export default function Services_Cart({ title, text, text2, button }) {
     return (
@@ -16,7 +17,9 @@ export default function Services_Cart({ title, text, text2, button }) {
             }
             {
                 button &&
-                <Button text={button} className='h-[66px] w-full max-md:h-[56px] max-md:text-sm' />
+                <Link href={'/auth/login'}>
+                    <Button text={button} className='h-[66px] w-full max-md:h-[56px] max-md:text-sm' />
+                </Link>
             }
         </div>
     )

@@ -1,6 +1,7 @@
 import React from 'react'
 import Button from '../ui/button'
 import Badge from '../ui/badge'
+import Link from 'next/link'
 
 export default function Hero() {
     return (
@@ -16,8 +17,13 @@ export default function Hero() {
                     Современная система управления QR-кодами для ведения журналов, формирования актов и контроля состояния систем пожарной безопасности
                 </p>
                 <div className="flex gap-6 justify-center max-md:flex-col-reverse">
-                    <Button text="Заказать услугу" className='w-[270px] h-15 max-md:w-full' />
-                    <Button text="Войти" className='w-[170px] h-15 bg-transparent border border-white max-md:w-full' />
+                    <Link href={'/auth/login'}>
+                        <Button text="Заказать услугу" className='w-[270px] h-15 max-md:w-full' />
+                    </Link>
+                    <Link href={'/auth/login'}>
+                        <Button text="Войти" className='w-[170px] h-15 bg-transparent border border-white max-md:w-full' />
+                    </Link>
+
                 </div>
             </div>
         </div>
