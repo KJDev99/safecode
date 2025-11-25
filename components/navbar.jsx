@@ -1,12 +1,36 @@
 'use client'
 import Image from 'next/image'
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import Button from './ui/button.jsx'
 import Link from 'next/link.js'
 import { IoIosMenu, IoIosCloseCircleOutline } from "react-icons/io";
 import MobileNav from './mobile-nav.jsx'
+import { useRouter } from 'next/navigation.js'
+import ProfileDropdown from './ui/ProfileDropdown.jsx'
 export default function Navbar() {
     const [showMenu, setShowMenu] = useState(false)
+    const [isAuth, setIsAuth] = useState(false);
+    const [role, setRole] = useState()
+    const checkAuth = () => {
+        const auth = localStorage.getItem("isAuthenticated");
+        const group = localStorage.getItem("user");
+        setIsAuth(auth === "true");
+        if (group) {
+
+
+            setRole(JSON.parse(group)?.groups[0]?.name);
+        }
+    };
+
+    useEffect(() => {
+        checkAuth();
+        window.addEventListener("authChanged", checkAuth);
+
+        return () => {
+            window.removeEventListener("authChanged", checkAuth);
+        };
+
+    }, []);
     return (
         <div className='bg-[#1E1E1E] relative z-50'>
             <div className='max-w-[1200px] mx-auto max-md:px-6'>
@@ -31,9 +55,14 @@ export default function Navbar() {
                                 <p className='text-white'>safecode@sfcrm.ru</p>
                             </a>
                         </div>
-                        <Link href={'/auth/login'}>
-                            <Button text="Регистрация / Вход" className='w-40 h-15 ' />
-                        </Link>
+                        {
+                            !isAuth
+                                ? <Link href={'/auth/login'}>
+                                    <Button text="Регистрация / Вход" className='w-40 h-15 ' />
+                                </Link>
+                                : <ProfileDropdown role={role} />
+                        }
+
                     </div>
 
                     {

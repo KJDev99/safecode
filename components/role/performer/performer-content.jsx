@@ -1,13 +1,11 @@
 'use client';
 
-import NavbarTop from '@/components/navbar-top';
 import LayoutRole from '@/components/role/layout-role';
-import Badge from '@/components/ui/badge';
 import React, { useState, useEffect, Suspense } from 'react';
 import { useRouter, useSearchParams } from 'next/navigation';
-import CustomerDashboard from './customer-dashboard';
+import PerformerDashboard from './performer-dashboard';
 
-export default function CustomerContent() {
+export default function PerformerContent() {
     const router = useRouter();
     const searchParams = useSearchParams();
     const [activeItem, setActiveItem] = useState('dashboard');
@@ -22,7 +20,7 @@ export default function CustomerContent() {
     const handleItemClick = (itemId) => {
         console.log('Tanlangan item:', itemId);
         setActiveItem(itemId);
-        router.push(`/roles/customer?tab=${itemId}`);
+        router.push(`/roles/performer?tab=${itemId}`);
     };
 
     return (
@@ -34,23 +32,15 @@ export default function CustomerContent() {
                         title: 'Основное',
                         items: [
                             { id: 'dashboard', text: 'Дашборд' },
-                            { id: 'objects', text: 'Мои объекты' },
-                            { id: 'application', text: 'Заявки' },
+                            { id: 'requests', text: 'Мои заявки' },
                         ]
                     },
                     {
                         id: 'documents',
                         title: 'Документы',
                         items: [
-                            { id: 'service-log', text: 'Журнал обслуживания' },
+                            { id: 'reports', text: 'Отчеты' },
                             { id: 'notifications', text: 'Уведомления' }
-                        ]
-                    },
-                    {
-                        id: 'shop',
-                        title: 'Магазин',
-                        items: [
-                            { id: 'myorders', text: 'Мои заказы' }
                         ]
                     }
                 ]}
@@ -62,7 +52,7 @@ export default function CustomerContent() {
                 onItemClick={handleItemClick}
             />
             {
-                activeItem == 'dashboard' && <CustomerDashboard />
+                activeItem == 'dashboard' && <PerformerDashboard />
             }
         </div>
     );

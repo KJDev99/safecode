@@ -8,7 +8,7 @@ export default function Button({ text, icon, className = "" }) {
         <button
             className={`${baseClasses} ${className}`}
         >
-            {icon && <span className="text-lg">{icon}</span>}
+            {icon && <span className="text-base">{icon}</span>}
             {text}
         </button>
     );

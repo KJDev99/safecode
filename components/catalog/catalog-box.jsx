@@ -18,7 +18,6 @@ export default function CatalogBox() {
 
     return (
         <div className='mx-auto max-w-[1200px]'>
-            <NavbarTop />
             <div className="py-8 max-md:px-6">
                 <Badge link2={'Каталог товаров'} adress2={'catalog'} link3={'Пожарная безопасность'} className="pb-0 max-md:pb-0" color="text-[#1E1E1E]/60" />
             </div>

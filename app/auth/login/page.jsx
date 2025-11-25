@@ -30,6 +30,7 @@ export default function Login() {
             localStorage.setItem('access_token', tokens.access);
             localStorage.setItem('refresh_token', tokens.refresh);
             localStorage.setItem('isAuthenticated', 'true');
+
         } catch (error) {
             console.error('LocalStorage ga saqlashda xatolik:', error);
         }
@@ -40,7 +41,6 @@ export default function Login() {
             e.preventDefault();
         }
 
-        console.log('Login process started');
         setLoading(true)
 
         // Validation
@@ -69,14 +69,10 @@ export default function Login() {
         }
 
         try {
-            console.log('Sending login data:', loginData);
             const result = await postData("/accounts/login/", loginData);
-            console.log('Login result:', result);
 
             if (result?.success) {
                 toast.success('Вход выполнен успешно!');
-
-                console.log(result?.data?.user?.groups[0]?.name);
 
                 // LocalStorage ga user va token ma'lumotlarini saqlash
                 if (result.data?.user && result.data?.tokens) {
@@ -114,6 +110,11 @@ export default function Login() {
                 //     }
                 // }, 1000);
 
+                setTimeout(() => {
+                    router.push('/')
+                    window.dispatchEvent(new Event("authChanged"));
+                }, 1000);
+
             } else {
 
                 toast.error(result?.response?.data?.message || 'Ошибка входа');
@@ -138,7 +139,6 @@ export default function Login() {
         }
     }
 
-    // Enter bosganda ham ishlashi uchun
     const handleKeyPress = (e) => {
         if (e.key === 'Enter') {
             handleSubmit();

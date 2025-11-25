@@ -1,13 +1,17 @@
 'use client';
 
-import NavbarTop from '@/components/navbar-top';
 import LayoutRole from '@/components/role/layout-role';
-import Badge from '@/components/ui/badge';
 import React, { useState, useEffect, Suspense } from 'react';
 import { useRouter, useSearchParams } from 'next/navigation';
-import CustomerDashboard from './customer-dashboard';
+import Users from './users';
+import LogOut from '../log-out';
+import AdminDashboard from './admin-dashboard';
+import AdminRequests from './admin-requests';
+import AdminStorage from './admin-storage';
+import AdminNotification from './admin-notification';
+import AdminSettings from './admin-settings';
 
-export default function CustomerContent() {
+export default function AdminContent() {
     const router = useRouter();
     const searchParams = useSearchParams();
     const [activeItem, setActiveItem] = useState('dashboard');
@@ -22,11 +26,11 @@ export default function CustomerContent() {
     const handleItemClick = (itemId) => {
         console.log('Tanlangan item:', itemId);
         setActiveItem(itemId);
-        router.push(`/roles/customer?tab=${itemId}`);
+        router.push(`/roles/admin-panel?tab=${itemId}`);
     };
 
     return (
-        <div className="grid grid-cols-4 mt-8 mb-[100px]">
+        <div className="grid grid-cols-4 mt-8 gap-6 mb-[100px] max-md:grid-cols-1 max-md:gap-0">
             <LayoutRole
                 sections={[
                     {
@@ -34,23 +38,16 @@ export default function CustomerContent() {
                         title: 'Основное',
                         items: [
                             { id: 'dashboard', text: 'Дашборд' },
-                            { id: 'objects', text: 'Мои объекты' },
-                            { id: 'application', text: 'Заявки' },
+                            { id: 'users', text: 'Пользователи и роли' },
+                            { id: 'requests', text: 'Заявки и проекты' },
                         ]
                     },
                     {
                         id: 'documents',
                         title: 'Документы',
                         items: [
-                            { id: 'service-log', text: 'Журнал обслуживания' },
+                            { id: 'storage', text: 'Хранилище' },
                             { id: 'notifications', text: 'Уведомления' }
-                        ]
-                    },
-                    {
-                        id: 'shop',
-                        title: 'Магазин',
-                        items: [
-                            { id: 'myorders', text: 'Мои заказы' }
                         ]
                     }
                 ]}
@@ -61,9 +58,29 @@ export default function CustomerContent() {
                 activeItem={activeItem}
                 onItemClick={handleItemClick}
             />
-            {
-                activeItem == 'dashboard' && <CustomerDashboard />
-            }
+            <div className="col-span-3">
+                {
+                    activeItem == 'dashboard' && <AdminDashboard />
+                }
+                {
+                    activeItem == 'users' && <Users />
+                }
+                {
+                    activeItem == 'requests' && <AdminRequests />
+                }
+                {
+                    activeItem == 'storage' && <AdminStorage />
+                }
+                {
+                    activeItem == 'notifications' && <AdminNotification />
+                }
+                {
+                    activeItem == 'settings' && <AdminSettings />
+                }
+                {
+                    activeItem == 'logout' && <LogOut redirtUrl="/roles/admin-panel?tab=dashboard" />
+                }
+            </div>
         </div>
     );
 }
