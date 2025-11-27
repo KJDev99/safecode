@@ -72,19 +72,19 @@ export default function ProductCart({
 
             <Image
                 src={img || '/cart.png'}
-                width={230}
-                height={230}
+                width={160}
+                height={160}
                 className='w-full transition-transform duration-300'
                 alt='product'
             />
 
 
-            <h3 className='mt-4 mb-3 text-[20px] text-[#1E1E1E] max-md:mt-2 max-md:text-[12px]'>{title || 'Ящик для песка 1 м3'}</h3>
+            <h3 className='mt-4 mb-3 text-base text-[#1E1E1E] max-md:mt-2 max-md:text-[12px]'>{title || 'Ящик для песка 1 м3'}</h3>
             <p className='text-[#1E1E1E]/60 text-sm max-md:text-[8px]'>Артикул: {item || 'ЯЩИ005'}</p>
             <p className='text-[#1E1E1E]/60 text-sm max-md:text-[8px]'>Размер: {size || '1023х1150х900'}</p>
 
 
-            <div className="mt-8 mb-4 text-lg flex  max-md:mt-4 max-md:mb-3 max-md:text-sm">
+            <div className="mt-6 mb-3 text-sm flex  max-md:mt-4 max-md:mb-3 max-md:text-sm">
                 <p className='text-[#2C5AA0]'>{formatPrice(price || 17700.00)} ₽</p> &nbsp; / &nbsp;
                 <p className='text-[#1E1E1E]/60'>шт</p>
             </div>

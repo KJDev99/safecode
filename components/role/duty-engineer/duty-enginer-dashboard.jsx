@@ -5,15 +5,13 @@ import React from 'react'
 import { IoNotifications } from 'react-icons/io5';
 import { LuPlus } from 'react-icons/lu';
 import { CiEdit } from "react-icons/ci";
-import { FaEdit } from 'react-icons/fa';
-import { FiEdit2 } from 'react-icons/fi';
 
-export default function PerformerDashboard() {
+export default function DutyEnginerDashboard() {
     return (
         <div>
             <div className="flex justify-between items-center">
                 <div className="flex flex-col">
-                    <Title text={'Добро пожаловатать, User!'} size={'text-[24px]'} />
+                    <Title text={'Добро пожаловатать User!'} size={'text-[24px]'} />
                     <p className='text-[#1E1E1E]/60 mt-4'>Обзор текущей активности и задач на сегодня</p>
                 </div>
                 <div className="w-[54px] h-[54px] flex items-center justify-center bg-[#C5C5C5]/50 rounded-[10px] relative">
@@ -26,43 +24,37 @@ export default function PerformerDashboard() {
             <div className="grid grid-cols-3 gap-6 mt-6">
                 <SystemCart
                     img="/admin/icon1.svg"
-                    title="122"
-                    text="Активные задачи"
+                    title="2"
+                    text="Доступных объектов"
                     imgSize="size-[38px]"
                 />
                 <SystemCart
                     img="/admin/icon2.svg"
-                    title="128v"
-                    text="Выполнено за месяц"
+                    title="3"
+                    text="Документов для подписи"
                     imgSize="size-[38px]"
                 />
                 <SystemCart
                     img="/admin/icon3.svg"
-                    title="12"
-                    text="Срочные задачи"
+                    title="120"
+                    text="Подписано за месяц"
                     imgSize="size-[38px]"
                 />
             </div>
-            <div className="grid grid-cols-2 gap-6 mt-6">
-                <div
-                    className='p-6 rounded-[12px] bg-white flex flex-col'
-                    style={{ boxShadow: '0px 0px 4px 0px #76767626' }}
-                >
-                    <Title text={'Заявки'} color="text-[#2C5AA0]" size="text-lg max-md:text-base" cls={"mb-3"} />
-                    <p className={`text-[#1E1E1E99] leading-[120%] grow max-md:text-sm mb-6`}>Назначьте исполнителя на новую задачу или заявку для обслуживания объекта</p>
-                    <Button text={'Перейти'} className='h-[66px] w-full max-md:h-[56px] max-md:text-sm' />
+            <div
+                className='p-6 rounded-[12px] bg-white grid grid-cols-2 mt-6'
+                style={{ boxShadow: '0px 0px 4px 0px #76767626' }}
+            >
+                <div className="flex flex-col">
+                    <Title text={'Новые заявки'} color="text-[#2C5AA0]" size="text-lg max-md:text-base" cls={"mb-3"} />
+                    <p className={`text-[#1E1E1E99] leading-[120%] grow max-md:text-sm `}>Быстро найдите заявку для обслуживания объекта</p>
                 </div>
-
-                <div
-                    className='p-6 rounded-[12px] bg-white flex flex-col'
-                    style={{ boxShadow: '0px 0px 4px 0px #76767626' }}
-                >
-                    <Title text={'Создать отчет '} color="text-[#2C5AA0]" size="text-lg max-md:text-base" cls={"mb-3"} />
-                    <p className={`text-[#1E1E1E99] leading-[120%] grow max-md:text-sm mb-6`}>Смотреть новые заявки  <br />
-                        Смотреть новые заявки  </p>
-                    <Button icon={<FiEdit2 />} text={'Заполнить журнал'} className='h-[66px] w-full max-md:h-[56px] max-md:text-sm gap-2 bg-[#E2E2E2] !text-[#8E8E8E]' />
+                <div className="flex justify-end">
+                    <Button text={'Перейти'} className='h-[66px] w-[368px] max-md:h-[56px] max-md:text-sm' />
                 </div>
             </div>
+
+
             <div className='px-6 pt-6 pb-8 w-full rounded-[12px] bg-white flex flex-col mt-6'
                 style={{ boxShadow: '0px 0px 4px 0px #76767626' }}>
                 <Title text={'Последняя активная заявка'} size="text-lg" />

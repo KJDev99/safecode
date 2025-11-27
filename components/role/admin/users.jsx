@@ -19,10 +19,11 @@ export default function Users() {
 
     // Update local users state when data changes
     useEffect(() => {
-        if (data && data.data) {
-            setUsers(data?.data?.map(user => ({ ...user, _checked: false })));
+        if (Array.isArray(data?.data)) {
+            setUsers(data.data.map(user => ({ ...user, _checked: false })));
         }
     }, [data]);
+
 
     const openModal = (user) => {
         setSelectedUser(user);

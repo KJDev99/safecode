@@ -1,9 +1,26 @@
-import React from 'react'
+'use client'
+import React, { useEffect, useState } from 'react'
 import Button from './ui/button'
 import Image from 'next/image'
 import Link from 'next/link'
 
 export default function Footer() {
+    const [isAuth, setIsAuth] = useState(false);
+
+    const checkAuth = () => {
+        const auth = localStorage.getItem("isAuthenticated");
+        setIsAuth(auth === "true");
+    };
+
+    useEffect(() => {
+        checkAuth();
+
+        window.addEventListener("authChanged", checkAuth);
+
+        return () => {
+            window.removeEventListener("authChanged", checkAuth);
+        };
+    }, []);
     return (
         <div className='bg-[#1E1E1E]'>
             <div className='max-w-[1200px] mx-auto  pl-16  py-16 max-md:hidden '>
@@ -28,7 +45,12 @@ export default function Footer() {
                     <div className="flex flex-col">
                         <h2 className='text-lg text-white mb-6'>CRM-сервис</h2>
                         <p className='mb-4 text-white/60'>Техническая поддержка</p>
-                        <p className='mb-4 text-white/60'>Вход в личный кабинет</p>
+                        {
+                            !isAuth ?
+                                <Link href={'/auth/login'} className='text-nowrap text-[#fff]/60 '>Вход в личный кабинет</Link >
+                                :
+                                ''
+                        }
                     </div>
 
                 </div>
@@ -64,7 +86,12 @@ export default function Footer() {
                             <div className="mb-10 flex flex-col">
                                 <Link href={'/'} className='text-nowrap mb-4 text-[#fff] '>CRM-сервис</Link >
                                 <Link href={'/advantages'} className='text-nowrap mb-3 text-[#fff]/60 '>Техническая поддержка</Link >
-                                <Link href={'/services'} className='text-nowrap text-[#fff]/60 '>Вход в личный кабинет</Link >
+                                {
+                                    !isAuth ?
+                                        <Link href={'/auth/login'} className='text-nowrap text-[#fff]/60 '>Вход в личный кабинет</Link >
+                                        :
+                                        ''
+                                }
                             </div>
 
                         </div>

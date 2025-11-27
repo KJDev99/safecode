@@ -4,6 +4,13 @@ import LayoutRole from '@/components/role/layout-role';
 import React, { useState, useEffect, Suspense } from 'react';
 import { useRouter, useSearchParams } from 'next/navigation';
 import LogOut from '../log-out';
+import InspectorsDashboard from './inspectors-dashboard';
+import InspectorsAccessObject from './inspectors-access-object';
+import InspecthorsObject from './inspectors-objects';
+import InspectorsObject from './inspectors-objects';
+import InspectorsDocument from './inspectors-document';
+import AdminNotification from '../admin/admin-notification';
+import InspectorsSettings from './inspectors-settings';
 
 export default function InspectorsContent() {
     const router = useRouter();
@@ -24,7 +31,7 @@ export default function InspectorsContent() {
     };
 
     return (
-        <div className="grid grid-cols-4 mt-8 mb-[100px]">
+        <div className="grid grid-cols-4 mt-8 gap-6 mb-[100px] max-md:grid-cols-1 max-md:gap-0">
             <LayoutRole
                 sections={[
                     {
@@ -52,9 +59,30 @@ export default function InspectorsContent() {
                 activeItem={activeItem}
                 onItemClick={handleItemClick}
             />
-            {
-                activeItem == 'logout' && <LogOut redirtUrl="/roles/inspectors?tab=dashboard" />
-            }
+            <div className="col-span-3">
+                {
+                    activeItem == 'dashboard' && <InspectorsDashboard />
+                }
+                {
+                    activeItem == 'access-object' && <InspectorsAccessObject />
+                }
+                {
+                    activeItem == 'objects' && <InspectorsObject />
+                }
+                {
+                    activeItem == 'document' && <InspectorsDocument />
+                }
+                {
+                    activeItem == 'notifications' && <AdminNotification />
+                }
+                {
+                    activeItem == 'settings' && <InspectorsSettings />
+                }
+
+                {
+                    activeItem == 'logout' && <LogOut redirtUrl="/roles/inspectors?tab=dashboard" />
+                }
+            </div>
         </div>
     );
 }

@@ -1,9 +1,26 @@
-import React from 'react'
+'use client'
+import React, { useEffect, useState } from 'react'
 import Button from '../ui/button'
 import Badge from '../ui/badge'
 import Link from 'next/link'
 
 export default function Hero() {
+    const [isAuth, setIsAuth] = useState(false);
+
+    const checkAuth = () => {
+        const auth = localStorage.getItem("isAuthenticated");
+        setIsAuth(auth === "true");
+    };
+
+    useEffect(() => {
+        checkAuth();
+
+        window.addEventListener("authChanged", checkAuth);
+
+        return () => {
+            window.removeEventListener("authChanged", checkAuth);
+        };
+    }, []);
     return (
         <div className="relative h-[794px] max-md:h-[769px] bg-cover bg-center bg-[url('/hero.png')] flex flex-col items-center md:justify-center">
             <div className="absolute inset-0 bg-gradient-to-t from-[#40404080] to-[rgba(67,67,67,0.2)]"></div>
@@ -16,15 +33,23 @@ export default function Hero() {
                 <p className="mt-6 mb-12 text-white leading-[114%] tracking-[-1%] text-lg max-w-[670px] mx-auto max-md:text-sm max-md:mb-[130px]">
                     Современная система управления QR-кодами для ведения журналов, формирования актов и контроля состояния систем пожарной безопасности
                 </p>
-                <div className="flex gap-6 justify-center max-md:flex-col-reverse">
-                    <Link href={'/auth/login'}>
-                        <Button text="Заказать услугу" className='w-[270px] h-15 max-md:w-full' />
-                    </Link>
-                    <Link href={'/auth/login'}>
-                        <Button text="Войти" className='w-[170px] h-15 bg-transparent border border-white max-md:w-full' />
-                    </Link>
+                {
+                    !isAuth ?
+                        <div className="flex gap-6 justify-center max-md:flex-col-reverse">
+                            <Link href={'/auth/login'}>
+                                <Button text="Заказать услугу" className='w-[270px] h-15 max-md:w-full' />
+                            </Link>
+                            <Link href={'/auth/login'}>
+                                <Button text="Войти" className='w-[170px] h-15 bg-transparent border border-white max-md:w-full' />
+                            </Link>
+                        </div>
+                        : <div className="flex gap-6 justify-center max-md:flex-col-reverse">
+                            <Link href={'/services'}>
+                                <Button text="Заказать услугу" className='w-[270px] h-15 max-md:w-full' />
+                            </Link>
 
-                </div>
+                        </div>
+                }
             </div>
         </div>
     )

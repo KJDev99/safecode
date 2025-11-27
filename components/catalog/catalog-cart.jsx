@@ -37,7 +37,7 @@ export default function CatalogCart() {
         return (
             <div className='mb-[100px] grid grid-cols-4 gap-6 max-md:grid-cols-2 max-md:gap-3.5 max-md:px-4'>
                 <div className="flex col-span-4 justify-center">
-                    <div className="text-center">No products available</div>
+                    <div className="text-center">Нет доступных продуктов</div>
                 </div>
             </div>
         );
@@ -56,7 +56,6 @@ export default function CatalogCart() {
                     size={`${product.width}х${product.height}х${product.depth}`}
                     price={product.price}
                     initialQuantity={1}
-                    // You can add more props if needed
                     description={product.description}
                     category={product.category}
                     stock={product.stock}

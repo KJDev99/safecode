@@ -22,7 +22,6 @@ export default function ServicesHero() {
                         return <Services_Cart key={service.id} title={service.title || ""} text={service.description || ''} text2={`От ${parseFloat(service.price).toLocaleString('ru-RU')} ₽/месяц`} button={'Заказать услугу'} />
                     })
                 }
-
             </div>
         </div>
     )
