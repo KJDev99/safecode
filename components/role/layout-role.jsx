@@ -62,7 +62,7 @@ export default function LayoutRole({
     };
 
     const getButtonClass = (item, isActive) => {
-        const baseClass = 'w-full h-[60px] justify-start px-6 transition-all duration-200';
+        const baseClass = 'w-full h-[60px] justify-start px-6 transition-all duration-200 max-md:h-[52px] max-md:text-sm ';
 
         if (item.isDanger) {
             return `${baseClass} bg-transparent !text-[#D9272799] border border-[#D9272799]`;
@@ -172,7 +172,7 @@ export default function LayoutRole({
                         animate={{ opacity: 1, y: 0 }}
                         exit={{ opacity: 0, y: -20 }}
                         transition={{ duration: 0.3 }}
-                        className="absolute top-0 left-0 right-0 bg-white rounded-[12px] p-8 space-y-4 z-50"
+                        className="absolute top-0 left-0 right-0 bg-white rounded-[12px] p-8 space-y-4 z-50 max-md:pb-15"
                         style={{ boxShadow: "0px 0px 20px 0px rgba(0,0,0,0.2)" }}
                     >
                         {currentSections.map((section) => (
@@ -236,7 +236,7 @@ export default function LayoutRole({
             </AnimatePresence>
             <div className='flex flex-col md:hidden'>
                 <motion.div
-                    className="flex items-center justify-center  gap-2 cursor-pointer"
+                    className={`flex items-center justify-center  gap-2 cursor-pointer ${isMobileMenuOpen ? 'z-[55]' : ''} `}
                     onClick={toggleMobileMenu}
                     whileTap={{ scale: 0.95 }}
                 >

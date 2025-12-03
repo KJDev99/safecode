@@ -1,91 +1,120 @@
 'use client'
 import React, { useEffect, useState } from 'react'
-
-// Leaflet komponentlari
-import { MapContainer, TileLayer, Marker, Popup } from 'react-leaflet'
-
-// Leaflet iconlari uchun fix
+import { MapContainer, TileLayer, Marker, Popup, useMapEvents } from 'react-leaflet'
 import L from 'leaflet'
 
-// Marker iconlarini to'g'rilash
-delete (L.Icon.Default.prototype)._getIconUrl
+// Leaflet iconlari uchun fix
+delete L.Icon.Default.prototype._getIconUrl
 L.Icon.Default.mergeOptions({
     iconRetinaUrl: 'https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.7.1/images/marker-icon-2x.png',
     iconUrl: 'https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.7.1/images/marker-icon.png',
     shadowUrl: 'https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.7.1/images/marker-shadow.png',
 })
 
+// Xaritada bosilganda markerni qo'yadigan komponent
+function LocationMarker({ position, onPositionChange, isEditable }) {
+    const map = useMapEvents({
+        click(e) {
+            if (isEditable) {
+                onPositionChange(e.latlng)
+            }
+        },
+    })
 
+    useEffect(() => {
+        if (position) {
+            map.flyTo(position, map.getZoom())
+        }
+    }, [position, map])
 
-const MapComponent = () => {
+    return position === null ? null : (
+        <Marker position={position} draggable={isEditable}>
+            <Popup>
+                <div className="p-2">
+                    <p className="text-sm font-semibold">Выбранная локация</p>
+                    <p className="text-xs text-gray-600 mt-1">
+                        Широта: {position.lat.toFixed(6)}
+                    </p>
+                    <p className="text-xs text-gray-600">
+                        Долгота: {position.lng.toFixed(6)}
+                    </p>
+                    {isEditable && (
+                        <p className="text-xs text-blue-600 mt-2">
+                            Нажмите на карту или перетащите маркер
+                        </p>
+                    )}
+                </div>
+            </Popup>
+        </Marker>
+    )
+}
+
+const MapComponent = ({
+    customLocations = null,
+    center = null,
+    isEditable = false,
+    selectedPosition = null,
+    onPositionSelect = null
+}) => {
     const [locations, setLocations] = useState([])
     const [isClient, setIsClient] = useState(false)
+    const [markerPosition, setMarkerPosition] = useState(selectedPosition)
 
     useEffect(() => {
         setIsClient(true)
 
-        // Backenddan ma'lumot olish (hozircha mock data)
-        const fetchLocations = async () => {
-            try {
-                // Haqiqiy loyihada: const response = await fetch('/api/locations')
-                const mockLocations = [
-                    {
-                        id: 1,
-                        name: 'ТЦ "Мега"',
-                        lat: 55.7633,
-                        lng: 37.5656,
-                        address: 'Москва, ул. Примерная, 1'
-                    },
-                    {
-                        id: 2,
-                        name: 'ТЦ "Галлерея"',
-                        lat: 55.7580,
-                        lng: 37.6200,
-                        address: 'Москва, ул. Тестовая, 15'
-                    },
-                    {
-                        id: 3,
-                        name: 'ТЦ "Авиапарк"',
-                        lat: 55.7912,
-                        lng: 37.5356,
-                        address: 'Москва, Ходынский бульвар, 4'
-                    }
-                ]
-                setLocations(mockLocations)
-            } catch (error) {
-                console.error('Xatolik yuz berdi:', error)
-            }
+        if (customLocations) {
+            setLocations(customLocations)
+        } else {
+            const mockLocations = [
+                {
+                    id: 1,
+                    name: 'ТЦ "Мега"',
+                    lat: 55.7633,
+                    lng: 37.5656,
+                    address: 'Москва, ул. Примерная, 1'
+                }
+            ]
+            setLocations(mockLocations)
         }
+    }, [customLocations])
 
-        fetchLocations()
-    }, [])
+    useEffect(() => {
+        if (selectedPosition) {
+            setMarkerPosition(selectedPosition)
+        }
+    }, [selectedPosition])
 
-    // Markaziy koordinatalar (Moscow)
-    const centerPosition = [55.7558, 37.6173]
+    const handlePositionChange = (latlng) => {
+        setMarkerPosition(latlng)
+        if (onPositionSelect) {
+            onPositionSelect(latlng)
+        }
+    }
+
+    const centerPosition = center || [55.7558, 37.6173]
 
     if (!isClient) {
         return (
             <div className="h-full w-full bg-gray-100 flex items-center justify-center">
-                <p>Karta yuklanmoqda...</p>
+                <p>Карта загружается...</p>
             </div>
         )
     }
 
     return (
         <MapContainer
-            center={centerPosition}
-            zoom={11}
+            center={markerPosition || centerPosition}
+            zoom={customLocations ? 15 : 11}
             style={{ height: '100%', width: '100%' }}
-            scrollWheelZoom={false}
+            scrollWheelZoom={true}
         >
-            {/* OpenStreetMap tile layer */}
             <TileLayer
                 attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
                 url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
             />
 
-            {/* Location markerlari */}
-            {locations.map((location) => (
+            {!isEditable && locations.map((location) => (
                 <Marker
                     key={location.id}
                     position={[location.lat, location.lng]}
@@ -101,6 +130,14 @@ const MapComponent = () => {
                     </Popup>
                 </Marker>
             ))}
+
+            {isEditable && (
+                <LocationMarker
+                    position={markerPosition}
+                    onPositionChange={handlePositionChange}
+                    isEditable={isEditable}
+                />
+            )}
         </MapContainer>
     )
 }

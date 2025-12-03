@@ -60,7 +60,7 @@ export default function Navbar() {
                                 ? <Link href={'/auth/login'}>
                                     <Button text="Регистрация / Вход" className='w-40 h-15 ' />
                                 </Link>
-                                : <ProfileDropdown role={role} />
+                                : <ProfileDropdown role={role} setShow={setShowMenu} />
                         }
 
                     </div>
@@ -71,7 +71,7 @@ export default function Navbar() {
                             :
                             <IoIosMenu onClick={() => setShowMenu(true)} className='text-white text-3xl cursor-pointer md:hidden' />
                     }
-                    <MobileNav show={showMenu} setShow={setShowMenu} />
+                    <MobileNav show={showMenu} setShow={setShowMenu} role={role} />
                 </div>
             </div>
         </div>

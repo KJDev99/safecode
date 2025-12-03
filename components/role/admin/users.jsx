@@ -5,6 +5,7 @@ import { IoMdClose } from "react-icons/io";
 import Button from "@/components/ui/button";
 import Title from "@/components/ui/title";
 import { useApiStore } from "@/store/useApiStore";
+import Loader from "@/components/Loader";
 
 export default function Users() {
     const { data, loading, error, getDataToken } = useApiStore();
@@ -17,7 +18,6 @@ export default function Users() {
         getDataToken("/accounts/users/");
     }, []);
 
-    // Update local users state when data changes
     useEffect(() => {
         if (Array.isArray(data?.data)) {
             setUsers(data.data.map(user => ({ ...user, _checked: false })));
@@ -35,14 +35,12 @@ export default function Users() {
         setSelectedUser(null);
     };
 
-    // Handle select all checkbox
     const handleSelectAll = (e) => {
         const checked = e.target.checked;
         setSelectAll(checked);
         setUsers(users.map(user => ({ ...user, _checked: checked })));
     };
 
-    // Handle individual user checkbox
     const handleUserCheck = (e, userId) => {
         const checked = e.target.checked;
 
@@ -52,7 +50,6 @@ export default function Users() {
 
         setUsers(updatedUsers);
 
-        // Update selectAll state based on if all users are checked
         const allChecked = updatedUsers.every(user => user._checked);
         setSelectAll(allChecked);
     };
@@ -66,26 +63,26 @@ export default function Users() {
     };
 
 
-    if (loading) return <div className="text-center py-8">Yuklanmoqda...</div>;
+    if (loading) return <Loader />;
     if (error) return <div className="text-center py-8 text-red-500">Xatolik yuz berdi: {error}</div>;
     if (!data) return <div className="text-center py-8">Ma'lumot topilmadi</div>;
 
     return (
         <div>
-            <div className="flex justify-between items-center">
+            <div className="flex justify-between md:items-center max-md:flex-col max-md:mt-8">
                 <div className="flex flex-col">
-                    <Title text={"Пользователи и роли"} size={"text-[24px]"} cls="uppercase" />
-                    <p className="text-[#1E1E1E]/60 mt-3">Формирование списка пользователей</p>
+                    <Title text={"Пользователи и роли"} size={"text-[24px] max-md:mb-3 max-md:text-[22px]"} cls="uppercase" />
+                    <p className="text-[#1E1E1E]/60 md:mt-3 max-md:text-sm max-md:mb-6 ">Формирование списка пользователей</p>
                 </div>
-                <Button className="h-[54px] w-[285px] gap-2.5" icon={<FaPlus />} text={"Назначить исполнителя"} />
+                <Button className="h-[54px] w-[285px] gap-2.5 max-md:w-full" icon={<FaPlus />} text={"Назначить исполнителя"} />
             </div>
 
             {/* TABLE */}
-            <div className="mt-6 bg-white rounded-2xl p-4" style={{ boxShadow: "0px 0px 4px 0px #76767626" }}>
+            <div className="mt-6 bg-white rounded-2xl p-4 max-md:overflow-x-auto max-md:py-0" style={{ boxShadow: "0px 0px 4px 0px #76767626" }}>
                 <table className="w-full border-collapse">
                     <thead>
                         <tr className="border-b border-[#1E1E1E80] text-[#1E1E1E99] text-lg ">
-                            <th className="p-x-3 text-left font-normal">
+                            <th className="p-x-3 text-left font-normal max-md:text-nowrap">
                                 <input
                                     id="head-check-all"
                                     type="checkbox"
@@ -93,12 +90,12 @@ export default function Users() {
                                     onChange={handleSelectAll}
                                 />
                             </th>
-                            <th className="p-3 text-left font-normal">Id</th>
-                            <th className="p-3 text-left font-normal">ФИО</th>
-                            <th className="p-3 text-left font-normal">Статус</th>
-                            <th className="p-3 text-left font-normal">Дата регистрации</th>
-                            <th className="p-3 text-left font-normal">Последний заход</th>
-                            <th className="p-3 text-left font-normal">Действие</th>
+                            <th className="p-3 text-left font-normal max-md:text-nowrap">Id</th>
+                            <th className="p-3 text-left font-normal max-md:text-nowrap">ФИО</th>
+                            <th className="p-3 text-left font-normal max-md:text-nowrap">Статус</th>
+                            <th className="p-3 text-left font-normal max-md:text-nowrap">Дата регистрации</th>
+                            <th className="p-3 text-left font-normal max-md:text-nowrap">Последний заход</th>
+                            <th className="p-3 text-left font-normal max-md:text-nowrap">Действие</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -146,7 +143,6 @@ export default function Users() {
                 </table>
             </div >
 
-            {/* MODAL */}
             {
                 isModalOpen && (
                     <div className="fixed inset-0 bg-black/40 flex justify-center items-center z-50">

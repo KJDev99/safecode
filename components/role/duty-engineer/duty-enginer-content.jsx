@@ -11,11 +11,24 @@ import DutyEnginerObjects from './duty-enginer-objects';
 import DutyEnginerReports from './duty-enginer-reports';
 import AdminNotification from '../admin/admin-notification';
 import DutyEnginerSettings from './duty-enginer-settings';
+import Badge from '@/components/ui/badge';
 
 export default function DutyEnginerContent() {
     const router = useRouter();
     const searchParams = useSearchParams();
     const [activeItem, setActiveItem] = useState('dashboard');
+
+    // Barcha item'larni bitta massivga yig'ib olamiz
+    const allItems = [
+        { id: 'dashboard', text: 'Дашборд' },
+        { id: 'new-application', text: 'Новые заявки' },
+        { id: 'all-application', text: 'Все заявки' },
+        { id: 'objects', text: 'Объекты' },
+        { id: 'reports', text: 'Отчеты' },
+        { id: 'notifications', text: 'Уведомления' },
+        { id: 'settings', text: 'Настройки' },
+        { id: 'logout', text: 'Выйти', isDanger: true }
+    ];
 
     useEffect(() => {
         const tab = searchParams.get('tab');
@@ -29,65 +42,70 @@ export default function DutyEnginerContent() {
         router.push(`/roles/duty-engineer?tab=${itemId}`);
     };
 
-    return (
-        <div className="grid grid-cols-4 mt-8 gap-6 mb-[100px] max-md:grid-cols-1 max-md:gap-0">
-            <LayoutRole
-                sections={[
-                    {
-                        id: 'main',
-                        title: 'Основное',
-                        items: [
-                            { id: 'dashboard', text: 'Дашборд' },
-                            { id: 'new-application', text: 'Новые заявки' },
-                            { id: 'all-application', text: 'Все заявки' },
-                            { id: 'objects', text: 'Объекты' },
-                        ]
-                    },
-                    {
-                        id: 'documents',
-                        title: 'Документы',
-                        items: [
-                            { id: 'reports', text: 'Отчеты' },
-                            { id: 'notifications', text: 'Уведомления' }
-                        ]
-                    }
-                ]}
-                bottomItems={[
-                    { id: 'settings', text: 'Настройки' },
-                    { id: 'logout', text: 'Выйти', isDanger: true }
-                ]}
-                activeItem={activeItem}
-                onItemClick={handleItemClick}
-            />
-            <div className="col-span-3">
+    // Aktiv bo'lgan itemning text'ini topish
+    const getActiveItemText = () => {
+        const activeItemData = allItems.find(item => item.id === activeItem);
+        return activeItemData ? activeItemData.text : 'Дашборд';
+    };
 
-                {
-                    activeItem == 'dashboard' && <DutyEnginerDashboard />
-                }
-                {
-                    activeItem == 'new-application' && <DutyEnginerNewReport />
-                }
-                {
-                    activeItem == 'all-application' && <DutyEnginerAllReport />
-                }
-                {
-                    activeItem == 'objects' && <DutyEnginerObjects />
-                }
-                {
-                    activeItem == 'reports' && <DutyEnginerReports />
-                }
-                {
-                    activeItem == 'notifications' && <AdminNotification />
-                }
-                {
-                    activeItem == 'settings' && <DutyEnginerSettings />
-                }
-                {
-                    activeItem == 'logout' && <LogOut redirtUrl="/roles/duty-engineer?tab=dashboard" />
-                }
+    return (
+        <div>
+            <Badge
+                link2={getActiveItemText()}
+                adress2='roles/duty-engineer'
+                color={'text-[#1E1E1E]/60'}
+            />
+            <div className="grid grid-cols-4 mt-8 gap-6 mb-[100px] max-md:grid-cols-1 max-md:gap-0 max-md:mb-[50px]">
+                <LayoutRole
+                    sections={[
+                        {
+                            id: 'main',
+                            title: 'Основное',
+                            items: allItems.filter(item =>
+                                ['dashboard', 'new-application', 'all-application', 'objects'].includes(item.id)
+                            )
+                        },
+                        {
+                            id: 'documents',
+                            title: 'Документы',
+                            items: allItems.filter(item =>
+                                ['reports', 'notifications'].includes(item.id)
+                            )
+                        }
+                    ]}
+                    bottomItems={allItems.filter(item =>
+                        ['settings', 'logout'].includes(item.id)
+                    )}
+                    activeItem={activeItem}
+                    onItemClick={handleItemClick}
+                />
+                <div className="col-span-3 max-md:col-span-1">
+                    {
+                        activeItem == 'dashboard' && <DutyEnginerDashboard />
+                    }
+                    {
+                        activeItem == 'new-application' && <DutyEnginerNewReport />
+                    }
+                    {
+                        activeItem == 'all-application' && <DutyEnginerAllReport />
+                    }
+                    {
+                        activeItem == 'objects' && <DutyEnginerObjects />
+                    }
+                    {
+                        activeItem == 'reports' && <DutyEnginerReports />
+                    }
+                    {
+                        activeItem == 'notifications' && <AdminNotification />
+                    }
+                    {
+                        activeItem == 'settings' && <DutyEnginerSettings />
+                    }
+                    {
+                        activeItem == 'logout' && <LogOut redirtUrl="/roles/duty-engineer?tab=dashboard" />
+                    }
+                </div>
             </div>
         </div>
     );
 }
-
-

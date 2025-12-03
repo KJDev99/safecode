@@ -20,8 +20,7 @@ function CustomerLoading() {
 export default function Customer() {
     return (
         <>
-            <div className="max-w-[1200px] mx-auto mt-8">
-                <Badge link2={'Дашборд'} adress2='roles/customer' color={'text-[#1E1E1E]/60'} />
+            <div className="max-w-[1200px] mx-auto mt-8 max-md:px-6">
                 <Suspense fallback={<CustomerLoading />}>
                     <CustomerContent />
                 </Suspense>

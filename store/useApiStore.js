@@ -69,6 +69,7 @@ export const useApiStore = create((set) => ({
         try {
             const res = await apiToken.get(endpoint);
             set({ data: res.data });
+            return res.data
         } catch (err) {
             set({ error: err?.response?.data || err });
         } finally {
@@ -81,8 +82,11 @@ export const useApiStore = create((set) => ({
         try {
             const res = await apiToken.post(endpoint, body);
             set({ data: res.data });
+            return res.data; // ← Response ni qaytaramiz
         } catch (err) {
-            set({ error: err?.response?.data || err });
+            const error = err?.response?.data || err;
+            set({ error });
+            return error; // ← Xatoni ham qaytaramiz
         } finally {
             set({ loading: false });
         }
@@ -93,8 +97,11 @@ export const useApiStore = create((set) => ({
         try {
             const res = await apiToken.put(endpoint, body);
             set({ data: res.data });
+            return res.data; // ← Response ni qaytaramiz
         } catch (err) {
-            set({ error: err?.response?.data || err });
+            const error = err?.response?.data || err;
+            set({ error });
+            return error; // ← Xatoni ham qaytaramiz
         } finally {
             set({ loading: false });
         }
@@ -105,8 +112,11 @@ export const useApiStore = create((set) => ({
         try {
             const res = await apiToken.delete(endpoint);
             set({ data: res.data });
+            return res.data; // ← Response ni qaytaramiz
         } catch (err) {
-            set({ error: err?.response?.data || err });
+            const error = err?.response?.data || err;
+            set({ error });
+            return error; // ← Xatoni ham qaytaramiz
         } finally {
             set({ loading: false });
         }

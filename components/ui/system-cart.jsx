@@ -5,7 +5,7 @@ import Title from './title'
 export default function SystemCart({ img, title, text, imgSize }) {
     return (
         <div
-            className='p-6 rounded-2xl bg-white'
+            className='p-6 rounded-2xl bg-white max-md:p-4'
             style={{ boxShadow: '0px 0px 4px 0px #76767626' }}
         >
             <Image src={img} alt='icon' width={24} height={24} className={`${imgSize ? imgSize : 'size-6'}`} />

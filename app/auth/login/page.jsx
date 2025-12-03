@@ -1,4 +1,5 @@
 'use client'
+import Loader from '@/components/Loader'
 import Button from '@/components/ui/button'
 import Input from '@/components/ui/input'
 import { useApiStore } from '@/store/useApiStore'
@@ -12,10 +13,10 @@ export default function Login() {
         identifier: '',
         password: '',
     })
-    const [loading, setLoading] = useState(false)
+
     const router = useRouter()
 
-    const { data, loading: rolesLoading, error, getData, postData } = useApiStore();
+    const { data, loading, error, getData, postData } = useApiStore();
 
     const handleInputChange = (field, value) => {
         setFormData(prev => ({
@@ -41,24 +42,24 @@ export default function Login() {
             e.preventDefault();
         }
 
-        setLoading(true)
+
 
         // Validation
         if (!formData.identifier.trim()) {
             toast.error('Введите номер телефона или e-mail');
-            setLoading(false);
+
             return;
         }
 
         if (!formData.password) {
             toast.error('Введите пароль');
-            setLoading(false);
+
             return;
         }
 
         // if (formData.password.length < 8) {
         //     toast.error('Пароль должен содержать минимум 8 символов');
-        //     setLoading(false);
+
         //     return;
         // }
 
@@ -87,6 +88,7 @@ export default function Login() {
 
 
                 setTimeout(() => {
+
                     switch (result?.data?.user?.groups[0]?.name) {
                         case "Дежурный инженер":
                             router.push('/roles/duty-engineer');
@@ -110,7 +112,7 @@ export default function Login() {
                     }
 
                     window.dispatchEvent(new Event("authChanged"));
-                }, 1000);
+                }, 10);
 
                 // setTimeout(() => {
                 //     router.push('/')
@@ -136,8 +138,6 @@ export default function Login() {
             } else {
                 toast.error('Ошибка при входе. Попробуйте снова.');
             }
-        } finally {
-            setLoading(false);
         }
     }
 
@@ -146,7 +146,11 @@ export default function Login() {
             handleSubmit();
         }
     }
-
+    if (loading) {
+        return (
+            <Loader />
+        );
+    }
     return (
         <div className='grid grid-cols-2 h-[720px] max-md:grid-cols-1'>
             <div className='flex flex-col items-center justify-center '>

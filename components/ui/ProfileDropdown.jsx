@@ -3,7 +3,7 @@ import React, { useState, useRef, useEffect } from 'react'
 import Link from 'next/link'
 import { IoIosArrowDown } from 'react-icons/io';
 
-export default function ProfileDropdown({ role }) {
+export default function ProfileDropdown({ role, setShow }) {
     const [open, setOpen] = useState(false);
     const dropdownRef = useRef(null);
     console.log(role);
@@ -47,69 +47,69 @@ export default function ProfileDropdown({ role }) {
                 {
                     role == "Дежурный инженер"
                         ? <div className="flex flex-col">
-                            <Link className="px-4 py-2 hover:text-white text-sm text-[white]/60" href="/roles/duty-engineer?tab=dashboard">Дашборд</Link>
-                            <Link className="px-4 py-2 hover:text-white text-sm text-[white]/60" href="/roles/duty-engineer?tab=new-application">Новые заявки</Link>
-                            <Link className="px-4 py-2 hover:text-white text-sm text-[white]/60" href="/roles/duty-engineer?tab=all-application">Все заявки</Link>
-                            <Link className="px-4 py-2 hover:text-white text-sm text-[white]/60" href="/roles/duty-engineer?tab=objects">Объекты</Link>
-                            <Link className="px-4 py-2 hover:text-white text-sm text-[white]/60" href="/roles/duty-engineer?tab=reports">Отчеты</Link>
-                            <Link className="px-4 py-2 hover:text-white text-sm text-[white]/60" href="/roles/duty-engineer?tab=notifications">Уведомления</Link>
-                            <Link className="px-4 py-2 hover:text-white text-sm text-[white]/60" href="/roles/duty-engineer?tab=myorder">Мои заказы</Link>
-                            <Link className="px-4 py-2 hover:text-white text-sm text-[white]/60" href="/roles/duty-engineer?tab=settings">Настройки</Link>
+                            <Link onClick={() => setShow(false)} className="px-4 py-2 hover:text-white text-sm text-[white]/60" href="/roles/duty-engineer?tab=dashboard">Дашборд</Link>
+                            <Link onClick={() => setShow(false)} className="px-4 py-2 hover:text-white text-sm text-[white]/60" href="/roles/duty-engineer?tab=new-application">Новые заявки</Link>
+                            <Link onClick={() => setShow(false)} className="px-4 py-2 hover:text-white text-sm text-[white]/60" href="/roles/duty-engineer?tab=all-application">Все заявки</Link>
+                            <Link onClick={() => setShow(false)} className="px-4 py-2 hover:text-white text-sm text-[white]/60" href="/roles/duty-engineer?tab=objects">Объекты</Link>
+                            <Link onClick={() => setShow(false)} className="px-4 py-2 hover:text-white text-sm text-[white]/60" href="/roles/duty-engineer?tab=reports">Отчеты</Link>
+                            <Link onClick={() => setShow(false)} className="px-4 py-2 hover:text-white text-sm text-[white]/60" href="/roles/duty-engineer?tab=notifications">Уведомления</Link>
+                            <Link onClick={() => setShow(false)} className="px-4 py-2 hover:text-white text-sm text-[white]/60" href="/roles/duty-engineer?tab=myorder">Мои заказы</Link>
+                            <Link onClick={() => setShow(false)} className="px-4 py-2 hover:text-white text-sm text-[white]/60" href="/roles/duty-engineer?tab=settings">Настройки</Link>
                         </div>
                         : role == "Заказчик"
                             ? <div className="flex flex-col">
-                                <Link className="px-4 py-2 hover:text-white text-sm text-[white]/60" href="/roles/customer?tab=dashboard">Дашборд</Link>
-                                <Link className="px-4 py-2 hover:text-white text-sm text-[white]/60" href="/roles/customer?tab=objects">Мои объекты</Link>
-                                <Link className="px-4 py-2 hover:text-white text-sm text-[white]/60" href="/roles/customer?tab=application">Заявки</Link>
-                                <Link className="px-4 py-2 hover:text-white text-sm text-[white]/60" href="/roles/customer?tab=service-log">Журнал обслуживания</Link>
-                                <Link className="px-4 py-2 hover:text-white text-sm text-[white]/60" href="/roles/customer?tab=notifications">Уведомления</Link>
-                                <Link className="px-4 py-2 hover:text-white text-sm text-[white]/60" href="/roles/customer?tab=myorder">Мои заказы</Link>
-                                <Link className="px-4 py-2 hover:text-white text-sm text-[white]/60" href="/roles/customer?tab=settings">Настройки</Link>
+                                <Link onClick={() => setShow(false)} className="px-4 py-2 hover:text-white text-sm text-[white]/60" href="/roles/customer?tab=dashboard">Дашборд</Link>
+                                <Link onClick={() => setShow(false)} className="px-4 py-2 hover:text-white text-sm text-[white]/60" href="/roles/customer?tab=objects">Мои объекты</Link>
+                                <Link onClick={() => setShow(false)} className="px-4 py-2 hover:text-white text-sm text-[white]/60" href="/roles/customer?tab=application">Заявки</Link>
+                                <Link onClick={() => setShow(false)} className="px-4 py-2 hover:text-white text-sm text-[white]/60" href="/roles/customer?tab=service-log">Журнал обслуживания</Link>
+                                <Link onClick={() => setShow(false)} className="px-4 py-2 hover:text-white text-sm text-[white]/60" href="/roles/customer?tab=notifications">Уведомления</Link>
+                                <Link onClick={() => setShow(false)} className="px-4 py-2 hover:text-white text-sm text-[white]/60" href="/roles/customer?tab=myorder">Мои заказы</Link>
+                                <Link onClick={() => setShow(false)} className="px-4 py-2 hover:text-white text-sm text-[white]/60" href="/roles/customer?tab=settings">Настройки</Link>
                             </div>
                             : role == "Инспектор МЧС"
                                 ? <div className="flex flex-col">
-                                    <Link className="px-4 py-2 hover:text-white text-sm text-[white]/60" href="/roles/inspectors?tab=dashboard">Дашборд</Link>
-                                    <Link className="px-4 py-2 hover:text-white text-sm text-[white]/60" href="/roles/inspectors?tab=access-object">Доступ к объекту</Link>
-                                    <Link className="px-4 py-2 hover:text-white text-sm text-[white]/60" href="/roles/inspectors?tab=objects">Мои объекты</Link>
-                                    <Link className="px-4 py-2 hover:text-white text-sm text-[white]/60" href="/roles/inspectors?tab=document">Документы</Link>
-                                    <Link className="px-4 py-2 hover:text-white text-sm text-[white]/60" href="/roles/inspectors?tab=notifications">Уведомления</Link>
-                                    <Link className="px-4 py-2 hover:text-white text-sm text-[white]/60" href="/roles/inspectors?tab=settings">Настройки</Link>
+                                    <Link onClick={() => setShow(false)} className="px-4 py-2 hover:text-white text-sm text-[white]/60" href="/roles/inspectors?tab=dashboard">Дашборд</Link>
+                                    <Link onClick={() => setShow(false)} className="px-4 py-2 hover:text-white text-sm text-[white]/60" href="/roles/inspectors?tab=access-object">Доступ к объекту</Link>
+                                    <Link onClick={() => setShow(false)} className="px-4 py-2 hover:text-white text-sm text-[white]/60" href="/roles/inspectors?tab=objects">Мои объекты</Link>
+                                    <Link onClick={() => setShow(false)} className="px-4 py-2 hover:text-white text-sm text-[white]/60" href="/roles/inspectors?tab=document">Документы</Link>
+                                    <Link onClick={() => setShow(false)} className="px-4 py-2 hover:text-white text-sm text-[white]/60" href="/roles/inspectors?tab=notifications">Уведомления</Link>
+                                    <Link onClick={() => setShow(false)} className="px-4 py-2 hover:text-white text-sm text-[white]/60" href="/roles/inspectors?tab=settings">Настройки</Link>
                                 </div>
                                 : role == "Исполнителя"
                                     ? <div className="flex flex-col">
-                                        <Link className="px-4 py-2 hover:text-white text-sm text-[white]/60" href="/roles/performer?tab=dashboard">Дашборд</Link>
-                                        <Link className="px-4 py-2 hover:text-white text-sm text-[white]/60" href="/roles/performer?tab=requests">Мои заявки</Link>
-                                        <Link className="px-4 py-2 hover:text-white text-sm text-[white]/60" href="/roles/performer?tab=reports">Отчеты</Link>
-                                        <Link className="px-4 py-2 hover:text-white text-sm text-[white]/60" href="/roles/performer?tab=notifications">Уведомления</Link>
-                                        <Link className="px-4 py-2 hover:text-white text-sm text-[white]/60" href="/roles/performer?tab=settings">Настройки</Link>
+                                        <Link onClick={() => setShow(false)} className="px-4 py-2 hover:text-white text-sm text-[white]/60" href="/roles/performer?tab=dashboard">Дашборд</Link>
+                                        <Link onClick={() => setShow(false)} className="px-4 py-2 hover:text-white text-sm text-[white]/60" href="/roles/performer?tab=requests">Мои заявки</Link>
+                                        <Link onClick={() => setShow(false)} className="px-4 py-2 hover:text-white text-sm text-[white]/60" href="/roles/performer?tab=reports">Отчеты</Link>
+                                        <Link onClick={() => setShow(false)} className="px-4 py-2 hover:text-white text-sm text-[white]/60" href="/roles/performer?tab=notifications">Уведомления</Link>
+                                        <Link onClick={() => setShow(false)} className="px-4 py-2 hover:text-white text-sm text-[white]/60" href="/roles/performer?tab=settings">Настройки</Link>
                                     </div>
                                     : role == "Менеджер"
                                         ? <div className="flex flex-col">
-                                            <Link className="px-4 py-2 hover:text-white text-sm text-[white]/60" href="/roles/manager?tab=dashboard">Дашборд</Link>
-                                            <Link className="px-4 py-2 hover:text-white text-sm text-[white]/60" href="/roles/manager?tab=requests">Заявки</Link>
-                                            <Link className="px-4 py-2 hover:text-white text-sm text-[white]/60" href="/roles/manager?tab=bills">Счета</Link>
-                                            <Link className="px-4 py-2 hover:text-white text-sm text-[white]/60" href="/roles/manager?tab=jurnals">Журналы и акты</Link>
-                                            <Link className="px-4 py-2 hover:text-white text-sm text-[white]/60" href="/roles/manager?tab=storage">Хранилище</Link>
-                                            <Link className="px-4 py-2 hover:text-white text-sm text-[white]/60" href="/roles/manager?tab=notifications">Уведомления</Link>
-                                            <Link className="px-4 py-2 hover:text-white text-sm text-[white]/60" href="/roles/manager?tab=settings">Настройки</Link>
+                                            <Link onClick={() => setShow(false)} className="px-4 py-2 hover:text-white text-sm text-[white]/60" href="/roles/manager?tab=dashboard">Дашборд</Link>
+                                            <Link onClick={() => setShow(false)} className="px-4 py-2 hover:text-white text-sm text-[white]/60" href="/roles/manager?tab=requests">Заявки</Link>
+                                            <Link onClick={() => setShow(false)} className="px-4 py-2 hover:text-white text-sm text-[white]/60" href="/roles/manager?tab=bills">Счета</Link>
+                                            <Link onClick={() => setShow(false)} className="px-4 py-2 hover:text-white text-sm text-[white]/60" href="/roles/manager?tab=jurnals">Журналы и акты</Link>
+                                            <Link onClick={() => setShow(false)} className="px-4 py-2 hover:text-white text-sm text-[white]/60" href="/roles/manager?tab=storage">Хранилище</Link>
+                                            <Link onClick={() => setShow(false)} className="px-4 py-2 hover:text-white text-sm text-[white]/60" href="/roles/manager?tab=notifications">Уведомления</Link>
+                                            <Link onClick={() => setShow(false)} className="px-4 py-2 hover:text-white text-sm text-[white]/60" href="/roles/manager?tab=settings">Настройки</Link>
                                         </div>
                                         : role == "Обслуживающий инженер"
                                             ? <div className="flex flex-col">
-                                                <Link className="px-4 py-2 hover:text-white text-sm text-[white]/60" href="/roles/manager?tab=dashboard">Дашборд</Link>
-                                                <Link className="px-4 py-2 hover:text-white text-sm text-[white]/60" href="/roles/manager?tab=requests">Заявки</Link>
-                                                <Link className="px-4 py-2 hover:text-white text-sm text-[white]/60" href="/roles/manager?tab=bills">Счета</Link>
-                                                <Link className="px-4 py-2 hover:text-white text-sm text-[white]/60" href="/roles/manager?tab=jurnals">Журналы и акты</Link>
-                                                <Link className="px-4 py-2 hover:text-white text-sm text-[white]/60" href="/roles/manager?tab=storage">Хранилище</Link>
-                                                <Link className="px-4 py-2 hover:text-white text-sm text-[white]/60" href="/roles/manager?tab=notifications">Уведомления</Link>
-                                                <Link className="px-4 py-2 hover:text-white text-sm text-[white]/60" href="/roles/manager?tab=settings">Настройки</Link>
+                                                <Link onClick={() => setShow(false)} className="px-4 py-2 hover:text-white text-sm text-[white]/60" href="/roles/manager?tab=dashboard">Дашборд</Link>
+                                                <Link onClick={() => setShow(false)} className="px-4 py-2 hover:text-white text-sm text-[white]/60" href="/roles/manager?tab=requests">Заявки</Link>
+                                                <Link onClick={() => setShow(false)} className="px-4 py-2 hover:text-white text-sm text-[white]/60" href="/roles/manager?tab=bills">Счета</Link>
+                                                <Link onClick={() => setShow(false)} className="px-4 py-2 hover:text-white text-sm text-[white]/60" href="/roles/manager?tab=jurnals">Журналы и акты</Link>
+                                                <Link onClick={() => setShow(false)} className="px-4 py-2 hover:text-white text-sm text-[white]/60" href="/roles/manager?tab=storage">Хранилище</Link>
+                                                <Link onClick={() => setShow(false)} className="px-4 py-2 hover:text-white text-sm text-[white]/60" href="/roles/manager?tab=notifications">Уведомления</Link>
+                                                <Link onClick={() => setShow(false)} className="px-4 py-2 hover:text-white text-sm text-[white]/60" href="/roles/manager?tab=settings">Настройки</Link>
                                             </div>
                                             : <div className="flex flex-col">
-                                                <Link className="px-4 py-2 hover:text-white text-sm text-[white]/60" href="/roles/admin-panel?tab=dashboard">Дашборд</Link>
-                                                <Link className="px-4 py-2 hover:text-white text-sm text-[white]/60" href="/roles/admin-panel?tab=users">Пользователи и роли</Link>
-                                                <Link className="px-4 py-2 hover:text-white text-sm text-[white]/60" href="/roles/admin-panel?tab=requests">Заявки и проекты</Link>
-                                                <Link className="px-4 py-2 hover:text-white text-sm text-[white]/60" href="/roles/admin-panel?tab=storage">Хранилище</Link>
-                                                <Link className="px-4 py-2 hover:text-white text-sm text-[white]/60" href="/roles/admin-panel?tab=notifications">Уведомления</Link>
-                                                <Link className="px-4 py-2 hover:text-white text-sm text-[white]/60" href="/roles/admin-panel?tab=settings">Настройки</Link>
+                                                <Link onClick={() => setShow(false)} className="px-4 py-2 hover:text-white text-sm text-[white]/60" href="/roles/admin-panel?tab=dashboard">Дашборд</Link>
+                                                <Link onClick={() => setShow(false)} className="px-4 py-2 hover:text-white text-sm text-[white]/60" href="/roles/admin-panel?tab=users">Пользователи и роли</Link>
+                                                <Link onClick={() => setShow(false)} className="px-4 py-2 hover:text-white text-sm text-[white]/60" href="/roles/admin-panel?tab=requests">Заявки и проекты</Link>
+                                                <Link onClick={() => setShow(false)} className="px-4 py-2 hover:text-white text-sm text-[white]/60" href="/roles/admin-panel?tab=storage">Хранилище</Link>
+                                                <Link onClick={() => setShow(false)} className="px-4 py-2 hover:text-white text-sm text-[white]/60" href="/roles/admin-panel?tab=notifications">Уведомления</Link>
+                                                <Link onClick={() => setShow(false)} className="px-4 py-2 hover:text-white text-sm text-[white]/60" href="/roles/admin-panel?tab=settings">Настройки</Link>
                                             </div>
                 }
 

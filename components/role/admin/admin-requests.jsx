@@ -7,23 +7,17 @@ import Title from "@/components/ui/title";
 import { useApiStore } from "@/store/useApiStore";
 
 export default function AdminRequests() {
-
-
-
-
-
-
     return (
         <div>
-            <div className="flex justify-between items-center">
+            <div className="flex justify-between md:items-center max-md:flex-col max-md:mt-8">
                 <div className="flex flex-col">
-                    <Title text={"Пользователи и роли"} size={"text-[24px]"} cls="uppercase" />
-                    <p className="text-[#1E1E1E]/60 mt-3">Формирование списка пользователей</p>
+                    <Title text={"Заявки и проекты"} size={"text-[24px] max-md:mb-3 max-md:text-[22px]"} cls="uppercase" />
+                    <p className="text-[#1E1E1E]/60 md:mt-3 max-md:text-sm max-md:mb-6 ">Место, где хранятся все отчеты, акты, смета, форма</p>
                 </div>
             </div>
 
             {/* TABLE */}
-            <div className="mt-6 bg-white rounded-2xl p-4" style={{ boxShadow: "0px 0px 4px 0px #76767626" }}>
+            <div className="md:mt-6 bg-white rounded-2xl p-4 max-md:overflow-x-auto max-md:py-0" style={{ boxShadow: "0px 0px 4px 0px #76767626" }}>
                 <table className="w-full border-collapse">
                     <thead>
                         <tr className="border-b border-[#1E1E1E80] text-[#1E1E1E99] text-lg ">
@@ -52,8 +46,8 @@ export default function AdminRequests() {
                                 <p className="text-[#2C5AA0] font-medium cursor-pointer">
                                     ТЦ "Мега”
                                 </p>
-                                <p className="text-sm text-[#1E1E1E99]">бул. Архитекторов, 35,</p>
-                                <p className="text-sm text-[#1E1E1E99]"> Омск</p>
+                                <p className="text-sm text-[#1E1E1E99] max-md:text-nowrap">бул. Архитекторов, 35,</p>
+                                <p className="text-sm text-[#1E1E1E99] max-md:text-nowrap"> Омск</p>
                             </td>
                             <td className="p-3 text-[#1E1E1E] text-base">22.03.22</td>
                             <td className="p-3 text-[#1E1E1E] text-base">Исполнитель</td>
@@ -69,8 +63,8 @@ export default function AdminRequests() {
                                 <p className="text-[#2C5AA0] font-medium cursor-pointer">
                                     ТЦ "Мега”
                                 </p>
-                                <p className="text-sm text-[#1E1E1E99]">бул. Архитекторов, 35,</p>
-                                <p className="text-sm text-[#1E1E1E99]"> Омск</p>
+                                <p className="text-sm text-[#1E1E1E99] max-md:text-nowrap">бул. Архитекторов, 35,</p>
+                                <p className="text-sm text-[#1E1E1E99] max-md:text-nowrap"> Омск</p>
                             </td>
                             <td className="p-3 text-[#1E1E1E] text-base">22.03.22</td>
                             <td className="p-3 text-[#1E1E1E] text-base">Исполнитель</td>
@@ -86,8 +80,8 @@ export default function AdminRequests() {
                                 <p className="text-[#2C5AA0] font-medium cursor-pointer">
                                     ТЦ "Мега”
                                 </p>
-                                <p className="text-sm text-[#1E1E1E99]">бул. Архитекторов, 35,</p>
-                                <p className="text-sm text-[#1E1E1E99]"> Омск</p>
+                                <p className="text-sm text-[#1E1E1E99] max-md:text-nowrap">бул. Архитекторов, 35,</p>
+                                <p className="text-sm text-[#1E1E1E99] max-md:text-nowrap"> Омск</p>
                             </td>
                             <td className="p-3 text-[#1E1E1E] text-base">22.03.22</td>
                             <td className="p-3 text-[#1E1E1E] text-base">Исполнитель</td>

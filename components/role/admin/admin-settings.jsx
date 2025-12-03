@@ -146,40 +146,40 @@ export default function AdminSettings() {
                 </div>
             )}
 
-            <div className="flex justify-between items-center">
+            <div className="flex justify-between md:items-center max-md:flex-col max-md:mt-8">
                 <div className="flex flex-col">
-                    <Title text={"Личные данные"} size={"text-[24px]"} cls="uppercase" />
-                    <p className="text-[#1E1E1E]/60 mt-3">Последнее обновление {data?.data?.updated_at ? new Date(data.data.updated_at).toLocaleDateString('ru-RU') : '24.09.25'}</p>
+                    <Title text={"Личные данные"} size={"text-[24px] max-md:mb-3 max-md:text-[22px]"} cls="uppercase" />
+                    <p className="text-[#1E1E1E]/60 md:mt-3 max-md:text-sm max-md:mb-6">Последнее обновление {data?.data?.updated_at ? new Date(data.data.updated_at).toLocaleDateString('ru-RU') : '24.09.25'}</p>
                 </div>
             </div>
 
             {/* Personal Information */}
-            <div className="p-8 mt-6 rounded-2xl grid grid-cols-2 gap-4" style={{ boxShadow: "0px 0px 4px 0px #76767626" }}>
+            <div className="p-8 md:mt-6 rounded-2xl grid grid-cols-2 max-md:grid-cols-1 gap-4 max-md:p-6" style={{ boxShadow: "0px 0px 4px 0px #76767626" }}>
                 <Input
                     label='Имя'
                     placeholder="Введите имя"
-                    className={'max-md:text-sm h-[50px]'}
+                    className={'max-md:text-sm h-[50px] max-md:h-[50px]'}
                     value={formData.first_name}
                     onChange={(value) => handleInputChange('first_name', value)}
                 />
                 <Input
                     label='Фамилия'
                     placeholder="Введите фамилию"
-                    className={'max-md:text-sm h-[50px]'}
+                    className={'max-md:text-sm h-[50px] max-md:h-[50px]'}
                     value={formData.last_name}
                     onChange={(value) => handleInputChange('last_name', value)}
                 />
                 <Input
                     label='Email'
                     placeholder="Введите email"
-                    className={'max-md:text-sm h-[50px]'}
+                    className={'max-md:text-sm h-[50px] max-md:h-[50px]'}
                     value={formData.email}
                     onChange={(value) => handleInputChange('email', value)}
                 />
                 <Input
                     label='Телефон'
                     placeholder="Введите номер телефона"
-                    className={'max-md:text-sm h-[50px]'}
+                    className={'max-md:text-sm h-[50px] max-md:h-[50px]'}
                     value={formData.phone_number}
                     onChange={(value) => handleInputChange('phone_number', value)}
                     type="tel"
@@ -187,14 +187,14 @@ export default function AdminSettings() {
                 <Input
                     label='Должность'
                     placeholder="Введите должность"
-                    className={'max-md:text-sm h-[50px]'}
+                    className={'max-md:text-sm h-[50px] max-md:h-[50px]'}
                     value={formData.position}
                     onChange={(value) => handleInputChange('position', value)}
                 />
                 <Input
                     label='Организация'
                     placeholder="Введите организацию"
-                    className={'max-md:text-sm h-[50px]'}
+                    className={'max-md:text-sm h-[50px] max-md:h-[50px]'}
                     value={formData.id_organization}
                     onChange={(value) => handleInputChange('id_organization', value)}
                 />
@@ -204,15 +204,15 @@ export default function AdminSettings() {
             {/* Address Information */}
             <div className="flex justify-between items-center">
                 <div className="flex flex-col mt-6">
-                    <Title text={"Адрес"} size={"text-[24px]"} cls="uppercase" />
+                    <Title text={"Адрес"} size={"text-[24px] max-md:text-[22px]"} cls="uppercase" />
                 </div>
             </div>
-            <div className="p-8 mt-6 rounded-2xl grid grid-cols-2 gap-4" style={{ boxShadow: "0px 0px 4px 0px #76767626" }}>
-                <div className="col-span-2">
+            <div className="p-8 mt-6 rounded-2xl grid grid-cols-2 gap-4 max-md:p-6 max-md:grid-cols-1" style={{ boxShadow: "0px 0px 4px 0px #76767626" }}>
+                <div className="col-span-2 max-md:col-span-1">
                     <Input
                         label='Город'
                         placeholder="Введите город"
-                        className={'max-md:text-sm h-[50px]'}
+                        className={'max-md:text-sm h-[50px] max-md:h-[50px]'}
                         value={formData.city}
                         onChange={(value) => handleInputChange('city', value)}
                     />
@@ -220,28 +220,28 @@ export default function AdminSettings() {
                 <Input
                     label='Улица'
                     placeholder="Введите улицу"
-                    className={'max-md:text-sm h-[50px]'}
+                    className={'max-md:text-sm h-[50px] max-md:h-[50px]'}
                     value={formData.street}
                     onChange={(value) => handleInputChange('street', value)}
                 />
                 <Input
                     label='Дом'
                     placeholder="Введите номер дома"
-                    className={'max-md:text-sm h-[50px]'}
+                    className={'max-md:text-sm h-[50px] max-md:h-[50px]'}
                     value={formData.house}
                     onChange={(value) => handleInputChange('house', value)}
                 />
                 <Input
                     label='Квартира'
                     placeholder="Введите номер квартиры"
-                    className={'max-md:text-sm h-[50px]'}
+                    className={'max-md:text-sm h-[50px] max-md:h-[50px]'}
                     value={formData.apartment}
                     onChange={(value) => handleInputChange('apartment', value)}
                 />
                 <Input
                     label='Индекс'
                     placeholder="Введите почтовый индекс"
-                    className={'max-md:text-sm h-[50px]'}
+                    className={'max-md:text-sm h-[50px] max-md:h-[50px]'}
                     value={formData.postal_index}
                     onChange={(value) => handleInputChange('postal_index', value)}
                 />
@@ -250,34 +250,33 @@ export default function AdminSettings() {
             {/* Security Settings */}
             <div className="flex justify-between items-center">
                 <div className="flex flex-col mt-6">
-                    <Title text={"Настройки"} size={"text-[24px]"} cls="uppercase" />
+                    <Title text={"Настройки"} size={"text-[24px] max-md:text-[22px]"} cls="uppercase" />
                 </div>
             </div>
-            <div className="p-8 mt-6 rounded-2xl gap-4" style={{ boxShadow: "0px 0px 4px 0px #76767626" }}>
+            <div className="p-8 mt-6 rounded-2xl gap-4 max-md:p-6" style={{ boxShadow: "0px 0px 4px 0px #76767626" }}>
                 <h3 className='mb-4 text-[#1E1E1E] text-lg'>Безопасность</h3>
-
                 {!showPasswordFields ? (
                     <button
-                        className="h-[64px] w-[194px] bg-[#E2E2E2] !text-[#8E8E8E] flex items-center justify-center rounded-[12px] text-sm cursor-pointer transition-all duration-200 tracking-[-1%]"
+                        className="h-[64px] w-[194px] bg-[#E2E2E2] !text-[#8E8E8E] flex items-center justify-center rounded-[12px] text-sm cursor-pointer transition-all duration-200 tracking-[-1%] max-md:h-[50px] max-md:w-full"
                         onClick={togglePasswordFields}
                     >Изменить пароль</button>
                 ) : (
                     <div className="space-y-4">
-                        <div className="grid grid-cols-2 gap-4">
+                        <div className="grid grid-cols-2 gap-4 max-md:grid-cols-1">
                             <Input
                                 label='Текущий пароль'
                                 type='password'
                                 placeholder="Введите текущий пароль"
-                                className={'max-md:text-sm h-[50px]'}
+                                className={'max-md:text-sm h-[50px] max-md:h-[50px]'}
                                 value={passwordData.old_password}
                                 onChange={(value) => handlePasswordChange('old_password', value)}
                             />
-                            <div></div>
+                            <div className='max-md:hidden'></div>
                             <Input
                                 label='Новый пароль'
                                 type='password'
                                 placeholder="Введите новый пароль"
-                                className={'max-md:text-sm h-[50px]'}
+                                className={'max-md:text-sm h-[50px] max-md:h-[50px]'}
                                 value={passwordData.new_password}
                                 onChange={(value) => handlePasswordChange('new_password', value)}
                             />
@@ -285,7 +284,7 @@ export default function AdminSettings() {
                                 label='Подтвердите пароль'
                                 type='password'
                                 placeholder="Повторите новый пароль"
-                                className={'max-md:text-sm h-[50px]'}
+                                className={'max-md:text-sm h-[50px] max-md:h-[50px]'}
                                 value={passwordData.new_password_confirm}
                                 onChange={(value) => handlePasswordChange('new_password_confirm', value)}
                             />
@@ -293,12 +292,12 @@ export default function AdminSettings() {
                         <div className="flex gap-3">
 
                             <button
-                                className="h-[64px] w-[194px] bg-[#2C5AA0] text-[white] flex items-center justify-center rounded-[12px] text-sm cursor-pointer transition-all duration-200 tracking-[-1%]"
+                                className="h-[64px] w-[194px] max-md:h-[50px] bg-[#2C5AA0] text-[white] flex items-center justify-center rounded-[12px] text-sm cursor-pointer transition-all duration-200 tracking-[-1%]"
                                 onClick={handleChangePassword}
                                 disabled={isLoading}
                             >Сохранить пароль</button>
                             <button
-                                className="h-[64px] w-[194px] bg-[#E2E2E2] !text-[#8E8E8E] flex items-center justify-center rounded-[12px] text-sm cursor-pointer transition-all duration-200 tracking-[-1%]"
+                                className="h-[64px] w-[194px] max-md:h-[50px] bg-[#E2E2E2] !text-[#8E8E8E] flex items-center justify-center rounded-[12px] text-sm cursor-pointer transition-all duration-200 tracking-[-1%]"
                                 onClick={togglePasswordFields}
                                 disabled={isLoading}
                             >Отмена</button>
@@ -310,7 +309,7 @@ export default function AdminSettings() {
 
             {/* Save Changes Button */}
             <Button
-                className="h-[66px] w-[300px] mt-12"
+                className="h-[66px] w-[300px] mt-12  max-md:mt-8 max-md:w-full max-md:h-[56px] bg-[#2C5AA0] text-white text-lg max-md:text-base"
                 text={isLoading ? "Сохранение..." : "Сохранить изменения"}
                 onClick={handleSaveProfile}
                 disabled={isLoading}
