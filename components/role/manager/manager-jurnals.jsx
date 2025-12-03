@@ -12,7 +12,15 @@ import Loader from '@/components/Loader';
 import { useApiStore } from '@/store/useApiStore';
 
 export default function ManagerJurnalsv() {
-    const { loading, data, getDataToken, postDataToken, putDataToken, deleteDataToken } = useApiStore();
+    const {
+        loading,
+        data,
+        getDataToken,
+        deleteDataToken,
+        postFormDataToken,
+        putFormDataToken
+    } = useApiStore();
+
     const [showCreateModal, setShowCreateModal] = useState(false);
     const [showEditModal, setShowEditModal] = useState(false);
     const [showDeleteModal, setShowDeleteModal] = useState(false);
@@ -20,12 +28,12 @@ export default function ManagerJurnalsv() {
     const [documentToDelete, setDocumentToDelete] = useState(null);
     const [userObjects, setUserObjects] = useState([]);
     const [documents, setDocuments] = useState([]);
-    const [isLoadingData, setIsLoadingData] = useState(true);
     const [formData, setFormData] = useState({
         type: '',
         object_id: '',
         date: ''
     });
+    const [selectedFiles, setSelectedFiles] = useState([]);
 
     useEffect(() => {
         const loadAllData = async () => {
@@ -57,69 +65,133 @@ export default function ManagerJurnalsv() {
         loadAllData();
     }, []);
 
+    const loadDocuments = async () => {
+        const documentsData = await getDataToken("/documents/journals-and-acts/");
+        if (documentsData?.data && Array.isArray(documentsData.data)) {
+            setDocuments(documentsData.data);
+        } else if (documentsData?.success && Array.isArray(documentsData.data)) {
+            setDocuments(documentsData.data);
+        }
+    };
+
+    // Fayllarni tanlash funksiyasi
+    const handleFileSelect = (e) => {
+        const files = Array.from(e.target.files);
+        setSelectedFiles(files);
+    };
+
+    // Fayllarni o'chirish funksiyasi
+    const removeFile = (index) => {
+        const newFiles = [...selectedFiles];
+        newFiles.splice(index, 1);
+        setSelectedFiles(newFiles);
+    };
+
     const handleCreateDocument = async () => {
         if (!formData.type || !formData.object_id || !formData.date) {
-            toast.error('Заполните все поля');
+            toast.error('Заполните все обязательные поля');
+            return;
+        }
+
+        if (selectedFiles.length === 0) {
+            toast.error('Выберите хотя бы один файл');
             return;
         }
 
         const loadingToast = toast.loading('Создание документа...');
 
-        const payload = {
-            object_id: parseInt(formData.object_id),
-            type: formData.type,
-            date: formData.date
-        };
+        try {
+            // FormData yaratish
+            const multipartFormData = new FormData();
 
-        console.log('Creating document with payload:', payload);
+            // Tekst ma'lumotlarni qo'shish
+            multipartFormData.append('object_id', formData.object_id);
+            multipartFormData.append('type', formData.type);
+            multipartFormData.append('date', formData.date);
 
-        const response = await postDataToken('/documents/journals-and-acts/', payload);
+            // Fayllarni qo'shish
+            selectedFiles.forEach((file) => {
+                multipartFormData.append('document_list', file);
+            });
 
-        console.log('Create response:', response);
+            console.log('Creating document with form data:');
+            for (let pair of multipartFormData.entries()) {
+                console.log(pair[0] + ': ' + (pair[1] instanceof File ? pair[1].name : pair[1]));
+            }
 
-        toast.dismiss(loadingToast);
+            // Yangi formData funksiyasini ishlatish
+            const response = await postFormDataToken('/documents/journals-and-acts/', multipartFormData);
 
-        if (response && !response.error && (response.success || response.id || response.data)) {
-            toast.success('Документ успешно создан');
-            setShowCreateModal(false);
-            resetFormData();
-            await loadDocuments();
-        } else {
-            toast.error(response?.message || response?.error || 'Ошибка при создании документа');
+            console.log('Create response:', response);
+
+            toast.dismiss(loadingToast);
+
+            if (response && !response.error && (response.success || response.id || response.data)) {
+                toast.success('Документ успешно создан');
+                setShowCreateModal(false);
+                resetFormData();
+                setSelectedFiles([]);
+                await loadDocuments();
+            } else {
+                toast.error(response?.detail || response?.message || response?.error || 'Ошибка при создании документа');
+            }
+        } catch (error) {
+            toast.dismiss(loadingToast);
+            console.error('Create error:', error);
+            toast.error('Ошибка при создании документа');
         }
     };
 
     const handleEditDocument = async () => {
         if (!selectedDocument) return;
         if (!formData.type || !formData.object_id || !formData.date) {
-            toast.error('Заполните все поля');
+            toast.error('Заполните все обязательные поля');
             return;
         }
 
         const loadingToast = toast.loading('Обновление документа...');
 
-        const payload = {
-            object_id: parseInt(formData.object_id),
-            type: formData.type,
-            date: formData.date
-        };
+        try {
+            // PUT so'rovi uchun FormData yaratish
+            const multipartFormData = new FormData();
 
-        console.log('Updating document with payload:', payload);
+            multipartFormData.append('object_id', formData.object_id);
+            multipartFormData.append('type', formData.type);
+            multipartFormData.append('date', formData.date);
 
-        const response = await putDataToken(`/documents/journals-and-acts/${selectedDocument.id}/`, payload);
+            // Agar yangi fayllar tanlangan bo'lsa, ularni qo'shish
+            if (selectedFiles.length > 0) {
+                selectedFiles.forEach((file) => {
+                    multipartFormData.append('document_list', file);
+                });
+            }
 
-        console.log('Update response:', response);
+            console.log('Updating document with form data:');
+            for (let pair of multipartFormData.entries()) {
+                console.log(pair[0] + ': ' + (pair[1] instanceof File ? pair[1].name : pair[1]));
+            }
 
-        toast.dismiss(loadingToast);
+            // Yangi putFormDataToken funksiyasini ishlatish
+            const response = await putFormDataToken(`/documents/journals-and-acts/${selectedDocument.id}/`, multipartFormData);
 
-        if (response && !response.error && (response.success || response.id || response.data)) {
-            toast.success('Документ успешно обновлен');
-            setShowEditModal(false);
-            setSelectedDocument(null);
-            resetFormData();
-            await loadDocuments();
-        } else {
-            toast.error(response?.message || response?.error || 'Ошибка при обновлении документа');
+            console.log('Update response:', response);
+
+            toast.dismiss(loadingToast);
+
+            if (response && !response.error && (response.success || response.id || response.data)) {
+                toast.success('Документ успешно обновлен');
+                setShowEditModal(false);
+                setSelectedDocument(null);
+                resetFormData();
+                setSelectedFiles([]);
+                await loadDocuments();
+            } else {
+                toast.error(response?.detail || response?.message || response?.error || 'Ошибка при обновлении документа');
+            }
+        } catch (error) {
+            toast.dismiss(loadingToast);
+            console.error('Update error:', error);
+            toast.error('Ошибка при обновлении документа');
         }
     };
 
@@ -160,12 +232,14 @@ export default function ManagerJurnalsv() {
     const handleCloseCreateModal = () => {
         setShowCreateModal(false);
         resetFormData();
+        setSelectedFiles([]);
     };
 
     const handleCloseEditModal = () => {
         setShowEditModal(false);
         setSelectedDocument(null);
         resetFormData();
+        setSelectedFiles([]);
     };
 
     const openEditModal = (document) => {
@@ -176,6 +250,7 @@ export default function ManagerJurnalsv() {
             object_id: document.object_id?.toString() || document.object?.id?.toString() || '',
             date: document.date || ''
         });
+        setSelectedFiles([]);
         setShowEditModal(true);
     };
 
@@ -189,8 +264,10 @@ export default function ManagerJurnalsv() {
 
     const getObjectName = (objectId) => {
         if (!objectId) return 'Неизвестный объект';
-        const obj = userObjects.find(o => o.id === objectId);
-        return obj ? obj.name : 'Неизвестный объект';
+        console.log(objectId.name);
+
+        // const obj = userObjects.find(o => o.id === objectId);
+        return objectId ? objectId.name : 'Неизвестный объект';
     };
 
     const getObjectAddress = (objectId) => {
@@ -227,6 +304,16 @@ export default function ManagerJurnalsv() {
         return `${day}.${month}.${year}`;
     };
 
+    // Faylni yuklab olish funksiyasi
+    const handleDownloadFile = (fileUrl, fileName) => {
+        const link = document.createElement('a');
+        link.href = fileUrl;
+        link.download = fileName || 'document.pdf';
+        document.body.appendChild(link);
+        link.click();
+        document.body.removeChild(link);
+    };
+
     if (loading) {
         return <Loader />;
     }
@@ -261,7 +348,7 @@ export default function ManagerJurnalsv() {
                             </div>
                             <div className="space-y-4">
                                 <div>
-                                    <label className="block text-sm font-semibold mb-2 text-[#1E1E1E]">Тип документа</label>
+                                    <label className="block text-sm font-semibold mb-2 text-[#1E1E1E]">Тип документа *</label>
                                     <select
                                         name="type"
                                         value={formData.type}
@@ -272,12 +359,11 @@ export default function ManagerJurnalsv() {
                                         <option value="estimate">Смета</option>
                                         <option value="act">Акт</option>
                                         <option value="form">Форма</option>
-                                        <option value="journal">Журнал</option>
                                     </select>
                                 </div>
                                 <div>
                                     <label className="block text-sm font-semibold mb-2 text-[#1E1E1E]">
-                                        Объект {userObjects.length > 0 && `(${userObjects.length} доступно)`}
+                                        Объект * {userObjects.length > 0 && `(${userObjects.length} доступно)`}
                                     </label>
                                     <select
                                         name="object_id"
@@ -297,7 +383,7 @@ export default function ManagerJurnalsv() {
                                     )}
                                 </div>
                                 <div>
-                                    <label className="block text-sm font-semibold mb-2 text-[#1E1E1E]">Дата</label>
+                                    <label className="block text-sm font-semibold mb-2 text-[#1E1E1E]">Дата *</label>
                                     <input
                                         type="date"
                                         name="date"
@@ -306,12 +392,67 @@ export default function ManagerJurnalsv() {
                                         className="w-full p-3 border-2 border-gray-200 rounded-xl focus:border-[#2C5AA0] focus:outline-none transition-colors"
                                     />
                                 </div>
+                                <div>
+                                    <label className="block text-sm font-semibold mb-2 text-[#1E1E1E]">
+                                        Файлы * (загрузите документы)
+                                    </label>
+                                    <div className="border-2 border-dashed border-gray-300 rounded-xl p-4 text-center hover:border-[#2C5AA0] transition-colors">
+                                        <input
+                                            type="file"
+                                            id="file-upload"
+                                            multiple
+                                            onChange={handleFileSelect}
+                                            className="hidden"
+                                            accept=".pdf,.doc,.docx,.xls,.xlsx,.jpg,.jpeg,.png"
+                                        />
+                                        <label
+                                            htmlFor="file-upload"
+                                            className="cursor-pointer block"
+                                        >
+                                            <div className="flex flex-col items-center">
+                                                <svg className="w-12 h-12 text-gray-400 mb-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M15 13l-3-3m0 0l-3 3m3-3v12" />
+                                                </svg>
+                                                <p className="text-[#2C5AA0] font-medium">Нажмите для загрузки файлов</p>
+                                                <p className="text-sm text-gray-500 mt-1">или перетащите файлы сюда</p>
+                                                <p className="text-xs text-gray-400 mt-1">PDF, DOC, DOCX, XLS, XLSX, JPG, PNG</p>
+                                            </div>
+                                        </label>
+                                    </div>
+
+                                    {/* Выбранные файлы */}
+                                    {selectedFiles.length > 0 && (
+                                        <div className="mt-4">
+                                            <p className="text-sm font-medium mb-2">Выбранные файлы ({selectedFiles.length}):</p>
+                                            <div className="space-y-2 max-h-40 overflow-y-auto">
+                                                {selectedFiles.map((file, index) => (
+                                                    <div key={index} className="flex items-center justify-between bg-gray-50 p-3 rounded-lg">
+                                                        <div className="flex items-center">
+                                                            <svg className="w-5 h-5 text-gray-500 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+                                                            </svg>
+                                                            <span className="text-sm truncate max-w-xs">{file.name}</span>
+                                                            <span className="text-xs text-gray-500 ml-2">({(file.size / 1024).toFixed(1)} KB)</span>
+                                                        </div>
+                                                        <button
+                                                            type="button"
+                                                            onClick={() => removeFile(index)}
+                                                            className="text-red-500 hover:text-red-700"
+                                                        >
+                                                            <IoMdClose />
+                                                        </button>
+                                                    </div>
+                                                ))}
+                                            </div>
+                                        </div>
+                                    )}
+                                </div>
                                 <div className="flex gap-3 pt-4">
                                     <Button
                                         className="flex-1 h-[48px]"
                                         text="Создать"
                                         onClick={handleCreateDocument}
-                                        disabled={loading || !formData.type || !formData.object_id || !formData.date}
+                                        disabled={loading || !formData.type || !formData.object_id || !formData.date || selectedFiles.length === 0}
                                     />
                                     <Button
                                         className="flex-1 h-[48px] bg-gray-200 !text-gray-700 hover:bg-gray-300"
@@ -353,7 +494,7 @@ export default function ManagerJurnalsv() {
                             </div>
                             <div className="space-y-4">
                                 <div>
-                                    <label className="block text-sm font-semibold mb-2 text-[#1E1E1E]">Тип документа</label>
+                                    <label className="block text-sm font-semibold mb-2 text-[#1E1E1E]">Тип документа *</label>
                                     <select
                                         name="type"
                                         value={formData.type}
@@ -364,11 +505,10 @@ export default function ManagerJurnalsv() {
                                         <option value="estimate">Смета</option>
                                         <option value="act">Акт</option>
                                         <option value="form">Форма</option>
-                                        <option value="journal">Журнал</option>
                                     </select>
                                 </div>
                                 <div>
-                                    <label className="block text-sm font-semibold mb-2 text-[#1E1E1E]">Объект</label>
+                                    <label className="block text-sm font-semibold mb-2 text-[#1E1E1E]">Объект *</label>
                                     <select
                                         name="object_id"
                                         value={formData.object_id}
@@ -384,7 +524,7 @@ export default function ManagerJurnalsv() {
                                     </select>
                                 </div>
                                 <div>
-                                    <label className="block text-sm font-semibold mb-2 text-[#1E1E1E]">Дата</label>
+                                    <label className="block text-sm font-semibold mb-2 text-[#1E1E1E]">Дата *</label>
                                     <input
                                         type="date"
                                         name="date"
@@ -392,6 +532,88 @@ export default function ManagerJurnalsv() {
                                         onChange={handleInputChange}
                                         className="w-full p-3 border-2 border-gray-200 rounded-xl focus:border-[#2C5AA0] focus:outline-none transition-colors"
                                     />
+                                </div>
+                                <div>
+                                    <label className="block text-sm font-semibold mb-2 text-[#1E1E1E]">
+                                        Файлы (новые файлы для замены)
+                                    </label>
+                                    <div className="border-2 border-dashed border-gray-300 rounded-xl p-4 text-center hover:border-[#2C5AA0] transition-colors">
+                                        <input
+                                            type="file"
+                                            id="file-upload-edit"
+                                            multiple
+                                            onChange={handleFileSelect}
+                                            className="hidden"
+                                            accept=".pdf,.doc,.docx,.xls,.xlsx,.jpg,.jpeg,.png"
+                                        />
+                                        <label
+                                            htmlFor="file-upload-edit"
+                                            className="cursor-pointer block"
+                                        >
+                                            <div className="flex flex-col items-center">
+                                                <svg className="w-12 h-12 text-gray-400 mb-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M15 13l-3-3m0 0l-3 3m3-3v12" />
+                                                </svg>
+                                                <p className="text-[#2C5AA0] font-medium">Нажмите для загрузки файлов</p>
+                                                <p className="text-sm text-gray-500 mt-1">Выберите новые файлы (необязательно)</p>
+                                            </div>
+                                        </label>
+                                    </div>
+
+                                    {/* Выбранные файлы */}
+                                    {selectedFiles.length > 0 && (
+                                        <div className="mt-4">
+                                            <p className="text-sm font-medium mb-2">Новые файлы ({selectedFiles.length}):</p>
+                                            <div className="space-y-2 max-h-40 overflow-y-auto">
+                                                {selectedFiles.map((file, index) => (
+                                                    <div key={index} className="flex items-center justify-between bg-gray-50 p-3 rounded-lg">
+                                                        <div className="flex items-center">
+                                                            <svg className="w-5 h-5 text-gray-500 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+                                                            </svg>
+                                                            <span className="text-sm truncate max-w-xs">{file.name}</span>
+                                                        </div>
+                                                        <button
+                                                            type="button"
+                                                            onClick={() => removeFile(index)}
+                                                            className="text-red-500 hover:text-red-700"
+                                                        >
+                                                            <IoMdClose />
+                                                        </button>
+                                                    </div>
+                                                ))}
+                                            </div>
+                                        </div>
+                                    )}
+
+                                    {/* Существующие файлы */}
+                                    {selectedDocument?.document_list && selectedDocument.document_list.length > 0 && (
+                                        <div className="mt-4">
+                                            <p className="text-sm font-medium mb-2">Текущие файлы:</p>
+                                            <div className="space-y-2">
+                                                {selectedDocument.document_list.map((file, index) => (
+                                                    <div key={index} className="flex items-center justify-between bg-blue-50 p-3 rounded-lg">
+                                                        <div className="flex items-center">
+                                                            <svg className="w-5 h-5 text-blue-500 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+                                                            </svg>
+                                                            <span className="text-sm truncate max-w-xs">
+                                                                {file.document.split('/').pop()}
+                                                            </span>
+                                                        </div>
+                                                        <a
+                                                            href={file.document}
+                                                            target="_blank"
+                                                            rel="noopener noreferrer"
+                                                            className="text-blue-500 hover:text-blue-700 text-sm"
+                                                        >
+                                                            Просмотреть
+                                                        </a>
+                                                    </div>
+                                                ))}
+                                            </div>
+                                        </div>
+                                    )}
                                 </div>
                                 <div className="flex gap-3 pt-4">
                                     <Button
@@ -492,7 +714,7 @@ export default function ManagerJurnalsv() {
                                 <th className="p-4 text-left font-semibold">Тип</th>
                                 <th className="p-4 text-left font-semibold">Объект</th>
                                 <th className="p-4 text-left font-semibold">Дата</th>
-                                <th className="p-4 text-left font-semibold">Статус</th>
+                                <th className="p-4 text-left font-semibold">Файлы</th>
                                 <th className="p-4 text-center font-semibold">Действия</th>
                             </tr>
                         </thead>
@@ -527,16 +749,40 @@ export default function ManagerJurnalsv() {
                                             </span>
                                         </td>
                                         <td className="p-4">
-                                            <span className={`inline-block px-3 py-1.5 rounded-lg font-medium text-sm ${statusInfo.color}`}>
-                                                {statusInfo.text}
-                                            </span>
+                                            <div className="flex flex-wrap gap-2">
+                                                {doc.document_list && doc.document_list.length > 0 ? (
+                                                    doc.document_list.map((file, index) => (
+                                                        <button
+                                                            key={index}
+                                                            onClick={() => handleDownloadFile(file.document, file.document.split('/').pop())}
+                                                            className="flex items-center gap-1 px-3 py-1.5 bg-gray-100 hover:bg-gray-200 rounded-lg text-sm text-[#1E1E1E] transition-colors"
+                                                            title={file.document.split('/').pop()}
+                                                        >
+                                                            <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+                                                            </svg>
+                                                            <span className="truncate max-w-xs">Файл {index + 1}</span>
+                                                        </button>
+                                                    ))
+                                                ) : (
+                                                    <span className="text-gray-400 text-sm">Нет файлов</span>
+                                                )}
+                                            </div>
                                         </td>
                                         <td className="p-4">
                                             <div className="flex gap-2 items-center justify-center">
                                                 <button
                                                     className="w-9 h-9 bg-[#2C5AA0] rounded-lg flex items-center justify-center hover:bg-[#234a85] transition-colors"
-                                                    title="Скачать"
-                                                    onClick={() => toast.info('Функция загрузки в разработке')}
+                                                    title="Скачать все файлы"
+                                                    onClick={() => {
+                                                        if (doc.document_list && doc.document_list.length > 0) {
+                                                            doc.document_list.forEach((file, index) => {
+                                                                handleDownloadFile(file.document, `file_${index + 1}.pdf`);
+                                                            });
+                                                        } else {
+                                                            toast.error('Нет файлов для скачивания');
+                                                        }
+                                                    }}
                                                 >
                                                     <LiaDownloadSolid className="text-lg text-white" />
                                                 </button>

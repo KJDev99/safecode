@@ -1,3 +1,4 @@
+// useApiStore.ts
 import { create } from "zustand";
 import { api, apiToken } from "@/lib/axios";
 
@@ -82,11 +83,11 @@ export const useApiStore = create((set) => ({
         try {
             const res = await apiToken.post(endpoint, body);
             set({ data: res.data });
-            return res.data; // ← Response ni qaytaramiz
+            return res.data;
         } catch (err) {
             const error = err?.response?.data || err;
             set({ error });
-            return error; // ← Xatoni ham qaytaramiz
+            return error;
         } finally {
             set({ loading: false });
         }
@@ -97,11 +98,11 @@ export const useApiStore = create((set) => ({
         try {
             const res = await apiToken.put(endpoint, body);
             set({ data: res.data });
-            return res.data; // ← Response ni qaytaramiz
+            return res.data;
         } catch (err) {
             const error = err?.response?.data || err;
             set({ error });
-            return error; // ← Xatoni ham qaytaramiz
+            return error;
         } finally {
             set({ loading: false });
         }
@@ -112,11 +113,53 @@ export const useApiStore = create((set) => ({
         try {
             const res = await apiToken.delete(endpoint);
             set({ data: res.data });
-            return res.data; // ← Response ni qaytaramiz
+            return res.data;
         } catch (err) {
             const error = err?.response?.data || err;
             set({ error });
-            return error; // ← Xatoni ham qaytaramiz
+            return error;
+        } finally {
+            set({ loading: false });
+        }
+    },
+
+    // =====================
+    //   FORMDATA BILAN FUNKSIYALAR (multipart/form-data uchun)
+    // =====================
+
+    postFormDataToken: async (endpoint, formData) => {
+        set({ loading: true, error: null });
+        try {
+            const res = await apiToken.post(endpoint, formData, {
+                headers: {
+                    'Content-Type': 'multipart/form-data'
+                }
+            });
+            set({ data: res.data });
+            return res.data;
+        } catch (err) {
+            const error = err?.response?.data || err;
+            set({ error });
+            return error;
+        } finally {
+            set({ loading: false });
+        }
+    },
+
+    putFormDataToken: async (endpoint, formData) => {
+        set({ loading: true, error: null });
+        try {
+            const res = await apiToken.put(endpoint, formData, {
+                headers: {
+                    'Content-Type': 'multipart/form-data'
+                }
+            });
+            set({ data: res.data });
+            return res.data;
+        } catch (err) {
+            const error = err?.response?.data || err;
+            set({ error });
+            return error;
         } finally {
             set({ loading: false });
         }
