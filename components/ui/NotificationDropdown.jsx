@@ -221,7 +221,7 @@ export default function NotificationDropdown({
             animate={{ opacity: 1, y: 0, scale: 1 }}
             exit={{ opacity: 0, y: -10, scale: 0.95 }}
             transition={{ duration: 0.2 }}
-            className="absolute right-0 mt-2 w-96 bg-white rounded-xl shadow-2xl border border-gray-100 z-50 max-md:w-80 max-md:right-0 max-md:left-auto"
+            className="absolute right-0 mt-2 w-96 bg-white rounded-xl shadow-2xl border border-gray-100  max-md:w-80 max-md:right-0 max-md:left-auto z-[1000]"
             style={{ boxShadow: "0px 10px 40px rgba(0, 0, 0, 0.1)" }}
           >
             {/* Dropdown Header */}
@@ -266,9 +266,8 @@ export default function NotificationDropdown({
                         notification._id ||
                         `notification-${index}`
                       }
-                      className={`p-4 hover:bg-gray-50 transition-colors cursor-pointer ${
-                        !notification.read ? "bg-blue-50/30" : ""
-                      }`}
+                      className={`p-4 hover:bg-gray-50 transition-colors cursor-pointer ${!notification.read ? "bg-blue-50/30" : ""
+                        }`}
                       onClick={() => {
                         if (!notification.read && notification.id) {
                           handleMarkAsRead(notification.id);
@@ -299,8 +298,8 @@ export default function NotificationDropdown({
                             <span className="text-xs text-gray-400 whitespace-nowrap ml-2">
                               {formatTime(
                                 notification.created_at ||
-                                  notification.timestamp ||
-                                  new Date()
+                                notification.timestamp ||
+                                new Date()
                               )}
                             </span>
                           </div>

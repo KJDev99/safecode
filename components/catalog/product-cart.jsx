@@ -3,6 +3,9 @@ import Image from "next/image";
 import Button from "../ui/button";
 import { IoHeartOutline, IoHeart } from "react-icons/io5";
 import { LuMinus, LuPlus } from "react-icons/lu";
+import { useCartStore } from "@/store/useCartStore";
+import { useFavoritesStore } from "@/store/useFavoritesStore";
+import toast from "react-hot-toast";
 
 export default function ProductCart({
   productId,
@@ -16,13 +19,15 @@ export default function ProductCart({
   initialQuantity = 1,
   buttonText = "В корзину",
   onFavoriteToggle,
-  onAddToCart,
   onCardClick,
 }) {
   const [quantity, setQuantity] = useState(initialQuantity);
   const [isLiked, setIsLiked] = useState(Boolean(isLike));
   const [isHovered, setIsHovered] = useState(false);
-
+  const addToCart = useCartStore((state) => state.addToCart);
+  const isFavorite = useFavoritesStore((state) => state.isFavorite);
+  const addFavorite = useFavoritesStore((state) => state.addFavorite);
+  const removeFavorite = useFavoritesStore((state) => state.removeFavorite);
   useEffect(() => {
     setIsLiked(Boolean(isLike));
   }, [isLike]);
@@ -46,23 +51,47 @@ export default function ProductCart({
       return;
     }
 
+    // YANGI LOGIKA: avval local state o'zgartirish
+    const newLikedState = !isLiked;
+    setIsLiked(newLikedState); // Darhol UI yangilash
+
     if (onFavoriteToggle) {
-      const success = await onFavoriteToggle(productId, !isLiked);
+      const success = await onFavoriteToggle(productId, newLikedState);
       if (success) {
-        setIsLiked((prev) => !prev);
+        // Backend muvaffaqiyatli bo'lsa, store yangilash
+        if (newLikedState) {
+          addFavorite(productId);
+        } else {
+          removeFavorite(productId);
+        }
+      } else {
+        // Agar backend xato bersa, state qaytarish
+        setIsLiked(!newLikedState);
       }
     } else {
-      setIsLiked((prev) => !prev);
+      // onFavoriteToggle yo'q bo'lsa, faqat store yangilash
+      if (newLikedState) {
+        addFavorite(productId);
+      } else {
+        removeFavorite(productId);
+      }
     }
   };
 
   const handleAddToCart = (event) => {
     event.stopPropagation();
-    if (onAddToCart) {
-      onAddToCart(productId, quantity);
-    } else {
-      console.log("Product added to cart:", { title, quantity, price });
-    }
+
+    const product = {
+      id: productId,
+      name: title,
+      price: price,
+      article: item,
+      image: img,
+      size: size,
+    };
+
+    addToCart(product, quantity);
+    toast.success(`${title} добавлен в корзину`);
   };
 
   const formatPrice = (value) => {
@@ -77,7 +106,10 @@ export default function ProductCart({
       onCardClick(productId);
     }
   };
-
+  useEffect(() => {
+    // Agar isLike prop o'zgarsa yoki isFavorite(productId) bilan tekshirish
+    setIsLiked(Boolean(isLike) || isFavorite(productId));
+  }, [isLike, productId, isFavorite]);
   return (
     <div
       className="p-4 relative rounded-[12px] transition-all duration-300 cursor-pointer w-full max-md:p-2 max-md:rounded-[8px]"
@@ -100,11 +132,10 @@ export default function ProductCart({
       )}
 
       <div
-        className={`absolute right-4 max-md:right-2 border rounded-[6px] max-md:rounded-[4px] max-md:w-5.5 max-md:h-5.5 w-8 h-8 flex items-center justify-center cursor-pointer transition-all duration-300 z-10 ${
-          isLiked
-            ? "text-red-500 border-red-500 bg-red-50"
-            : "text-[#2C5AA0] border-[#2C5AA099] hover:bg-[#D7E5FA]"
-        }`}
+        className={`absolute right-4 text-[#2C5AA0] border-[#2C5AA099] max-md:right-2 border rounded-[6px] max-md:rounded-[4px] max-md:w-5.5 max-md:h-5.5 w-8 h-8 flex items-center justify-center cursor-pointer transition-all duration-300 z-10 ${isLiked
+          ? " bg-[#D7E5FA]"
+          : "bg-white hover:bg-[#D7E5FA]"
+          }`}
         onClick={toggleLike}
         title={isLiked ? "Убрать из избранного" : "Добавить в избранное"}
       >
@@ -142,11 +173,10 @@ export default function ProductCart({
         {buttonText === "В корзину" && (
           <div className="border border-[#1E1E1E80] rounded-[10px] flex items-center justify-between h-[54px] max-md:h-[33px] max-md:rounded-[6px] grow-1 px-4  max-md:gap-x-2 max-md:px-2">
             <button
-              className={`text-xl font-medium transition-colors duration-200 max-md:text-base ${
-                quantity <= 1
-                  ? "text-[#1E1E1E80] cursor-not-allowed"
-                  : "text-[#1E1E1E80] hover:text-[#2C5AA0]"
-              }`}
+              className={`text-xl font-medium transition-colors duration-200 max-md:text-base ${quantity <= 1
+                ? "text-[#1E1E1E80] cursor-not-allowed"
+                : "text-[#1E1E1E80] hover:text-[#2C5AA0]"
+                }`}
               onClick={handleDecrement}
               disabled={quantity <= 1}
               type="button"
@@ -167,11 +197,10 @@ export default function ProductCart({
         )}
 
         <Button
-          className={`h-[54px]  w-[135px] transition-all duration-300 max-md:h-[33px] max-md:w-[77px] max-md:rounded-[6px] max-md:text-[8px] ${
-            isHovered
-              ? "bg-[#2C5AA0] !text-white"
-              : "bg-[#EFEFEF] !text-[#8E8E8E]"
-          } ${buttonText !== "В корзину" ? "grow" : "grow-0"}`}
+          className={`h-[54px]  w-[135px] transition-all duration-300 max-md:h-[33px] max-md:w-[77px] max-md:rounded-[6px] max-md:text-[8px] ${isHovered
+            ? "bg-[#2C5AA0] !text-white"
+            : "bg-[#EFEFEF] !text-[#8E8E8E]"
+            } ${buttonText !== "В корзину" ? "grow" : "grow-0"}`}
           text={buttonText || "В корзину"}
           onClick={handleAddToCart}
         />

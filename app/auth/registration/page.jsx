@@ -147,37 +147,36 @@ export default function Registration() {
                 })
                 setPosition('')
 
-                setTimeout(() => {
-                    switch (result?.data?.user?.groups[0]?.name) {
-                        case "Дежурный инженер":
-                            router.push('/roles/duty-engineer');
-                            break;
-                        case "Заказчик":
-                            router.push('/roles/customer');
-                            break;
-                        case "Инспектор МЧС":
-                            router.push('/roles/inspectors');
-                            break;
-                        case "Исполнителя":
-                            router.push('/roles/performer');
-                            break;
-                        case "Менеджер":
-                            router.push('/roles/manager');
-                            break;
-                        case "Обслуживающий инженер":
-                            router.push('/roles/service-engineer');
-                            break;
-                        default: router.push('/roles/admin-panel');
-                    }
-                    window.dispatchEvent(new Event("authChanged"));
-                }, 1000);
+                switch (result?.data?.user?.groups[0]?.name) {
+                    case "Дежурный инженер":
+                        router.push('/roles/duty-engineer');
+                        break;
+                    case "Заказчик":
+                        router.push('/roles/customer');
+                        break;
+                    case "Инспектор МЧС":
+                        router.push('/roles/inspectors');
+                        break;
+                    case "Исполнителя":
+                        router.push('/roles/performer');
+                        break;
+                    case "Менеджер":
+                        router.push('/roles/manager');
+                        break;
+                    case "Обслуживающий инженер":
+                        router.push('/roles/service-engineer');
+                        break;
+                    default: router.push('/roles/admin-panel');
+                }
+                window.dispatchEvent(new Event("authChanged"));
+
             } else {
                 toast.error(result?.response?.data?.message || 'Ошибка входа');
+                setLoading(false)
             }
         } catch (error) {
             console.error('Registration error:', error)
             toast.error('Ошибка при регистрации. Попробуйте снова.')
-        } finally {
             setLoading(false)
         }
     }

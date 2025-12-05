@@ -5,9 +5,16 @@ import { IoSearchSharp } from "react-icons/io5";
 import { FaHeart, FaShoppingCart } from "react-icons/fa";
 import { RxHamburgerMenu } from "react-icons/rx";
 import Link from 'next/link';
+import { useCartStore } from '@/store/useCartStore';
+import { useFavoritesStore } from '@/store/useFavoritesStore';
+import { useRouter } from 'next/navigation';
 
 export default function NavbarTop() {
     const [isAuth, setIsAuth] = useState(false);
+    const router = useRouter();
+
+    const totalItems = useCartStore((state) => state.getTotalItems());
+    const totalFavorites = useFavoritesStore((state) => state.getTotalFavorites());
 
     const checkAuth = () => {
         const auth = localStorage.getItem("isAuthenticated");
@@ -35,14 +42,26 @@ export default function NavbarTop() {
                 <input placeholder='Введите артикул, слово или фразу' className='text-[#1E1E1E99] grow-1 outline-0' />
                 <IoSearchSharp className='text-[#1E1E1E99] text-xl' />
             </div>
-            <div className="w-15 h-15 flex items-center justify-center bg-[#C5C5C5]/50 rounded-[10px]">
-                <FaHeart className='text-[#1E1E1E]/50' size={24} />
-            </div>
-            <div className="w-15 h-15 flex items-center justify-center bg-[#C5C5C5]/50 rounded-[10px] relative">
-                <FaShoppingCart className='text-[#1E1E1E]/50' size={24} />
-                <div className="absolute w-4.5 h-4.5 flex items-center justify-center my-0 border bg-[#E1E2E2] border-[#1E1E1E]/50 rounded-full top-2.5 right-2 text-[#1E1E1E]/50 text-[10px]">
-                    2
+            <Link href="/favorites">
+                <div className="w-15 h-15 flex items-center justify-center bg-[#C5C5C5]/50 rounded-[10px] relative cursor-pointer hover:bg-[#C5C5C5]/70 transition-all">
+                    <FaHeart className='text-[#1E1E1E]/50' size={24} />
+                    {totalFavorites > 0 && (
+                        <div className="absolute w-4.5 h-4.5 flex items-center justify-center my-0 border bg-[#E1E2E2] border-[#1E1E1E]/50 rounded-full top-2.5 right-2 text-[#1E1E1E]/50 text-[10px]">
+                            {totalFavorites > 99 ? '99+' : totalFavorites}
+                        </div>
+                    )}
                 </div>
+            </Link>
+            <div
+                className="w-15 h-15 flex items-center justify-center bg-[#C5C5C5]/50 rounded-[10px] relative cursor-pointer hover:bg-[#C5C5C5]/70 transition-all"
+                onClick={() => router.push('/cart')}
+            >
+                <FaShoppingCart className='text-[#1E1E1E]/50' size={24} />
+                {totalItems > 0 && (
+                    <div className="absolute w-4.5 h-4.5 flex items-center justify-center my-0 border bg-[#E1E2E2] border-[#1E1E1E]/50 rounded-full top-2.5 right-2 text-[#1E1E1E]/50 text-[10px]">
+                        {totalItems > 99 ? '99+' : totalItems}
+                    </div>
+                )}
             </div>
         </div>
     )

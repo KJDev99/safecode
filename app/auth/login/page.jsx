@@ -17,6 +17,7 @@ export default function Login() {
     const router = useRouter()
 
     const { data, loading, error, getData, postData } = useApiStore();
+    const [newLoading, setNewLoading] = useState(false);
 
     const handleInputChange = (field, value) => {
         setFormData(prev => ({
@@ -71,7 +72,7 @@ export default function Login() {
 
         try {
             const result = await postData("/accounts/login/", loginData);
-
+            setNewLoading(true);
             if (result?.success) {
                 toast.success('Вход выполнен успешно!');
 
@@ -87,40 +88,33 @@ export default function Login() {
                 });
 
 
-                setTimeout(() => {
+                switch (result?.data?.user?.groups[0]?.name) {
+                    case "Дежурный инженер":
+                        router.push('/roles/duty-engineer');
+                        break;
+                    case "Заказчик":
+                        router.push('/roles/customer');
+                        break;
+                    case "Инспектор МЧС":
+                        router.push('/roles/inspectors');
+                        break;
+                    case "Исполнителя":
+                        router.push('/roles/performer');
+                        break;
+                    case "Менеджер":
+                        router.push('/roles/manager');
+                        break;
+                    case "Обслуживающий инженер":
+                        router.push('/roles/service-engineer');
+                        break;
+                    default: router.push('/roles/admin-panel');
+                }
 
-                    switch (result?.data?.user?.groups[0]?.name) {
-                        case "Дежурный инженер":
-                            router.push('/roles/duty-engineer');
-                            break;
-                        case "Заказчик":
-                            router.push('/roles/customer');
-                            break;
-                        case "Инспектор МЧС":
-                            router.push('/roles/inspectors');
-                            break;
-                        case "Исполнителя":
-                            router.push('/roles/performer');
-                            break;
-                        case "Менеджер":
-                            router.push('/roles/manager');
-                            break;
-                        case "Обслуживающий инженер":
-                            router.push('/roles/service-engineer');
-                            break;
-                        default: router.push('/roles/admin-panel');
-                    }
+                window.dispatchEvent(new Event("authChanged"));
 
-                    window.dispatchEvent(new Event("authChanged"));
-                }, 10);
-
-                // setTimeout(() => {
-                //     router.push('/')
-                //     window.dispatchEvent(new Event("authChanged"));
-                // }, 1000);
 
             } else {
-
+                setNewLoading(false);
                 toast.error(result?.response?.data?.message || 'Ошибка входа');
             }
         } catch (error) {
@@ -138,6 +132,8 @@ export default function Login() {
             } else {
                 toast.error('Ошибка при входе. Попробуйте снова.');
             }
+
+            setNewLoading(false);
         }
     }
 
@@ -146,7 +142,7 @@ export default function Login() {
             handleSubmit();
         }
     }
-    if (loading) {
+    if (loading || newLoading) {
         return (
             <Loader />
         );

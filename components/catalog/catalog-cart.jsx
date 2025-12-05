@@ -4,6 +4,7 @@ import toast from "react-hot-toast";
 import ProductCart from "./product-cart";
 import Button from "../ui/button";
 import { useApiStore } from "@/store/useApiStore";
+import { useFavoritesStore } from "@/store/useFavoritesStore";
 
 const buildProductSize = (product) => {
   if (product?.sizes_list?.length) {
@@ -42,6 +43,9 @@ export default function CatalogCart({ selectedCategory }) {
   const [loadingProducts, setLoadingProducts] = useState(true);
   const [errorMessage, setErrorMessage] = useState(null);
   const [currentPage, setCurrentPage] = useState(1);
+  const isFavorite = useFavoritesStore((state) => state.isFavorite);
+  const addFavorite = useFavoritesStore((state) => state.addFavorite);
+  const removeFavorite = useFavoritesStore((state) => state.removeFavorite);
 
   const endpoint = useMemo(() => {
     const params = new URLSearchParams();
@@ -60,8 +64,8 @@ export default function CatalogCart({ selectedCategory }) {
       const incoming = Array.isArray(response?.data)
         ? response.data
         : Array.isArray(response)
-        ? response
-        : [];
+          ? response
+          : [];
 
       setProducts((prev) =>
         currentPage === 1 ? incoming : [...prev, ...incoming]
@@ -91,8 +95,10 @@ export default function CatalogCart({ selectedCategory }) {
           await postDataToken("/products/favorites/", {
             product_id: productId,
           });
+          addFavorite(productId); // YANGI
         } else {
           await deleteDataToken(`/products/favorites/${productId}/delete/`);
+          removeFavorite(productId); // YANGI
         }
         setProducts((prev) =>
           prev.map((product) =>
@@ -110,12 +116,8 @@ export default function CatalogCart({ selectedCategory }) {
         return false;
       }
     },
-    [postDataToken, deleteDataToken]
+    [postDataToken, deleteDataToken, addFavorite, removeFavorite] // DEPENDENCIES
   );
-
-  const handleAddToCart = useCallback(() => {
-    router.push("/cart");
-  }, [router]);
 
   const handleCardClick = useCallback(
     (productId) => {
@@ -161,7 +163,7 @@ export default function CatalogCart({ selectedCategory }) {
           key={product.id || product.article || index}
           productId={product.id}
           isNew={product.is_new}
-          isLike={Boolean(product.is_favorite)}
+          isLike={Boolean(product.is_favorite) || isFavorite(product.id)} // O'ZGARTIRISH
           img={getProductImage(product)}
           title={product.name}
           item={product.article}
@@ -169,7 +171,6 @@ export default function CatalogCart({ selectedCategory }) {
           price={product.price}
           initialQuantity={1}
           onFavoriteToggle={handleFavoriteToggle}
-          onAddToCart={handleAddToCart}
           onCardClick={handleCardClick}
         />
       ))}
