@@ -34,7 +34,7 @@ export default function NavbarTop() {
     if (!isAuth) return null;
 
     return (
-        <div className='h-25 max-w-[1200px] mx-auto flex items-center gap-4 max-md:hidden'>
+        <div className='h-25 w-[1200px] mx-auto flex items-center gap-4 max-md:hidden'>
             <Link href={'/catalog'}>
                 <Button icon={<RxHamburgerMenu />} className='h-15 w-[340px] gap-2' text={"Каталог товаров"} />
             </Link>
