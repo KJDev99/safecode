@@ -16,8 +16,6 @@ export default function Navbar() {
         const group = localStorage.getItem("user");
         setIsAuth(auth === "true");
         if (group) {
-
-
             setRole(JSON.parse(group)?.groups[0]?.name);
         }
     };

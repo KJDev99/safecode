@@ -1,15 +1,39 @@
 'use client'
 import Image from 'next/image'
-import React, { useEffect } from 'react'
+import React, { useEffect, useState } from 'react'
 import Title from '../ui/title'
 import Button from '../ui/button'
 import { useApiStore } from '@/store/useApiStore';
+import Link from 'next/link'
+import { motion } from 'framer-motion'
 
 export default function ServicesBox() {
     const { data, loading, error, getData } = useApiStore();
 
     useEffect(() => {
         getData("/website/services/");
+    }, []);
+    const [isAuth, setIsAuth] = useState(false);
+    const [role, setRole] = useState()
+    const [showTooltip, setShowTooltip] = useState(false);
+    const isCustomer = role === "Заказчик";
+    const checkAuth = () => {
+        const auth = localStorage.getItem("isAuthenticated");
+        const group = localStorage.getItem("user");
+        setIsAuth(auth === "true");
+        if (group) {
+            setRole(JSON.parse(group)?.groups[0]?.name);
+        }
+    };
+
+    useEffect(() => {
+        checkAuth();
+
+        window.addEventListener("authChanged", checkAuth);
+
+        return () => {
+            window.removeEventListener("authChanged", checkAuth);
+        };
     }, []);
 
     if (loading) return <div className="text-center py-8">Yuklanmoqda...</div>;
@@ -19,6 +43,7 @@ export default function ServicesBox() {
     return (
         <div className='mt-12 mb-[100px] max-w-[1200px] mx-auto max-md:mt-8 max-md:mb-[50px] max-md:px-6'>
             {/* Desktop korinishi - grid bilan */}
+
             <div className="max-md:hidden grid grid-cols-2 gap-6">
                 {data.map((service, index) => (
                     <React.Fragment key={service.id}>
@@ -45,10 +70,54 @@ export default function ServicesBox() {
                                             <p className='text-[#1E1E1E] text-[20px]'>
                                                 От {parseFloat(service.price).toLocaleString('ru-RU')} ₽/месяц
                                             </p>
-                                            <Button
-                                                text={"Заказать услугу"}
-                                                className='w-[324px] h-full'
-                                            />
+                                            {
+                                                !isAuth ?
+                                                    <Link href={'/auth/login'} className='text-nowrap text-[#fff]/60 '>
+                                                        <Button
+                                                            text={"Заказать услугу"}
+                                                            className='w-[324px] h-[64px]'
+                                                        />
+                                                    </Link >
+                                                    :
+                                                    <div className="relative inline-block">
+
+                                                        {/* Agar customer bo'lsa Link ishlaydi */}
+                                                        {isCustomer ? (
+                                                            <Link href={'/roles/customer?tab=settings'}>
+                                                                <Button
+                                                                    text={"Заказать услугу"}
+                                                                    className='w-[324px] h-[64px] cursor-pointer'
+                                                                />
+                                                            </Link>
+                                                        ) : (
+                                                            // Agar customer bo'lmasa disable qilingan button
+                                                            <motion.div
+                                                                onMouseEnter={() => setShowTooltip(true)}
+                                                                onMouseLeave={() => setShowTooltip(false)}
+                                                                className="w-[324px] h-[64px] select-none"
+                                                            >
+                                                                <Button
+                                                                    text={"Заказать услугу"}
+                                                                    className="w-[324px] h-[64px] opacity-50 cursor-not-allowed"
+                                                                    disabled
+                                                                />
+                                                            </motion.div>
+                                                        )}
+
+                                                        {/* Tooltip (faqat role noto'g'ri bo'lsa chiqadi) */}
+                                                        {!isCustomer && showTooltip && (
+                                                            <motion.div
+                                                                initial={{ opacity: 0, y: 5 }}
+                                                                animate={{ opacity: 1, y: 0 }}
+                                                                exit={{ opacity: 0 }}
+                                                                className="absolute top-full left-1/2 -translate-x-1/2 mt-2 bg-black text-white px-3 py-2 rounded-lg text-sm whitespace-nowrap shadow-lg z-50"
+                                                            >
+                                                                ❗ Этот доступ не предназначен для вашей роли
+                                                            </motion.div>
+                                                        )}
+                                                    </div>
+                                            }
+
                                         </div>
                                     </div>
                                 </div>
@@ -94,10 +163,53 @@ export default function ServicesBox() {
                                             <p className='text-[#1E1E1E] text-[20px]'>
                                                 От {parseFloat(service.price).toLocaleString('ru-RU')} ₽/месяц
                                             </p>
-                                            <Button
-                                                text={"Заказать услугу"}
-                                                className='w-[324px] h-full'
-                                            />
+                                            {
+                                                !isAuth ?
+                                                    <Link href={'/auth/login'} className='text-nowrap text-[#fff]/60 '>
+                                                        <Button
+                                                            text={"Заказать услугу"}
+                                                            className='w-[324px] h-[64px]'
+                                                        />
+                                                    </Link >
+                                                    :
+                                                    <div className="relative inline-block">
+
+                                                        {/* Agar customer bo'lsa Link ishlaydi */}
+                                                        {isCustomer ? (
+                                                            <Link href={'/roles/customer?tab=settings'}>
+                                                                <Button
+                                                                    text={"Заказать услугу"}
+                                                                    className='w-[324px] h-[64px] cursor-pointer'
+                                                                />
+                                                            </Link>
+                                                        ) : (
+                                                            // Agar customer bo'lmasa disable qilingan button
+                                                            <motion.div
+                                                                onMouseEnter={() => setShowTooltip(true)}
+                                                                onMouseLeave={() => setShowTooltip(false)}
+                                                                className="w-[324px] h-[64px] select-none"
+                                                            >
+                                                                <Button
+                                                                    text={"Заказать услугу"}
+                                                                    className="w-[324px] h-[64px] opacity-50 cursor-not-allowed"
+                                                                    disabled
+                                                                />
+                                                            </motion.div>
+                                                        )}
+
+                                                        {/* Tooltip (faqat role noto'g'ri bo'lsa chiqadi) */}
+                                                        {!isCustomer && showTooltip && (
+                                                            <motion.div
+                                                                initial={{ opacity: 0, y: 5 }}
+                                                                animate={{ opacity: 1, y: 0 }}
+                                                                exit={{ opacity: 0 }}
+                                                                className="absolute top-full left-1/2 -translate-x-1/2 mt-2 bg-black text-white px-3 py-2 rounded-lg text-sm whitespace-nowrap shadow-lg z-50"
+                                                            >
+                                                                ❗ Этот доступ не предназначен для вашей роли
+                                                            </motion.div>
+                                                        )}
+                                                    </div>
+                                            }
                                         </div>
                                     </div>
                                 </div>
