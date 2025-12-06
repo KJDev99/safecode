@@ -53,7 +53,7 @@ export default function ProfileDropdown({ role, setShow }) {
                             <Link onClick={() => setShow(false)} className="px-4 py-2 hover:text-white text-sm text-[white]/60" href="/roles/duty-engineer?tab=objects">Объекты</Link>
                             <Link onClick={() => setShow(false)} className="px-4 py-2 hover:text-white text-sm text-[white]/60" href="/roles/duty-engineer?tab=reports">Отчеты</Link>
                             <Link onClick={() => setShow(false)} className="px-4 py-2 hover:text-white text-sm text-[white]/60" href="/roles/duty-engineer?tab=notifications">Уведомления</Link>
-                            <Link onClick={() => setShow(false)} className="px-4 py-2 hover:text-white text-sm text-[white]/60" href="/roles/duty-engineer?tab=myorder">Мои заказы</Link>
+                            <Link onClick={() => setShow(false)} className="px-4 py-2 hover:text-white text-sm text-[white]/60" href="/roles/duty-engineer?tab=myorders">Мои заказы</Link>
                             <Link onClick={() => setShow(false)} className="px-4 py-2 hover:text-white text-sm text-[white]/60" href="/roles/duty-engineer?tab=settings">Настройки</Link>
                         </div>
                         : role == "Заказчик"
@@ -63,7 +63,7 @@ export default function ProfileDropdown({ role, setShow }) {
                                 <Link onClick={() => setShow(false)} className="px-4 py-2 hover:text-white text-sm text-[white]/60" href="/roles/customer?tab=application">Заявки</Link>
                                 <Link onClick={() => setShow(false)} className="px-4 py-2 hover:text-white text-sm text-[white]/60" href="/roles/customer?tab=service-log">Журнал обслуживания</Link>
                                 <Link onClick={() => setShow(false)} className="px-4 py-2 hover:text-white text-sm text-[white]/60" href="/roles/customer?tab=notifications">Уведомления</Link>
-                                <Link onClick={() => setShow(false)} className="px-4 py-2 hover:text-white text-sm text-[white]/60" href="/roles/customer?tab=myorder">Мои заказы</Link>
+                                <Link onClick={() => setShow(false)} className="px-4 py-2 hover:text-white text-sm text-[white]/60" href="/roles/customer?tab=myorders">Мои заказы</Link>
                                 <Link onClick={() => setShow(false)} className="px-4 py-2 hover:text-white text-sm text-[white]/60" href="/roles/customer?tab=settings">Настройки</Link>
                             </div>
                             : role == "Инспектор МЧС"

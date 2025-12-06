@@ -7,6 +7,7 @@ import { LuPlus } from 'react-icons/lu';
 import { CiEdit } from "react-icons/ci";
 import { useApiStore } from '@/store/useApiStore';
 import Loader from '@/components/Loader';
+import Link from 'next/link';
 
 export default function CustomerDashboard() {
     const { data, loading, error, getDataToken } = useApiStore();
@@ -96,7 +97,9 @@ export default function CustomerDashboard() {
                     <p className={`text-[#1E1E1E99] leading-[120%] grow max-md:text-sm mb-6`}>
                         "Профессиональный пакет" - услуга уже <br className="max-md:hidden" /> ваша
                     </p>
-                    <Button text={'Купить на следующий месяц'} className='h-[66px] w-full max-md:h-[56px] max-md:text-sm' />
+                    <Link href={'/roles/customer?tab=service-log'}>
+                        <Button text={'Купить на следующий месяц'} className='h-[66px] w-full max-md:h-[56px] max-md:text-sm' />
+                    </Link>
                 </div>
 
                 <div
@@ -107,11 +110,13 @@ export default function CustomerDashboard() {
                     <p className={`text-[#1E1E1E99] leading-[120%] grow max-md:text-sm mb-6`}>
                         Быстро создать новую задачу или заявку для обслуживания объекта
                     </p>
-                    <Button
-                        icon={<LuPlus />}
-                        text={'Создать заявку'}
-                        className='h-[66px] w-full max-md:h-[56px] max-md:text-sm gap-2'
-                    />
+                    <Link href={'/roles/customer?tab=objects'}>
+                        <Button
+                            icon={<LuPlus />}
+                            text={'Создать заявку'}
+                            className='h-[66px] w-full max-md:h-[56px] max-md:text-sm gap-2'
+                        />
+                    </Link>
                 </div>
 
                 <div

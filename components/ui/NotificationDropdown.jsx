@@ -230,7 +230,7 @@ export default function NotificationDropdown({
                 <h3 className="font-bold text-[#1E1E1E] text-lg">
                   Уведомления
                 </h3>
-                {allNotifications.length > 0 && (
+                {/* {allNotifications.length > 0 && (
                   <button
                     onClick={onClearAll}
                     className="flex items-center gap-1 px-3 py-1.5 text-sm text-red-500 hover:bg-red-50 rounded-lg transition-colors"
@@ -238,7 +238,7 @@ export default function NotificationDropdown({
                     <IoTrash className="text-base" />
                     Очистить
                   </button>
-                )}
+                )} */}
               </div>
             </div>
 

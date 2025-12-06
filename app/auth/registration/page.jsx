@@ -68,7 +68,11 @@ export default function Registration() {
             setLoading(false)
             return
         }
-
+        if (formData.password.length < 8) {
+            toast.error('Пароль должен содержать минимум 8 символов, включать большие и маленькие буквы и цифры.')
+            setLoading(false)
+            return
+        }
         const requiredFields = [
             { field: 'first_name', name: 'Имя' },
             { field: 'last_name', name: 'Фамилия' },
@@ -99,13 +103,7 @@ export default function Registration() {
             return
         }
 
-        if (formData.password.length < 6) {
-            toast.error('Пароль должен содержать минимум 6 символов')
-            setLoading(false)
-            return
-        }
-
-        if (formData.password.length < 6) {
+        if (formData.password.length < 8) {
             toast.error('Пароль должен содержать минимум 6 символов')
             setLoading(false)
             return

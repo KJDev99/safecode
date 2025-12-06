@@ -96,7 +96,7 @@ export default function CheckoutPage() {
     const handleSubmitOrder = async () => {
         // Validation
         if (!profileData.city || !profileData.street || !profileData.house) {
-            toast.error("Заполните данные профиля (адрес обязателен)");
+            toast.error("Заполните данные адреса.");
             return;
         }
 

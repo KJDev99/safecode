@@ -36,7 +36,7 @@ export default function AdminContent() {
     const allItems = [
         { id: 'dashboard', text: 'Дашборд' },
         { id: 'users', text: 'Пользователи и роли' },
-        { id: 'requests', text: 'Заявки и проекты' },
+        // { id: 'requests', text: 'Заявки и проекты' },
         { id: 'menegnet', text: 'Управление' },
         { id: 'tovar', text: 'Товаров' },
         { id: 'storage', text: 'Хранилище' },
