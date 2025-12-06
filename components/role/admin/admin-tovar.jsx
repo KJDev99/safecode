@@ -1166,13 +1166,9 @@ export default function AdminTovar() {
                   <div className="w-full aspect-square mb-4 rounded-lg overflow-hidden">
                     <Image
                       src={
-                        product.images_list?.[0]?.image ||
-                        product.images_list?.[0]?.image_url ||
-                        product.images?.[0]?.image ||
-                        product.images?.[0]?.image_url ||
-                        "/cart.png"
+                        product.images_list?.[0]?.image || "/cart.png"
                       }
-                      alt={product.name}
+                      alt={product.name || "name"}
                       width={300}
                       height={300}
                       className="w-full h-full object-cover"
@@ -1237,11 +1233,10 @@ export default function AdminTovar() {
                     <button
                       key={pageNum}
                       onClick={() => setCurrentPage(pageNum)}
-                      className={`w-10 h-10 rounded-lg ${
-                        currentPage === pageNum
-                          ? "bg-[#2C5AA0] text-white"
-                          : "border border-gray-300 hover:bg-gray-50"
-                      }`}
+                      className={`w-10 h-10 rounded-lg ${currentPage === pageNum
+                        ? "bg-[#2C5AA0] text-white"
+                        : "border border-gray-300 hover:bg-gray-50"
+                        }`}
                     >
                       {pageNum}
                     </button>

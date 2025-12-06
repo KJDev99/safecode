@@ -113,10 +113,10 @@ export default function Users() {
                                     <p className="text-[#2C5AA0] font-medium cursor-pointer">
                                         {user.last_name} {user.first_name}
                                     </p>
-                                    <p className="text-sm text-[#1E1E1E99]">{user.groups[0]?.name}</p>
+                                    <p className="text-sm text-[#1E1E1E99]">{user.groups && user.groups[0]?.name || ""}</p>
                                     <p className="text-sm text-[#1E1E1E99]">{user.email}</p>
                                 </td>
-                                <td className="p-3 text-[#2C5AA0] text-nowrap">{user.groups[0]?.name}</td>
+                                <td className="p-3 text-[#2C5AA0] text-nowrap">{user.groups && user.groups[0]?.name || ""}</td>
                                 <td className="p-3 text-[#1E1E1E] text-base">{formatDate(user.created_at)}</td>
 
                                 <td className="p-3 text-[#1E1E1E] text-base">{user.last_login ? user.last_login.slice(0, 10) : "-"}</td>
