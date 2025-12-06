@@ -96,7 +96,7 @@ export default function ManagerDashboard() {
                 >
                     <Title text={'Новый договор'} color="text-[#2C5AA0]" size="text-lg max-md:text-base" cls={"mb-3"} />
                     <p className={`text-[#1E1E1E99] leading-[120%] grow max-md:text-sm mb-6`}>
-                        Быстро создать новый договор для услуги по обслуживанию объекта
+                        Быстро создать новый договор для услуги по обслуживанию объекта.
                     </p>
                     <Link href={'/roles/manager?tab=bills'}>
                         <Button
