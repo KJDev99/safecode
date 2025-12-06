@@ -98,13 +98,13 @@ export default function ManagerDashboard() {
                     <p className={`text-[#1E1E1E99] leading-[120%] grow max-md:text-sm mb-6`}>
                         Быстро создать новый договор для услуги по обслуживанию объекта.
                     </p>
-                    <Link href={'manager?tab=bills'}>
+                    {/* <Link href={'manager?tab=bills'}>
                         <Button
                             icon={<LuPlus />}
                             text={'Создать договор'}
                             className='h-[66px] w-full max-md:h-[56px] max-md:text-sm gap-x-2'
                         />
-                    </Link>
+                    </Link> */}
                 </div>
 
                 <div
@@ -116,13 +116,13 @@ export default function ManagerDashboard() {
                         Подписать электронный журнал <br className="max-md:hidden" />
                         выполненных работ по объекту
                     </p>
-                    <Link href={"/roles/manager?tab=jurnals"}>
+                    {/* <Link href={"/roles/manager?tab=jurnals"}>
                         <Button
                             icon={<FiEdit3 />}
                             text={'Подписать акты'}
                             className='h-[66px] w-full max-md:h-[56px] max-md:text-sm gap-2 bg-[#E2E2E2] !text-[#8E8E8E]'
                         />
-                    </Link>
+                    </Link> */}
                 </div>
             </div>
 
