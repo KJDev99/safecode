@@ -97,7 +97,7 @@ export default function CustomerDashboard() {
                     <p className={`text-[#1E1E1E99] leading-[120%] grow max-md:text-sm mb-6`}>
                         "Профессиональный пакет" - услуга уже <br className="max-md:hidden" /> ваша
                     </p>
-                    <Link href={'/roles/customer?tab=service-log'}>
+                    <Link href={'customer?tab=service-log'}>
                         <Button text={'Купить на следующий месяц'} className='h-[66px] w-full max-md:h-[56px] max-md:text-sm' />
                     </Link>
                 </div>
@@ -110,7 +110,7 @@ export default function CustomerDashboard() {
                     <p className={`text-[#1E1E1E99] leading-[120%] grow max-md:text-sm mb-6`}>
                         Быстро создать новую задачу или заявку для обслуживания объекта
                     </p>
-                    <Link href={'/roles/customer?tab=objects'}>
+                    <Link href={'customer?tab=objects'}>
                         <Button
                             icon={<LuPlus />}
                             text={'Создать заявку'}

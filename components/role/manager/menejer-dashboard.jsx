@@ -98,7 +98,7 @@ export default function ManagerDashboard() {
                     <p className={`text-[#1E1E1E99] leading-[120%] grow max-md:text-sm mb-6`}>
                         Быстро создать новый договор для услуги по обслуживанию объекта.
                     </p>
-                    <Link href={'/roles/manager?tab=bills'}>
+                    <Link href={'manager?tab=bills'}>
                         <Button
                             icon={<LuPlus />}
                             text={'Создать договор'}

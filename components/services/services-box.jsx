@@ -83,7 +83,7 @@ export default function ServicesBox() {
 
                                                         {/* Agar customer bo'lsa Link ishlaydi */}
                                                         {isCustomer ? (
-                                                            <Link href={'/roles/customer?tab=settings'}>
+                                                            <Link href={'customer?tab=settings'}>
                                                                 <Button
                                                                     text={"Заказать услугу"}
                                                                     className='w-[324px] h-[64px] cursor-pointer'
@@ -176,7 +176,7 @@ export default function ServicesBox() {
 
                                                         {/* Agar customer bo'lsa Link ishlaydi */}
                                                         {isCustomer ? (
-                                                            <Link href={'/roles/customer?tab=settings'}>
+                                                            <Link href={'customer?tab=settings'}>
                                                                 <Button
                                                                     text={"Заказать услугу"}
                                                                     className='w-[324px] h-[64px] cursor-pointer'

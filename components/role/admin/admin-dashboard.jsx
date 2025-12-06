@@ -97,7 +97,7 @@ export default function AdminDashboard() {
                 >
                     <Title text={'Назначить исполнителя'} color="text-[#2C5AA0]" size="text-lg max-md:text-base" cls={"mb-3"} />
                     <p className={`text-[#1E1E1E99] leading-[120%] grow max-md:text-sm mb-6`}>Назначьте исполнителя на новую задачу или заявку для обслуживания объекта</p>
-                    <Link href={'/roles/admin-panel?tab=users'}>
+                    <Link href={'admin-panel?tab=users'}>
                         <Button icon={<LuPlus />} text={'Создать пользователя'} className='h-[66px] w-full max-md:h-[56px] max-md:text-sm' />
                     </Link>
                 </div>
@@ -109,7 +109,7 @@ export default function AdminDashboard() {
                     <Title text={'Смотреть новые заявки '} color="text-[#2C5AA0]" size="text-lg max-md:text-base" cls={"mb-3"} />
                     <p className={`text-[#1E1E1E99] leading-[120%] grow max-md:text-sm mb-6`}>Смотреть новые заявки  <br />
                         Смотреть новые заявки  </p>
-                    <Link href={'/roles/admin-panel?tab=menegnet'}>
+                    <Link href={'admin-panel?tab=menegnet'}>
                         <Button text={'Смотреть'} className='h-[66px] w-full max-md:h-[56px] max-md:text-sm gap-2 bg-[#E2E2E2] !text-[#8E8E8E]' />
                     </Link>
                 </div>
