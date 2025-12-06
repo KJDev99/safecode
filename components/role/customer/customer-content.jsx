@@ -32,7 +32,7 @@ export default function CustomerContent() {
     const allItems = [
         { id: 'dashboard', text: 'Дашборд' },
         { id: 'objects', text: 'Мои объекты' },
-        { id: 'application', text: 'Заявки' },
+        // { id: 'application', text: 'Заявки' },
         { id: 'service-log', text: 'Журнал обслуживания' },
         { id: 'notifications', text: 'Уведомления' },
         { id: 'myorders', text: 'Мои заказы' },
