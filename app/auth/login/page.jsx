@@ -15,8 +15,7 @@ export default function Login() {
     })
 
     const router = useRouter()
-
-    const { data, loading, error, getData, postData } = useApiStore();
+    const { data, loading, error, postData } = useApiStore(); // getData kerak emas
     const [newLoading, setNewLoading] = useState(false);
 
     const handleInputChange = (field, value) => {
@@ -33,50 +32,113 @@ export default function Login() {
             localStorage.setItem('refresh_token', tokens.refresh);
             localStorage.setItem('isAuthenticated', 'true');
 
+            // Debug uchun console
+            console.log('Saved to localStorage:', {
+                user: userData,
+                access_token: tokens.access,
+                refresh_token: tokens.refresh
+            });
+
         } catch (error) {
             console.error('LocalStorage ga saqlashda xatolik:', error);
         }
     }
 
     const handleSubmit = async (e) => {
-        if (e) {
-            e.preventDefault();
-        }
-
-
+        if (e) e.preventDefault();
 
         // Validation
         if (!formData.identifier.trim()) {
             toast.error('Введите номер телефона или e-mail');
-
             return;
         }
 
         if (!formData.password) {
             toast.error('Введите пароль');
-
             return;
         }
 
-        // if (formData.password.length < 8) {
-        //     toast.error('Пароль должен содержать минимум 8 символов');
-
-        //     return;
-        // }
-
-        // Prepare login data according to backend API
+        // Prepare login data
         const loginData = {
             identifier: formData.identifier,
             password: formData.password,
         }
 
         try {
-            const result = await postData("/accounts/login/", loginData);
             setNewLoading(true);
-            if (result?.success) {
+            console.log('Sending login request:', loginData);
+
+            // postData natijasini debug qilish
+            const result = await postData("/accounts/login/", loginData);
+            console.log('Login result:', result);
+            console.log('Result type:', typeof result);
+            console.log('Result structure:', result);
+
+            // ===================================================
+            // 1-CHI HOLAT: Agar postData {success, data} qaytarsa
+            // ===================================================
+            if (result && typeof result === 'object' && 'success' in result) {
+                // Sizning yangi API store versiyangizda
+                if (result.success === true) {
+                    toast.success('Вход выполнен успешно!');
+                    console.log('Success! Data:', result.data);
+
+                    // Save to localStorage
+                    if (result.data?.user && result.data?.tokens) {
+                        saveToLocalStorage(result.data.user, result.data.tokens);
+                    }
+
+                    // Reset form
+                    setFormData({
+                        identifier: '',
+                        password: '',
+                    });
+
+                    // User role bo'yicha redirect qilish
+                    const userRole = result.data?.user?.groups[0]?.name;
+                    console.log('User role:', userRole);
+
+                    const roleRoutes = {
+                        "Дежурный инженер": '/roles/duty-engineer',
+                        "Заказчик": '/roles/customer',
+                        "Инспектор МЧС": '/roles/inspectors',
+                        "Исполнителя": '/roles/performer',
+                        "Менеджер": '/roles/manager',
+                        "Обслуживающий инженер": '/roles/service-engineer'
+                    };
+
+                    const route = roleRoutes[userRole] || '/roles/admin-panel';
+                    console.log('Redirecting to:', route);
+                    router.push(route);
+
+                    window.dispatchEvent(new Event("authChanged"));
+
+                } else {
+                    // Error handling
+                    const errorMessage = result?.response?.data?.message ||
+                        result?.response?.data?.detail ||
+                        'Ошибка входа';
+
+                    console.log('Login error:', errorMessage);
+
+                    // Agar user email tasdiqlamagan bo'lsa
+                    if (errorMessage.includes('email') || errorMessage.includes('подтвержден') || errorMessage.includes('verify')) {
+                        toast.error('Пожалуйста, подтвердите ваш email перед входом. Проверьте вашу почту.');
+                    } else {
+                        toast.error(errorMessage);
+                    }
+                }
+            }
+            // ===================================================
+            // 2-CHI HOLAT: Agar postData to'g'ridan-to'g'ri backend response qaytarsa
+            // ===================================================
+            else if (result && typeof result === 'object' && result.data) {
+                // Bu sizning eski API store versiyangiz uchun
+                console.log('Old API store structure detected');
+
                 toast.success('Вход выполнен успешно!');
 
-                // LocalStorage ga user va token ma'lumotlarini saqlash
+                // Save to localStorage
                 if (result.data?.user && result.data?.tokens) {
                     saveToLocalStorage(result.data.user, result.data.tokens);
                 }
@@ -87,52 +149,37 @@ export default function Login() {
                     password: '',
                 });
 
+                // User role bo'yicha redirect qilish
+                const userRole = result.data?.user?.groups[0]?.name;
+                console.log('User role:', userRole);
 
-                switch (result?.data?.user?.groups[0]?.name) {
-                    case "Дежурный инженер":
-                        router.push('/roles/duty-engineer');
-                        break;
-                    case "Заказчик":
-                        router.push('/roles/customer');
-                        break;
-                    case "Инспектор МЧС":
-                        router.push('/roles/inspectors');
-                        break;
-                    case "Исполнителя":
-                        router.push('/roles/performer');
-                        break;
-                    case "Менеджер":
-                        router.push('/roles/manager');
-                        break;
-                    case "Обслуживающий инженер":
-                        router.push('/roles/service-engineer');
-                        break;
-                    default: router.push('/roles/admin-panel');
-                }
+                const roleRoutes = {
+                    "Дежурный инженер": '/roles/duty-engineer',
+                    "Заказчик": '/roles/customer',
+                    "Инспектор МЧС": '/roles/inspectors',
+                    "Исполнителя": '/roles/performer',
+                    "Менеджер": '/roles/manager',
+                    "Обслуживающий инженер": '/roles/service-engineer'
+                };
+
+                const route = roleRoutes[userRole] || '/roles/admin-panel';
+                console.log('Redirecting to:', route);
+                router.push(route);
 
                 window.dispatchEvent(new Event("authChanged"));
-
-
-            } else {
-                setNewLoading(false);
-                toast.error(result?.response?.data?.message || 'Ошибка входа');
             }
+            // ===================================================
+            // 3-CHI HOLAT: Boshqa format
+            // ===================================================
+            else {
+                console.log('Unknown result format:', result);
+                toast.error('Ошибка при входе. Неизвестный формат ответа.');
+            }
+
         } catch (error) {
             console.error('Login error:', error);
-
-            // Batafsil xato ma'lumotlari
-            if (error && typeof error === 'object') {
-                if (error.message) {
-                    toast.error(error.message);
-                } else if (error.detail) {
-                    toast.error(error.detail);
-                } else {
-                    toast.error('Ошибка при входе. Проверьте данные и попробуйте снова.');
-                }
-            } else {
-                toast.error('Ошибка при входе. Попробуйте снова.');
-            }
-
+            toast.error('Ошибка при входе. Попробуйте снова.');
+        } finally {
             setNewLoading(false);
         }
     }
@@ -142,11 +189,11 @@ export default function Login() {
             handleSubmit();
         }
     }
+
     if (loading || newLoading) {
-        return (
-            <Loader />
-        );
+        return <Loader />;
     }
+
     return (
         <div className='grid grid-cols-2 h-[720px] max-md:grid-cols-1'>
             <div className='flex flex-col items-center justify-center '>
@@ -179,6 +226,15 @@ export default function Login() {
                             disabled={loading}
                         />
                     </form>
+
+                    <div className="mt-4">
+                        <Link
+                            href="/auth/forgot-password"
+                            className="text-sm text-blue-600 hover:text-blue-800 block text-center"
+                        >
+                            Забыли пароль?
+                        </Link>
+                    </div>
 
                     <p className='mt-4 text-xs text-[#1E1E1E99] leading-[100%] tracking-[0%] max-md:text-center'>
                         Входя в аккаунт или создавая новый, вы соглашаетесь с нашими Правилами и условиями и Положением о конфиденциальности

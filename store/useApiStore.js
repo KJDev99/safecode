@@ -60,7 +60,19 @@ export const useApiStore = create((set) => ({
             set({ loading: false });
         }
     },
-
+    verifyEmail: async (token) => {
+        set({ loading: true, error: null });
+        try {
+            // Endpoint'ga token query parametr sifatida qo'shamiz
+            const res = await api.get(`/accounts/verify-email/?token=${token}`);
+            set({ data: res.data });
+        } catch (err) {
+            const error = err?.response?.data || err;
+            set({ error });
+        } finally {
+            set({ loading: false });
+        }
+    },
     // =====================
     //   TOKEN BILAN FUNKSIYALAR
     // =====================
@@ -164,4 +176,6 @@ export const useApiStore = create((set) => ({
             set({ loading: false });
         }
     },
+
+
 }));
