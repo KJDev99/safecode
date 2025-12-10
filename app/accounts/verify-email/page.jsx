@@ -1,48 +1,49 @@
 'use client'
 import Loader from '@/components/Loader'
 import { useApiStore } from '@/store/useApiStore'
-import { useRouter, useSearchParams } from 'next/navigation'
-import React, { useEffect, useState } from 'react'
+import { useRouter } from 'next/navigation'
+import React, { useEffect, useState, Suspense } from 'react'
 import toast from 'react-hot-toast'
 
-export default function VerifyEmailPage() {
+// useSearchParams bilan komponent
+function VerifyEmailContent() {
     const router = useRouter()
-    const searchParams = useSearchParams()
-    const token = searchParams.get('token')
-
-    const { verifyEmail } = useApiStore() // verifyEmail funksiyasini chaqiramiz
+    const { verifyEmail } = useApiStore()
     const [loading, setLoading] = useState(true)
     const [verificationStatus, setVerificationStatus] = useState(null)
 
     useEffect(() => {
-        if (!token) {
-            toast.error('Недействительная ссылка подтверждения')
-            router.push('/auth/login')
-            return
+        // Client-side da URL parametrlarini olish
+        if (typeof window !== 'undefined') {
+            const params = new URLSearchParams(window.location.search)
+            const token = params.get('token')
+
+            if (!token) {
+                toast.error('Недействительная ссылка подтверждения')
+                router.push('/auth/login')
+                return
+            }
+
+            verifyEmailFunc(token)
         }
+    }, [])
 
-        verifyEmailFunc()
-    }, [token])
-
-    const verifyEmailFunc = async () => {
+    const verifyEmailFunc = async (token) => {
         try {
             setLoading(true)
 
-            // Yangi verifyEmail funksiyasidan foydalanamiz
             const result = await verifyEmail(token)
 
             if (result?.success) {
                 setVerificationStatus('success')
                 toast.success('Email успешно подтвержден! Теперь вы можете войти в систему.')
 
-                // 3 soniyadan keyin login pagega o'tkazamiz
                 setTimeout(() => {
                     router.push('/auth/login')
                 }, 3000)
             } else {
                 setVerificationStatus('error')
 
-                // Backenddan kelgan xato xabarlarini chiroyli ko'rsatish
                 const errorMessage = result?.response?.data?.message ||
                     result?.response?.data?.detail ||
                     'Ошибка подтверждения email'
@@ -158,5 +159,21 @@ export default function VerifyEmailPage() {
                 )}
             </div>
         </div>
+    )
+}
+
+// Asosiy komponent
+export default function VerifyEmailPage() {
+    return (
+        <Suspense fallback={
+            <div className="min-h-screen flex items-center justify-center bg-gray-50">
+                <div className="text-center">
+                    <div className="w-16 h-16 border-4 border-blue-600 border-t-transparent rounded-full animate-spin mx-auto mb-4"></div>
+                    <p className="text-gray-600">Загрузка...</p>
+                </div>
+            </div>
+        }>
+            <VerifyEmailContent />
+        </Suspense>
     )
 }
