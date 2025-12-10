@@ -1,29 +1,29 @@
 'use client'
-import React, { useState, useEffect } from 'react'
+import React, { useState, useEffect, Suspense } from 'react'
 import Button from '@/components/ui/button'
 import Input from '@/components/ui/input'
 import Loader from '@/components/Loader'
 import { useApiStore } from '@/store/useApiStore'
-import { useRouter, useSearchParams } from 'next/navigation'
+import { useRouter } from 'next/navigation'
 import toast from 'react-hot-toast'
 import Link from 'next/link'
 
-export default function VerifyEmailCodePage() {
+// Asosiy kontent komponenti
+function VerifyEmailCodeContent() {
     const router = useRouter()
-    const searchParams = useSearchParams()
 
     const [formData, setFormData] = useState({
         email: '',
         code: ''
     })
     const [loading, setLoading] = useState(false)
-    const [pageLoading, setPageLoading] = useState(false)
+    const [pageLoading, setPageLoading] = useState(true)
     const [emailError, setEmailError] = useState('')
 
     const { postData } = useApiStore()
 
     useEffect(() => {
-        // URL dan email parametrini olish
+        // Client-side da URL parametrlarini olish (useSearchParams'siz)
         if (typeof window !== 'undefined') {
             const params = new URLSearchParams(window.location.search)
             const emailFromUrl = params.get('email')
@@ -32,6 +32,8 @@ export default function VerifyEmailCodePage() {
                 // Email URL parametrdan kelgan bo'lsa, avtomatik to'ldirish
                 setFormData(prev => ({ ...prev, email: emailFromUrl }))
             }
+
+            setPageLoading(false)
         }
     }, [])
 
@@ -168,7 +170,14 @@ export default function VerifyEmailCodePage() {
     }
 
     if (pageLoading) {
-        return <Loader />
+        return (
+            <div className="min-h-screen flex items-center justify-center bg-gray-50 p-4">
+                <div className="text-center">
+                    <div className="w-16 h-16 border-4 border-blue-600 border-t-transparent rounded-full animate-spin mx-auto mb-4"></div>
+                    <p className="text-gray-600">Загрузка...</p>
+                </div>
+            </div>
+        )
     }
 
     return (
@@ -231,7 +240,7 @@ export default function VerifyEmailCodePage() {
                                 maxLength={6}
                                 pattern="[0-9]*"
                                 inputMode="numeric"
-                                className="text-center text-xl tracking-widest w-full"
+                                className="text-center text-xl tracking-widest w-full h-14"
                                 required
                             />
                             <p className="text-xs text-gray-500 mt-2">
@@ -239,6 +248,23 @@ export default function VerifyEmailCodePage() {
                             </p>
                         </div>
 
+                        {/* Resend Code Button */}
+                        <div className="text-center">
+                            <button
+                                type="button"
+                                onClick={handleResendCode}
+                                disabled={loading || !formData.email || emailError}
+                                className={`text-sm font-medium ${loading || !formData.email || emailError
+                                        ? 'text-gray-400 cursor-not-allowed'
+                                        : 'text-blue-600 hover:text-blue-800'
+                                    }`}
+                            >
+                                Отправить код повторно
+                            </button>
+                            <p className="text-xs text-gray-500 mt-1">
+                                Если вы не получили код, нажмите для повторной отправки
+                            </p>
+                        </div>
 
                         {/* Submit Button */}
                         <Button
@@ -277,8 +303,50 @@ export default function VerifyEmailCodePage() {
                     </div>
                 </form>
 
-
+                {/* Instructions */}
+                <div className="mt-8 p-4 bg-blue-50 rounded-lg">
+                    <h3 className="text-sm font-semibold text-blue-800 mb-2">Не получили код?</h3>
+                    <ul className="text-sm text-blue-700 space-y-1">
+                        <li className="flex items-start">
+                            <span className="mr-2">•</span>
+                            <span>Проверьте папку "Спам" или "Рассылки"</span>
+                        </li>
+                        <li className="flex items-start">
+                            <span className="mr-2">•</span>
+                            <span>Убедитесь, что ввели правильный email адрес</span>
+                        </li>
+                        <li className="flex items-start">
+                            <span className="mr-2">•</span>
+                            <span>Подождите 1-2 минуты, письма могут приходить с задержкой</span>
+                        </li>
+                        <li className="flex items-start">
+                            <span className="mr-2">•</span>
+                            <span>Если код не пришел, нажмите "Отправить код повторно"</span>
+                        </li>
+                    </ul>
+                </div>
             </div>
         </div>
+    )
+}
+
+// Loading komponenti
+function VerifyEmailCodeLoading() {
+    return (
+        <div className="min-h-screen flex items-center justify-center bg-gray-50">
+            <div className="text-center">
+                <div className="w-16 h-16 border-4 border-blue-600 border-t-transparent rounded-full animate-spin mx-auto mb-4"></div>
+                <p className="text-gray-600">Загрузка...</p>
+            </div>
+        </div>
+    )
+}
+
+// Asosiy page komponenti
+export default function VerifyEmailCodePage() {
+    return (
+        <Suspense fallback={<VerifyEmailCodeLoading />}>
+            <VerifyEmailCodeContent />
+        </Suspense>
     )
 }
