@@ -174,12 +174,12 @@ export default function Login() {
             else {
                 console.log('Unknown result format:', result);
                 toast.error('Ошибка при входе. Неизвестный формат ответа.');
+                setNewLoading(false);
             }
 
         } catch (error) {
             console.error('Login error:', error);
             toast.error('Ошибка при входе. Попробуйте снова.');
-        } finally {
             setNewLoading(false);
         }
     }
@@ -229,7 +229,7 @@ export default function Login() {
 
                     <div className="mt-4">
                         <Link
-                            href="/auth/forgot-password"
+                            href="/auth/email-reg"
                             className="text-sm text-blue-600 hover:text-blue-800 block text-center"
                         >
                             Забыли пароль?

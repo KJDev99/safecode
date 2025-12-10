@@ -272,7 +272,7 @@ export default function CustomerApplication() {
                                     value={searchQuery}
                                     onChange={(e) => setSearchQuery(e.target.value)}
                                     onKeyPress={(e) => e.key === 'Enter' && handleSearch()}
-                                    placeholder="Введите адрес (например: Ташкент, улица Навои)"
+                                    placeholder="Введите адрес"
                                     className="flex-1 p-2 border border-gray-300 rounded-lg"
                                 />
                                 <Button

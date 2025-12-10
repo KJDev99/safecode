@@ -5,40 +5,136 @@ import { MdCheck } from "react-icons/md";
 import { RiQuestionMark } from "react-icons/ri";
 import { IoMdClose } from "react-icons/io";
 import { useApiStore } from '@/store/useApiStore'
-import toast from 'react-hot-toast'
-
+import { useRouter } from 'next/navigation'
 // Notification turi bo'yicha icon va rang aniqlash
-const getNotificationTypeInfo = (verb, category) => {
-    if (verb === 'object_sent_for_review') {
-        return {
-            icon: RiQuestionMark,
-            bgColor: '#E2E2E2',
-            iconColor: '#1E1E1E99',
-            buttonType: 'view'
-        };
-    } else if (verb === 'bill_created') {
-        return {
-            icon: MdCheck,
-            bgColor: '#29C77C',
-            iconColor: 'white',
-            buttonType: 'view'
-        };
-    } else if (verb === 'journal_and_act_created') {
-        return {
-            icon: MdCheck,
-            bgColor: '#29C77C',
-            iconColor: 'white',
-            buttonType: 'view'
-        };
-    } else {
-        // Default holat
-        return {
-            icon: IoMdClose,
-            bgColor: '#D9272799',
-            iconColor: '#fff',
-            buttonType: 'view'
-        };
+
+// Har bir role uchun tab mapping
+const ROLE_TAB_MAPPINGS = {
+    // Admin Panel
+    'admin-panel': {
+        'bills': 'bills-admin',
+        'journals_and_acts': 'service-log',
+        'user_object': 'menegnet',
+        'orders': 'orders-admin',
+        'tasks': 'tasks-admin',
+        'incidents': 'incidents-admin',
+        'equipment': 'equipment-admin',
+        'documents': 'documents-admin',
+        'reports': 'reports-admin',
+        'users': 'users-admin',
+        'settings': 'settings-admin',
+        'default': 'notifications'
+    },
+    // Customer
+    'customer': {
+        'bills': 'bills-cust',
+        'journals_and_acts': 'service-log',
+        'user_object': 'objects-cust',
+        'orders': 'orders-cust',
+        'tasks': 'tasks-cust',
+        'incidents': 'incidents-cust',
+        'equipment': 'equipment-cust',
+        'documents': 'documents-cust',
+        'reports': 'reports-cust',
+        'settings': 'settings-cust',
+        'default': 'notifications'
+    },
+    // Duty Engineer
+    'duty-engineer': {
+        'user_object': 'objects-duty',
+        'tasks': 'tasks-duty',
+        'incidents': 'incidents-duty',
+        'reports': 'reports-duty',
+        'settings': 'settings-duty',
+        'default': 'notifications'
+    },
+    // Inspector MCHS
+    'inspectors': {
+        'user_object': 'objects-insp',
+        'incidents': 'incidents-insp',
+        'reports': 'reports-insp',
+        'settings': 'settings-insp',
+        'default': 'notifications'
+    },
+    // Performer
+    'performer': {
+        'user_object': 'objects-perf',
+        'tasks': 'tasks-perf',
+        'orders': 'orders-perf',
+        'settings': 'settings-perf',
+        'default': 'notifications'
+    },
+    // Manager
+    'manager': {
+        'bills': 'bills-manager',
+        'journals_and_acts': 'service-log',
+        'user_object': 'main-objects',
+        'orders': 'orders-manager',
+        'tasks': 'tasks-manager',
+        'incidents': 'incidents-manager',
+        'equipment': 'equipment-manager',
+        'documents': 'documents-manager',
+        'users': 'users-manager',
+        'settings': 'settings-manager',
+        'default': 'notifications'
+    },
+    // Service Engineer
+    'service-engineer': {
+        'user_object': 'objects-service',
+        'tasks': 'tasks-service',
+        'journals_and_acts': 'service-log-engineer',
+        'equipment': 'equipment-service',
+        'settings': 'settings-service',
+        'default': 'notifications'
     }
+};
+
+// Har bir role uchun base URL
+const ROLE_BASE_URLS = {
+    'admin-panel': '/roles/admin-panel',
+    'customer': '/roles/customer',
+    'duty-engineer': '/roles/duty-engineer',
+    'inspectors': '/roles/inspectors',
+    'performer': '/roles/performer',
+    'manager': '/roles/manager',
+    'service-engineer': '/roles/service-engineer'
+};
+
+// Joriy role'ni aniqlash
+const getCurrentRole = () => {
+    if (typeof window === 'undefined') return 'admin-panel';
+
+    const path = window.location.pathname;
+    const roleMatch = path.match(/\/roles\/([^\/]+)/);
+
+    if (!roleMatch) return 'admin-panel';
+
+    const role = roleMatch[1];
+    return role in ROLE_BASE_URLS ? role : 'admin-panel';
+};
+
+// Notification navigatsiyasini olish
+const getNotificationNavigation = (notification) => {
+    const { category } = notification;
+
+    // Joriy role
+    const currentRole = getCurrentRole();
+
+    // Base URL
+    const baseUrl = ROLE_BASE_URLS[currentRole] || '/roles/admin-panel';
+
+    // Role uchun mapping
+    const roleMapping = ROLE_TAB_MAPPINGS[currentRole] || ROLE_TAB_MAPPINGS['admin-panel'];
+
+    // Tab ni aniqlash
+    const tab = roleMapping[category] || roleMapping['default'] || 'notifications';
+
+    return {
+        url: `${baseUrl}?tab=${tab}`,
+        role: currentRole,
+        tab: tab,
+        category: category
+    };
 };
 
 // Sana formatlash
@@ -121,6 +217,7 @@ const patchDataToken = async (url, data = {}) => {
 };
 
 export default function AdminNotification() {
+    const router = useRouter();
     const { getDataToken, deleteDataToken } = useApiStore();
     const [notifications, setNotifications] = useState([]);
     const [loading, setLoading] = useState(true);
@@ -149,11 +246,9 @@ export default function AdminNotification() {
                 setCurrentPage(page);
             } else {
                 setError(response.message || 'Не удалось загрузить уведомления');
-                toast.error(response.message || 'Не удалось загрузить уведомления');
             }
         } catch (error) {
             setError(error?.message || 'Ошибка при загрузке уведомлений');
-            toast.error('Ошибка при загрузке уведомлений');
         } finally {
             setLoading(false);
         }
@@ -183,7 +278,6 @@ export default function AdminNotification() {
                     )
                 );
                 setUnreadCount(prev => Math.max(0, prev - 1));
-                console.log('Уведомление отмечено как прочитанное');
             } else {
                 console.log('Не удалось отметить уведомление как прочитанное');
             }
@@ -200,14 +294,14 @@ export default function AdminNotification() {
             handleMarkAsRead(notification.id);
         }
 
-        // Bu yerda notification turiga qarab navigation qo'shishingiz mumkin
-        // Masalan:
-        // if (notification.target?.type === 'bill') {
-        //     router.push(`/bills/${notification.target.id}`);
-        // }
-    }, [handleMarkAsRead]);
+        const navigation = getNotificationNavigation(notification);
 
-    // Keyingi sahifani yuklash
+        setTimeout(() => {
+            router.push(navigation.url);
+        }, 500);
+
+    }, [handleMarkAsRead, router]);
+
     const handleLoadMore = useCallback(() => {
         if (pagination?.has_next && !loading) {
             loadNotifications(currentPage + 1);
@@ -290,10 +384,7 @@ export default function AdminNotification() {
 
             {/* Notification'lar ro'yxati */}
             {notifications.map((notification) => {
-                const { icon: Icon, bgColor, iconColor } = getNotificationTypeInfo(
-                    notification.verb,
-                    notification.category
-                );
+
 
                 const isRead = notification.is_read;
 
@@ -306,41 +397,61 @@ export default function AdminNotification() {
                     >
                         <div className="flex items-center gap-x-4 max-md:items-start max-md:mb-4 w-full">
 
+
                             <div className="flex flex-col flex-1 min-w-0">
                                 <Title
                                     text={notification.message}
                                     size={"text-lg max-md:text-base max-md:leading-[110%]"}
                                     cls={`${isRead ? 'text-[#2C5AA0]/70' : 'text-[#2C5AA0]'}`}
                                 />
+
+                                {/* Time and info row */}
                                 <div className="flex flex-wrap items-center gap-2 mt-2 max-md:gap-1">
-                                    <p className="text-[#1E1E1E]/60 max-md:text-sm max-md:leading-[120%]">
-                                        {formatTimeAgo(notification.created_at)}
-                                    </p>
-                                    <span className="text-[#1E1E1E]/40">•</span>
-                                    <p className="text-[#1E1E1E]/60 max-md:text-sm max-md:leading-[120%]">
-                                        {notification.actor?.first_name} {notification.actor?.last_name}
-                                    </p>
+                                    {/* Time */}
+                                    <div className="flex items-center gap-1 bg-gray-100 px-3 py-1 rounded-full">
+                                        <svg className="w-3 h-3 text-gray-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
+                                        </svg>
+                                        <p className="text-xs text-[#1E1E1E]/80">
+                                            {formatTimeAgo(notification.created_at)}
+                                        </p>
+                                    </div>
+
+                                    {/* Actor info if exists */}
+                                    {notification.actor && (
+                                        <div className="flex items-center gap-1 bg-blue-50 px-3 py-1 rounded-full">
+                                            <svg className="w-3 h-3 text-blue-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
+                                            </svg>
+                                            <p className="text-xs text-blue-600">
+                                                {notification.actor.first_name} {notification.actor.last_name}
+                                            </p>
+                                        </div>
+                                    )}
+
+                                    {/* Object info if exists */}
                                     {notification.user_object?.name && (
-                                        <>
-                                            <span className="text-[#1E1E1E]/40">•</span>
-                                            <p className="text-[#1E1E1E]/60 max-md:text-sm max-md:leading-[120%]">
+                                        <div className="flex items-center gap-1 bg-green-50 px-3 py-1 rounded-full">
+                                            <svg className="w-3 h-3 text-green-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4" />
+                                            </svg>
+                                            <p className="text-xs text-green-600">
                                                 {notification.user_object.name}
                                             </p>
-                                        </>
+                                        </div>
                                     )}
                                 </div>
 
+                                {/* Unread indicator */}
                                 {!isRead && (
                                     <div className="flex items-center gap-2 mt-3">
                                         <div className="w-2 h-2 bg-blue-600 rounded-full animate-pulse"></div>
                                         <span className="text-xs font-medium text-blue-600">
-                                            Новое уведомление • Нажмите, чтобы прочитать
+                                            Новое уведомление • Нажмите, чтобы перейти
                                         </span>
                                     </div>
                                 )}
                             </div>
-
-
                         </div>
                     </div>
                 );
@@ -368,4 +479,3 @@ export default function AdminNotification() {
         </div>
     );
 }
-

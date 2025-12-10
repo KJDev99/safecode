@@ -3,6 +3,7 @@ import Input from '@/components/ui/input'
 import Title from '@/components/ui/title'
 import React, { useState, useEffect } from 'react'
 import { useApiStore } from '@/store/useApiStore'
+import toast from 'react-hot-toast'
 
 export default function CustomerSettings() {
     const { data, loading, error, getDataToken, putDataToken, postDataToken } = useApiStore();
@@ -20,7 +21,6 @@ export default function CustomerSettings() {
         postal_index: ''
     });
     const [passwordData, setPasswordData] = useState({
-        old_password: '',
         new_password: '',
         new_password_confirm: ''
     });
@@ -67,7 +67,6 @@ export default function CustomerSettings() {
             [field]: value
         }));
     };
-
     // Save profile changes
     const handleSaveProfile = async () => {
         setIsLoading(true);
@@ -86,54 +85,62 @@ export default function CustomerSettings() {
         }
     };
 
-    // Change password
     const handleChangePassword = async () => {
-        if (passwordData.new_password !== passwordData.new_password_confirm) {
-            setMessage('Новые пароли не совпадают');
+        // Validatsiya
+        if (!passwordData.new_password) {
+            toast.error('Введите новый пароль');
             return;
         }
 
-        if (passwordData.new_password.length < 6) {
-            setMessage('Пароль должен содержать минимум 6 символов');
+        if (passwordData.new_password.length < 8) {
+            toast.error('Пароль должен содержать минимум 8 символов');
+            return;
+        }
+
+        if (passwordData.new_password !== passwordData.new_password_confirm) {
+            toast.error('Пароли не совпадают');
             return;
         }
 
         setIsLoading(true);
-        setMessage('');
 
         try {
-            await postDataToken("/accounts/profile/change-password/", {
-                old_password: passwordData.old_password,
-                new_password: passwordData.new_password
-            });
+            // Endpoint: /accounts/users/{id}/password/
+            // Bu endpoint faqat new_password qabul qiladi
+            const response = await putDataToken(
+                `/accounts/users/${data?.data?.id}/password/`,
+                { password: passwordData.new_password }
+            );
 
-            setMessage('Пароль успешно изменен');
-            setPasswordData({
-                old_password: '',
-                new_password: '',
-                new_password_confirm: ''
-            });
-            setShowPasswordFields(false);
+            if (response?.success) {
+                toast.success('Пароль успешно изменен');
+                setPasswordData({
+                    new_password: '',
+                    new_password_confirm: ''
+                });
+                setShowPasswordFields(false);
+            } else {
+                const errorMessage = response?.response?.data?.detail ||
+                    response?.response?.data?.message ||
+                    response?.response?.data?.password?.[0] ||
+                    'Ошибка при изменении пароля';
+                toast.error(errorMessage);
+            }
         } catch (err) {
-            setMessage('Ошибка при изменении пароля. Проверьте текущий пароль.');
+            console.error('Change password error:', err);
+            toast.error('Ошибка при изменении пароля');
         } finally {
             setIsLoading(false);
         }
     };
 
-    // Toggle password fields visibility
     const togglePasswordFields = () => {
-        console.log(showPasswordFields);
-
         setShowPasswordFields(!showPasswordFields);
         setPasswordData({
-            old_password: '',
             new_password: '',
             new_password_confirm: ''
         });
-        setMessage('');
     };
-
     if (loading) return <div className="text-center py-8">Загрузка...</div>;
     if (error) return <div className="text-center py-8 text-red-500">Ошибка: {error}</div>;
 
@@ -263,7 +270,6 @@ export default function CustomerSettings() {
 
             </div>
 
-            {/* Security Settings */}
             <div className="flex justify-between items-center">
                 <div className="flex flex-col mt-6">
                     <Title text={"Настройки"} size={"text-[24px]"} cls="uppercase" />
@@ -279,16 +285,10 @@ export default function CustomerSettings() {
                     >Изменить пароль</button>
                 ) : (
                     <div className="space-y-4">
+                        <p className="text-sm text-gray-600 mb-2">
+                            Введите новый пароль. Старый пароль не требуется.
+                        </p>
                         <div className="grid grid-cols-2 gap-4">
-                            <Input
-                                label='Текущий пароль'
-                                type='password'
-                                placeholder="Введите текущий пароль"
-                                className={'max-md:text-sm h-[50px]'}
-                                value={passwordData.old_password}
-                                onChange={(value) => handlePasswordChange('old_password', value)}
-                            />
-                            <div></div>
                             <Input
                                 label='Новый пароль'
                                 type='password'
@@ -307,7 +307,6 @@ export default function CustomerSettings() {
                             />
                         </div>
                         <div className="flex gap-3">
-
                             <button
                                 className="h-[64px] w-[194px] bg-[#2C5AA0] text-[white] flex items-center justify-center rounded-[12px] text-sm cursor-pointer transition-all duration-200 tracking-[-1%]"
                                 onClick={handleChangePassword}
@@ -318,7 +317,6 @@ export default function CustomerSettings() {
                                 onClick={togglePasswordFields}
                                 disabled={isLoading}
                             >Отмена</button>
-
                         </div>
                     </div>
                 )}
