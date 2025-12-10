@@ -66,9 +66,15 @@ export const useApiStore = create((set) => ({
             // Endpoint'ga token query parametr sifatida qo'shamiz
             const res = await api.get(`/accounts/verify-email/?token=${token}`);
             set({ data: res.data });
+            return { success: true, data: res.data };
         } catch (err) {
             const error = err?.response?.data || err;
             set({ error });
+            return {
+                success: false,
+                response: err.response,
+                error: err.message
+            };
         } finally {
             set({ loading: false });
         }
