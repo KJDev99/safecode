@@ -5,7 +5,7 @@ import { useApiStore } from '@/store/useApiStore'
 import { useRouter } from 'next/navigation'
 import toast from 'react-hot-toast'
 
-export default function LogOut({ redirtUrl = "/" }) {
+export default function LogOut({ redirtUrl = "/", setExitModalOpen }) {
     const [loading, setLoading] = useState(false)
     const [isVisible, setIsVisible] = useState(true)
     const router = useRouter()
@@ -61,6 +61,9 @@ export default function LogOut({ redirtUrl = "/" }) {
 
     const handleCancel = () => {
         setIsVisible(false)
+        if (setExitModalOpen) {
+            setExitModalOpen(false)
+        }
         setTimeout(() => {
             router.push(redirtUrl)
         }, 300)
@@ -80,7 +83,7 @@ export default function LogOut({ redirtUrl = "/" }) {
         <AnimatePresence>
             {isVisible && (
                 <motion.div
-                    className="fixed inset-0 bg-black/80 bg-opacity-50 flex items-center justify-center z-50 p-4"
+                    className="fixed inset-0 bg-black/80 bg-opacity-50 flex items-center justify-center z-[1001] p-4"
                     onClick={handleOverlayClick}
                     initial={{ opacity: 0 }}
                     animate={{ opacity: 1 }}

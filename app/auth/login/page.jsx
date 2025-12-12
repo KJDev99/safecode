@@ -232,7 +232,7 @@ export default function Login() {
                             href="/auth/email-reg"
                             className="text-sm text-blue-600 hover:text-blue-800 block text-center"
                         >
-                            Забыли пароль?
+                            Вход по электронной почте
                         </Link>
                     </div>
 

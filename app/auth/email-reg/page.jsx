@@ -202,9 +202,7 @@ function VerifyEmailCodeContent() {
                     <h1 className="text-2xl font-bold text-gray-900 mb-2">
                         Подтверждение Email
                     </h1>
-                    <p className="text-gray-600 mb-4">
-                        Введите ваш email и 6-значный код подтверждения
-                    </p>
+
                 </div>
 
                 <form onSubmit={handleSubmit}>
@@ -240,31 +238,13 @@ function VerifyEmailCodeContent() {
                                 maxLength={6}
                                 pattern="[0-9]*"
                                 inputMode="numeric"
-                                className="text-center text-xl tracking-widest w-full h-14"
+
                                 required
                             />
-                            <p className="text-xs text-gray-500 mt-2">
-                                Введите 6 цифр, которые вы получили в письме
-                            </p>
+
                         </div>
 
-                        {/* Resend Code Button */}
-                        <div className="text-center">
-                            <button
-                                type="button"
-                                onClick={handleResendCode}
-                                disabled={loading || !formData.email || emailError}
-                                className={`text-sm font-medium ${loading || !formData.email || emailError
-                                        ? 'text-gray-400 cursor-not-allowed'
-                                        : 'text-blue-600 hover:text-blue-800'
-                                    }`}
-                            >
-                                Отправить код повторно
-                            </button>
-                            <p className="text-xs text-gray-500 mt-1">
-                                Если вы не получили код, нажмите для повторной отправки
-                            </p>
-                        </div>
+
 
                         {/* Submit Button */}
                         <Button
@@ -291,40 +271,12 @@ function VerifyEmailCodeContent() {
                                     Вернуться к входу
                                 </Link>
                             </div>
-                            <div className="text-center">
-                                <Link
-                                    href="/auth/registration"
-                                    className="text-sm text-gray-600 hover:text-gray-800 inline-block"
-                                >
-                                    Ещё не зарегистрированы? Создать аккаунт
-                                </Link>
-                            </div>
+
                         </div>
                     </div>
                 </form>
 
-                {/* Instructions */}
-                <div className="mt-8 p-4 bg-blue-50 rounded-lg">
-                    <h3 className="text-sm font-semibold text-blue-800 mb-2">Не получили код?</h3>
-                    <ul className="text-sm text-blue-700 space-y-1">
-                        <li className="flex items-start">
-                            <span className="mr-2">•</span>
-                            <span>Проверьте папку "Спам" или "Рассылки"</span>
-                        </li>
-                        <li className="flex items-start">
-                            <span className="mr-2">•</span>
-                            <span>Убедитесь, что ввели правильный email адрес</span>
-                        </li>
-                        <li className="flex items-start">
-                            <span className="mr-2">•</span>
-                            <span>Подождите 1-2 минуты, письма могут приходить с задержкой</span>
-                        </li>
-                        <li className="flex items-start">
-                            <span className="mr-2">•</span>
-                            <span>Если код не пришел, нажмите "Отправить код повторно"</span>
-                        </li>
-                    </ul>
-                </div>
+
             </div>
         </div>
     )

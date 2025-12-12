@@ -6,17 +6,20 @@ import Button from '../ui/button'
 import { useApiStore } from '@/store/useApiStore';
 import Link from 'next/link'
 import { motion } from 'framer-motion'
+import toast from 'react-hot-toast';
 
 export default function ServicesBox() {
-    const { data, loading, error, getData } = useApiStore();
-
-    useEffect(() => {
-        getData("/website/services/");
-    }, []);
+    const { data, loading, error, getData, postDataToken } = useApiStore();
     const [isAuth, setIsAuth] = useState(false);
     const [role, setRole] = useState()
     const [showTooltip, setShowTooltip] = useState(false);
+    const [isProcessing, setIsProcessing] = useState(false);
     const isCustomer = role === "Заказчик";
+
+    useEffect(() => {
+        getData("/website/services/");
+    }, [isProcessing]);
+
     const checkAuth = () => {
         const auth = localStorage.getItem("isAuthenticated");
         const group = localStorage.getItem("user");
@@ -35,6 +38,43 @@ export default function ServicesBox() {
             window.removeEventListener("authChanged", checkAuth);
         };
     }, []);
+
+    const handlePurchaseService = async (serviceId, serviceTitle) => {
+        if (!isAuth) {
+            window.location.href = '/auth/login';
+            return;
+        }
+
+        if (!isCustomer) {
+            toast.error("Только заказчики могут заказывать услуги");
+            return;
+        }
+
+        setIsProcessing(true);
+        const loadingToast = toast.loading(`Заказ услуги "${serviceTitle}"...`);
+
+        try {
+            const payload = {
+                service: serviceId
+            };
+
+            const response = await postDataToken("/accounts/purchased-services/", payload);
+
+            toast.dismiss(loadingToast);
+
+            if (response && !response.error) {
+                toast.success(`Услуга "${serviceTitle}" успешно заказана!`);
+            } else {
+                toast.error("Произошла ошибка при заказе услуги");
+            }
+        } catch (error) {
+            toast.dismiss(loadingToast);
+            toast.error("Произошла ошибка при заказе услуги");
+            console.error("Error purchasing service:", error);
+        } finally {
+            setIsProcessing(false);
+        }
+    };
 
     if (loading) return <div className="text-center py-8">Yuklanmoqda...</div>;
     if (error) return <div className="text-center py-8 text-red-500">Xatolik yuz berdi: {error}</div>;
@@ -70,54 +110,30 @@ export default function ServicesBox() {
                                             <p className='text-[#1E1E1E] text-[20px]'>
                                                 От {parseFloat(service.price).toLocaleString('ru-RU')} ₽/месяц
                                             </p>
-                                            {
-                                                !isAuth ?
+                                            <div className="relative inline-block">
+                                                {!isAuth ? (
                                                     <Link href={'/auth/login'} className='text-nowrap text-[#fff]/60 '>
                                                         <Button
                                                             text={"Заказать услугу"}
-                                                            className='w-[324px] h-[64px]'
+                                                            className='w-[324px] h-[64px] cursor-pointer'
                                                         />
-                                                    </Link >
-                                                    :
-                                                    <div className="relative inline-block">
+                                                    </Link>
+                                                ) : (
+                                                    <motion.div
+                                                        onMouseEnter={() => setShowTooltip(true)}
+                                                        onMouseLeave={() => setShowTooltip(false)}
+                                                        className="w-[324px] h-[64px]"
+                                                    >
+                                                        <Button
+                                                            text={isProcessing ? "Обработка..." : "Заказать услугу"}
+                                                            className={`w-[324px] h-[64px] ${!isCustomer || isProcessing ? 'opacity-50 cursor-not-allowed' : 'cursor-pointer'}`}
+                                                            onClick={() => isCustomer && !isProcessing && handlePurchaseService(service.id, service.title)}
+                                                            disabled={!isCustomer || isProcessing}
+                                                        />
 
-                                                        {/* Agar customer bo'lsa Link ishlaydi */}
-                                                        {isCustomer ? (
-                                                            <Link href={'/roles/customer?tab=settings'}>
-                                                                <Button
-                                                                    text={"Заказать услугу"}
-                                                                    className='w-[324px] h-[64px] cursor-pointer'
-                                                                />
-                                                            </Link>
-                                                        ) : (
-                                                            // Agar customer bo'lmasa disable qilingan button
-                                                            <motion.div
-                                                                onMouseEnter={() => setShowTooltip(true)}
-                                                                onMouseLeave={() => setShowTooltip(false)}
-                                                                className="w-[324px] h-[64px] select-none"
-                                                            >
-                                                                <Button
-                                                                    text={"Заказать услугу"}
-                                                                    className="w-[324px] h-[64px] opacity-50 cursor-not-allowed"
-                                                                    disabled
-                                                                />
-                                                            </motion.div>
-                                                        )}
-
-                                                        {/* Tooltip (faqat role noto'g'ri bo'lsa chiqadi) */}
-                                                        {!isCustomer && showTooltip && (
-                                                            <motion.div
-                                                                initial={{ opacity: 0, y: 5 }}
-                                                                animate={{ opacity: 1, y: 0 }}
-                                                                exit={{ opacity: 0 }}
-                                                                className="absolute top-full left-1/2 -translate-x-1/2 mt-2 bg-black text-white px-3 py-2 rounded-lg text-sm whitespace-nowrap shadow-lg z-50"
-                                                            >
-                                                                ❗ Этот доступ не предназначен для вашей роли
-                                                            </motion.div>
-                                                        )}
-                                                    </div>
-                                            }
-
+                                                    </motion.div>
+                                                )}
+                                            </div>
                                         </div>
                                     </div>
                                 </div>
@@ -163,53 +179,30 @@ export default function ServicesBox() {
                                             <p className='text-[#1E1E1E] text-[20px]'>
                                                 От {parseFloat(service.price).toLocaleString('ru-RU')} ₽/месяц
                                             </p>
-                                            {
-                                                !isAuth ?
+                                            <div className="relative inline-block">
+                                                {!isAuth ? (
                                                     <Link href={'/auth/login'} className='text-nowrap text-[#fff]/60 '>
                                                         <Button
                                                             text={"Заказать услугу"}
-                                                            className='w-[324px] h-[64px]'
+                                                            className='w-[324px] h-[64px] cursor-pointer'
                                                         />
-                                                    </Link >
-                                                    :
-                                                    <div className="relative inline-block">
+                                                    </Link>
+                                                ) : (
+                                                    <motion.div
+                                                        onMouseEnter={() => setShowTooltip(true)}
+                                                        onMouseLeave={() => setShowTooltip(false)}
+                                                        className="w-[324px] h-[64px]"
+                                                    >
+                                                        <Button
+                                                            text={isProcessing ? "Обработка..." : "Заказать услугу"}
+                                                            className={`w-[324px] h-[64px] ${!isCustomer || isProcessing ? 'opacity-50 cursor-not-allowed' : 'cursor-pointer'}`}
+                                                            onClick={() => isCustomer && !isProcessing && handlePurchaseService(service.id, service.title)}
+                                                            disabled={!isCustomer || isProcessing}
+                                                        />
 
-                                                        {/* Agar customer bo'lsa Link ishlaydi */}
-                                                        {isCustomer ? (
-                                                            <Link href={'/roles/customer?tab=settings'}>
-                                                                <Button
-                                                                    text={"Заказать услугу"}
-                                                                    className='w-[324px] h-[64px] cursor-pointer'
-                                                                />
-                                                            </Link>
-                                                        ) : (
-                                                            // Agar customer bo'lmasa disable qilingan button
-                                                            <motion.div
-                                                                onMouseEnter={() => setShowTooltip(true)}
-                                                                onMouseLeave={() => setShowTooltip(false)}
-                                                                className="w-[324px] h-[64px] select-none"
-                                                            >
-                                                                <Button
-                                                                    text={"Заказать услугу"}
-                                                                    className="w-[324px] h-[64px] opacity-50 cursor-not-allowed"
-                                                                    disabled
-                                                                />
-                                                            </motion.div>
-                                                        )}
-
-                                                        {/* Tooltip (faqat role noto'g'ri bo'lsa chiqadi) */}
-                                                        {!isCustomer && showTooltip && (
-                                                            <motion.div
-                                                                initial={{ opacity: 0, y: 5 }}
-                                                                animate={{ opacity: 1, y: 0 }}
-                                                                exit={{ opacity: 0 }}
-                                                                className="absolute top-full left-1/2 -translate-x-1/2 mt-2 bg-black text-white px-3 py-2 rounded-lg text-sm whitespace-nowrap shadow-lg z-50"
-                                                            >
-                                                                ❗ Этот доступ не предназначен для вашей роли
-                                                            </motion.div>
-                                                        )}
-                                                    </div>
-                                            }
+                                                    </motion.div>
+                                                )}
+                                            </div>
                                         </div>
                                     </div>
                                 </div>
@@ -256,14 +249,15 @@ export default function ServicesBox() {
                                         От {parseFloat(service.price).toLocaleString('ru-RU')} ₽/месяц
                                     </p>
                                     <Button
-                                        text={"Заказать услугу"}
-                                        className='h-[66px] w-full'
+                                        text={isProcessing ? "Обработка..." : "Заказать услугу"}
+                                        className={`h-[66px] w-full ${!isCustomer || isProcessing ? 'opacity-50 cursor-not-allowed' : 'cursor-pointer'}`}
+                                        onClick={() => isCustomer && !isProcessing && handlePurchaseService(service.id, service.title)}
+                                        disabled={!isCustomer || isProcessing}
                                     />
+
                                 </div>
                             </div>
                         </div>
-
-
                     </React.Fragment>
                 ))}
             </div>

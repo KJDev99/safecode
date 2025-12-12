@@ -24,14 +24,34 @@ export default function CustomerSettings() {
         new_password: '',
         new_password_confirm: ''
     });
+    const [servicesData, setServicesData] = useState([]);
+    const [servicesLoading, setServicesLoading] = useState(false);
     const [showPasswordFields, setShowPasswordFields] = useState(false);
     const [message, setMessage] = useState('');
     const [isLoading, setIsLoading] = useState(false);
+    const [extendingServiceId, setExtendingServiceId] = useState(null);
 
     // Load profile data on component mount
     useEffect(() => {
         getDataToken("/accounts/profile/");
+        loadPurchasedServices();
     }, []);
+
+    // Load purchased services
+    const loadPurchasedServices = async () => {
+        setServicesLoading(true);
+        try {
+            const response = await getDataToken("/accounts/purchased-services/");
+            if (response && response.data) {
+                setServicesData(response.data);
+            }
+        } catch (err) {
+            console.error('Error loading purchased services:', err);
+            toast.error('Ошибка при загрузке услуг');
+        } finally {
+            setServicesLoading(false);
+        }
+    };
 
     // Update form data when API data is loaded
     useEffect(() => {
@@ -67,6 +87,7 @@ export default function CustomerSettings() {
             [field]: value
         }));
     };
+
     // Save profile changes
     const handleSaveProfile = async () => {
         setIsLoading(true);
@@ -134,6 +155,35 @@ export default function CustomerSettings() {
         }
     };
 
+    // Extend service for next month
+    const handleExtendService = async (serviceId, serviceTitle, finishedDate) => {
+        setExtendingServiceId(serviceId);
+        const loadingToast = toast.loading(`Продление услуги "${serviceTitle}"...`);
+
+        try {
+            const response = await postDataToken("/accounts/purchased-services/", {
+                service: serviceId,
+                start_date: finishedDate,
+            });
+
+            toast.dismiss(loadingToast);
+
+            if (response && !response.error) {
+                toast.success(`Услуга "${serviceTitle}" успешно продлена!`);
+                // Reload services
+                await loadPurchasedServices();
+            } else {
+                toast.error('Ошибка при продлении услуги');
+            }
+        } catch (err) {
+            toast.dismiss(loadingToast);
+            console.error('Error extending service:', err);
+            toast.error('Ошибка при продлении услуги');
+        } finally {
+            setExtendingServiceId(null);
+        }
+    };
+
     const togglePasswordFields = () => {
         setShowPasswordFields(!showPasswordFields);
         setPasswordData({
@@ -141,6 +191,17 @@ export default function CustomerSettings() {
             new_password_confirm: ''
         });
     };
+
+    // Format date function
+    const formatDate = (dateString) => {
+        if (!dateString) return '';
+        const date = new Date(dateString);
+        const day = String(date.getDate()).padStart(2, '0');
+        const month = String(date.getMonth() + 1).padStart(2, '0');
+        const year = String(date.getFullYear()).slice(2);
+        return `${day}.${month}.${year}`;
+    };
+
     if (loading) return <div className="text-center py-8">Загрузка...</div>;
     if (error) return <div className="text-center py-8 text-red-500">Ошибка: {error}</div>;
 
@@ -252,24 +313,74 @@ export default function CustomerSettings() {
                     onChange={(value) => handleInputChange('postal_index', value)}
                 />
             </div>
+
+            {/* Services Information */}
             <div className="flex justify-between items-center">
                 <div className="flex flex-col mt-6">
                     <Title text={"Услуги"} size={"text-[24px]"} cls="uppercase" />
                 </div>
             </div>
+
             <div className="p-8 mt-6 rounded-2xl flex flex-col gap-4" style={{ boxShadow: "0px 0px 4px 0px #76767626" }}>
+                {servicesLoading ? (
+                    <div className="text-center py-4 text-[#1E1E1E99]">
+                        Загрузка услуг...
+                    </div>
+                ) : servicesData.length === 0 ? (
+                    <div className="text-center py-4 text-[#1E1E1E99]">
+                        Нет активных услуг
+                    </div>
+                ) : (
+                    <div className="space-y-4 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                        {servicesData
+                            .filter(service => service.is_active) // Faqat aktiv xizmatlarni ko'rsatish
+                            .map((purchasedService) => {
+                                const isActive = purchasedService.is_active;
+                                const finishedDate = purchasedService.finished_date;
+                                const serviceTitle = purchasedService.service?.title || 'Услуга';
 
-                <Input
-                    label='Пакеты'
-                    placeholder="Профессиональный пакет"
-                    className={'max-md:text-sm h-[50px] !w-[294px]'}
-                />
-                <button
-                    className="h-[64px] w-[294px] bg-[#E2E2E2] !text-[#8E8E8E] flex items-center justify-center rounded-[12px] text-sm cursor-pointer transition-all duration-200 tracking-[-1%]"
-                >Продлить на следующий месяц</button>
+                                return (
+                                    <div
+                                        key={purchasedService.id}
+                                        className=""
+                                    >
+                                        <div className="flex mb-4 justify-between">
+                                            <p className='text-[#1E1E1E99]'>Пакеты</p>
+                                            <p className='text-[#1E1E1E]'>
+                                                Активен до {formatDate(finishedDate)}
+                                            </p>
+                                        </div>
+                                        <div className="w-full h-[50px] border border-[#1E1E1E80] px-6 rounded-[12px] mb-6 flex items-center text-[#1E1E1E]">
+                                            {serviceTitle}
 
+                                        </div>
+
+
+
+                                        {isActive && finishedDate && (
+                                            <>
+
+                                                <button
+                                                    className="w-full h-[64px] bg-[#2C5AA0] text-white flex items-center justify-center rounded-[12px] text-sm cursor-pointer transition-all duration-200 tracking-[-1%] hover:bg-[#1e4073] disabled:bg-gray-400 disabled:cursor-not-allowed"
+                                                    onClick={() => handleExtendService(purchasedService.service.id, serviceTitle, finishedDate)}
+                                                    disabled={extendingServiceId === purchasedService.id}
+                                                >
+                                                    {extendingServiceId === purchasedService.id
+                                                        ? 'Продление...'
+                                                        : 'Продлить на следующий месяц'
+                                                    }
+                                                </button>
+                                            </>
+                                        )}
+                                    </div>
+                                );
+                            })
+                        }
+                    </div>
+                )}
             </div>
 
+            {/* Settings */}
             <div className="flex justify-between items-center">
                 <div className="flex flex-col mt-6">
                     <Title text={"Настройки"} size={"text-[24px]"} cls="uppercase" />

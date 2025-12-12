@@ -2,9 +2,11 @@
 import React, { useState, useRef, useEffect } from 'react'
 import Link from 'next/link'
 import { IoIosArrowDown } from 'react-icons/io';
+import LogOut from '../role/log-out';
 
 export default function ProfileDropdown({ role, setShow }) {
     const [open, setOpen] = useState(false);
+    const [exitModalOpen, setExitModalOpen] = useState(false);
     const dropdownRef = useRef(null);
     console.log(role);
 
@@ -55,6 +57,9 @@ export default function ProfileDropdown({ role, setShow }) {
                             <Link onClick={() => setShow(false)} className="px-4 py-2 hover:text-white text-sm text-[white]/60" href="/roles/duty-engineer?tab=notifications">Уведомления</Link>
                             <Link onClick={() => setShow(false)} className="px-4 py-2 hover:text-white text-sm text-[white]/60" href="/roles/duty-engineer?tab=myorders">Мои заказы</Link>
                             <Link onClick={() => setShow(false)} className="px-4 py-2 hover:text-white text-sm text-[white]/60" href="/roles/duty-engineer?tab=settings">Настройки</Link>
+                            <div className="px-4 pt-2 pb-4  hover:text-white text-sm text-[white]/60" onClick={() => setExitModalOpen(true)}>Выйти</div>
+                            {exitModalOpen && <LogOut redirtUrl="/roles/duty-engineer?tab=dashboard" setExitModalOpen={setExitModalOpen} />}
+
                         </div>
                         : role == "Заказчик"
                             ? <div className="flex flex-col">
@@ -65,6 +70,8 @@ export default function ProfileDropdown({ role, setShow }) {
                                 <Link onClick={() => setShow(false)} className="px-4 py-2 hover:text-white text-sm text-[white]/60" href="/roles/customer?tab=notifications">Уведомления</Link>
                                 <Link onClick={() => setShow(false)} className="px-4 py-2 hover:text-white text-sm text-[white]/60" href="/roles/customer?tab=myorders">Мои заказы</Link>
                                 <Link onClick={() => setShow(false)} className="px-4 py-2 hover:text-white text-sm text-[white]/60" href="/roles/customer?tab=settings">Настройки</Link>
+                                <div className="px-4 pt-2 pb-4  hover:text-white text-sm text-[white]/60" onClick={() => setExitModalOpen(true)}>Выйти</div>
+                                {exitModalOpen && <LogOut redirtUrl="/roles/customer?tab=dashboard" setExitModalOpen={setExitModalOpen} />}
                             </div>
                             : role == "Инспектор МЧС"
                                 ? <div className="flex flex-col">
@@ -74,6 +81,8 @@ export default function ProfileDropdown({ role, setShow }) {
                                     <Link onClick={() => setShow(false)} className="px-4 py-2 hover:text-white text-sm text-[white]/60" href="/roles/inspectors?tab=document">Документы</Link>
                                     <Link onClick={() => setShow(false)} className="px-4 py-2 hover:text-white text-sm text-[white]/60" href="/roles/inspectors?tab=notifications">Уведомления</Link>
                                     <Link onClick={() => setShow(false)} className="px-4 py-2 hover:text-white text-sm text-[white]/60" href="/roles/inspectors?tab=settings">Настройки</Link>
+                                    <div className="px-4 pt-2 pb-4  hover:text-white text-sm text-[white]/60" onClick={() => setExitModalOpen(true)}>Выйти</div>
+                                    {exitModalOpen && <LogOut redirtUrl="/roles/inspectors?tab=dashboard" setExitModalOpen={setExitModalOpen} />}
                                 </div>
                                 : role == "Исполнителя"
                                     ? <div className="flex flex-col">
@@ -82,6 +91,8 @@ export default function ProfileDropdown({ role, setShow }) {
                                         <Link onClick={() => setShow(false)} className="px-4 py-2 hover:text-white text-sm text-[white]/60" href="/roles/performer?tab=reports">Отчеты</Link>
                                         <Link onClick={() => setShow(false)} className="px-4 py-2 hover:text-white text-sm text-[white]/60" href="/roles/performer?tab=notifications">Уведомления</Link>
                                         <Link onClick={() => setShow(false)} className="px-4 py-2 hover:text-white text-sm text-[white]/60" href="/roles/performer?tab=settings">Настройки</Link>
+                                        <div className="px-4 pt-2 pb-4  hover:text-white text-sm text-[white]/60" onClick={() => setExitModalOpen(true)}>Выйти</div>
+                                        {exitModalOpen && <LogOut redirtUrl="/roles/performer?tab=dashboard" setExitModalOpen={setExitModalOpen} />}
                                     </div>
                                     : role == "Менеджер"
                                         ? <div className="flex flex-col">
@@ -92,6 +103,8 @@ export default function ProfileDropdown({ role, setShow }) {
                                             <Link onClick={() => setShow(false)} className="px-4 py-2 hover:text-white text-sm text-[white]/60" href="/roles/manager?tab=storage">Хранилище</Link>
                                             <Link onClick={() => setShow(false)} className="px-4 py-2 hover:text-white text-sm text-[white]/60" href="/roles/manager?tab=notifications">Уведомления</Link>
                                             <Link onClick={() => setShow(false)} className="px-4 py-2 hover:text-white text-sm text-[white]/60" href="/roles/manager?tab=settings">Настройки</Link>
+                                            <div className="px-4 pt-2 pb-4  hover:text-white text-sm text-[white]/60" onClick={() => setExitModalOpen(true)}>Выйти</div>
+                                            {exitModalOpen && <LogOut redirtUrl="/roles/manager?tab=dashboard" setExitModalOpen={setExitModalOpen} />}
                                         </div>
                                         : role == "Обслуживающий инженер"
                                             ? <div className="flex flex-col">
@@ -102,6 +115,8 @@ export default function ProfileDropdown({ role, setShow }) {
                                                 <Link onClick={() => setShow(false)} className="px-4 py-2 hover:text-white text-sm text-[white]/60" href="/roles/manager?tab=storage">Хранилище</Link>
                                                 <Link onClick={() => setShow(false)} className="px-4 py-2 hover:text-white text-sm text-[white]/60" href="/roles/manager?tab=notifications">Уведомления</Link>
                                                 <Link onClick={() => setShow(false)} className="px-4 py-2 hover:text-white text-sm text-[white]/60" href="/roles/manager?tab=settings">Настройки</Link>
+                                                <div className="px-4 pt-2 pb-4  hover:text-white text-sm text-[white]/60" onClick={() => setExitModalOpen(true)}>Выйти</div>
+                                                {exitModalOpen && <LogOut redirtUrl="/roles/manager?tab=dashboard" setExitModalOpen={setExitModalOpen} />}
                                             </div>
                                             : <div className="flex flex-col">
                                                 <Link onClick={() => setShow(false)} className="px-4 py-2 hover:text-white text-sm text-[white]/60" href="/roles/admin-panel?tab=dashboard">Дашборд</Link>
@@ -110,6 +125,8 @@ export default function ProfileDropdown({ role, setShow }) {
                                                 <Link onClick={() => setShow(false)} className="px-4 py-2 hover:text-white text-sm text-[white]/60" href="/roles/admin-panel?tab=storage">Хранилище</Link>
                                                 <Link onClick={() => setShow(false)} className="px-4 py-2 hover:text-white text-sm text-[white]/60" href="/roles/admin-panel?tab=notifications">Уведомления</Link>
                                                 <Link onClick={() => setShow(false)} className="px-4 py-2 hover:text-white text-sm text-[white]/60" href="/roles/admin-panel?tab=settings">Настройки</Link>
+                                                <div className="px-4 pt-2 pb-4  hover:text-white text-sm text-[white]/60" onClick={() => setExitModalOpen(true)}>Выйти</div>
+                                                {exitModalOpen && <LogOut redirtUrl="/roles/admin-panel?tab=dashboard" setExitModalOpen={setExitModalOpen} />}
                                             </div>
                 }
 

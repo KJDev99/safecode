@@ -558,7 +558,7 @@ export default function Users() {
                 <Button
                     className="h-[54px] w-[285px] gap-2.5 max-md:w-full"
                     icon={<FaPlus />}
-                    text={"Назначить исполнителя"}
+                    text={"Создать пользователя"}
                     onClick={openCreateModal}
                 />
             </div>
@@ -579,15 +579,7 @@ export default function Users() {
                     <table className="w-full border-collapse">
                         <thead>
                             <tr className="border-b-2 border-gray-200 text-[#1E1E1E99] text-base">
-                                <th className="p-4 text-left font-semibold">
-                                    <input
-                                        id="head-check-all"
-                                        type="checkbox"
-                                        checked={selectAll}
-                                        onChange={handleSelectAll}
-                                        className="w-4 h-4"
-                                    />
-                                </th>
+
                                 <th className="p-4 text-left font-semibold">Id</th>
                                 <th className="p-4 text-left font-semibold">ФИО</th>
                                 <th className="p-4 text-left font-semibold">Роль</th>
@@ -599,14 +591,7 @@ export default function Users() {
                         <tbody>
                             {users.map((user, index) => (
                                 <tr key={user.id} className="border-b border-gray-100 hover:bg-gray-50 transition-colors">
-                                    <td className="p-4">
-                                        <input
-                                            type="checkbox"
-                                            checked={user._checked || false}
-                                            onChange={(e) => handleUserCheck(e, user.id)}
-                                            className="w-4 h-4"
-                                        />
-                                    </td>
+
                                     <td className="p-4 text-[#1E1E1E] font-medium">{index + 1}</td>
                                     <td className="p-4">
                                         <p className="text-[#2C5AA0] font-semibold cursor-pointer hover:underline"
@@ -616,7 +601,7 @@ export default function Users() {
                                         <p className="text-sm text-[#1E1E1E99]">{user.email}</p>
                                         <p className="text-sm text-[#1E1E1E99]">{user.phone_number || "Телефон не указан"}</p>
                                     </td>
-                                    <td className="p-4">
+                                    <td className="p-4 text-nowrap  ">
                                         <span className="px-3 py-1 bg-blue-100 text-blue-800 rounded-full text-sm font-medium">
                                             {user.groups && user.groups[0]?.name || "Не назначено"}
                                         </span>
@@ -627,13 +612,13 @@ export default function Users() {
                                     </td>
                                     <td className="p-4">
                                         <div className="flex gap-2 items-center justify-center">
-                                            <button
+                                            {/* <button
                                                 onClick={() => openEditModal(user)}
                                                 className="w-9 h-9 bg-gray-200 rounded-lg flex items-center justify-center hover:bg-gray-300 transition-colors"
                                                 title="Редактировать"
                                             >
                                                 <FiEdit2 className="text-base text-[#1E1E1E]" />
-                                            </button>
+                                            </button> */}
                                             <button
                                                 onClick={() => openDeleteModal(user)}
                                                 className="w-9 h-9 bg-red-500 rounded-lg flex items-center justify-center hover:bg-red-600 transition-colors"

@@ -11,6 +11,7 @@ import Button from "@/components/ui/button";
 import Title from "@/components/ui/title";
 import Loader from "@/components/Loader";
 import { useApiStore } from "@/store/useApiStore";
+import SkeletonCard from "@/components/ui/SkeletonCard";
 
 export default function AdminTovar() {
   const {
@@ -49,38 +50,36 @@ export default function AdminTovar() {
   // Load products and categories
   useEffect(() => {
     const loadAllData = async () => {
-      setIsLoadingData(true);
       await Promise.all([loadProducts(currentPage), loadCategories()]);
-      setIsLoadingData(false);
     };
 
     loadAllData();
   }, [currentPage]);
 
-  // Update products when data changes
   useEffect(() => {
     if (data) {
       console.log("API Response:", data);
 
-      // Handle different response structures
+      // Data borligini tekshirish
       if (data.success && Array.isArray(data.data)) {
-        // Standard API response: { success: true, data: [...], pagination: {...} }
         setProducts(data.data);
         if (data.pagination) {
           setTotalPages(data.pagination.total_pages || 1);
         }
+        setIsLoadingData(false); // ✅ Data kelganda loading ni o'chirish
       } else if (data.data && Array.isArray(data.data)) {
-        // Response with data property
         setProducts(data.data);
         if (data.pagination) {
           setTotalPages(data.pagination.total_pages || 1);
         }
+        setIsLoadingData(false); // ✅ Data kelganda loading ni o'chirish
       } else if (Array.isArray(data)) {
-        // Direct array response
         setProducts(data);
+        setIsLoadingData(false); // ✅ Data kelganda loading ni o'chirish
       }
     }
   }, [data]);
+
 
   const loadProducts = async (page = 1) => {
     await getDataToken(`/products/?page=${page}`);
@@ -511,9 +510,34 @@ export default function AdminTovar() {
   };
 
   if (isLoadingData && products.length === 0) {
-    return <Loader />;
-  }
+    return (
+      <div>
+        {/* Header section - o'zgarmaydi */}
+        <div className="flex justify-between md:items-center max-md:flex-col max-md:mt-8">
+          <div className="flex flex-col">
+            <Title text={"Товары"} size={"text-[24px] max-md:mb-3 max-md:text-[22px]"} cls="uppercase" />
+            <p className="text-[#1E1E1E]/60 md:mt-3 max-md:text-sm max-md:mb-6">
+              Загрузка товаров...
+            </p>
+          </div>
+          <Button
+            className="h-[54px] w-[285px] gap-2.5 max-md:w-full"
+            icon={<FaPlus />}
+            text={"Добавить товар"}
+            onClick={() => setIsModalOpen(true)}
+            disabled={true}
+          />
+        </div>
 
+        {/* Skeleton cards grid */}
+        <div className="mt-6 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4">
+          {[...Array(8)].map((_, index) => (
+            <SkeletonCard key={index} />
+          ))}
+        </div>
+      </div>
+    );
+  }
   return (
     <div>
       {/* Create Modal */}
@@ -1098,7 +1122,7 @@ export default function AdminTovar() {
       </div>
 
       {/* Products Grid */}
-      {products.length === 0 && !isLoadingData ? (
+      {products.length === 0 ? (
         <div
           className="mt-6 bg-white rounded-2xl p-8 text-center"
           style={{ boxShadow: "0px 0px 4px 0px #76767626" }}
@@ -1155,52 +1179,62 @@ export default function AdminTovar() {
                     </button>
                   </div>
 
-                  {/* Inactive Badge */}
-                  {!product.is_active && (
-                    <div className="absolute top-14 right-4 px-2 py-1 bg-red-500 text-white text-xs rounded z-10">
-                      Неактивен
-                    </div>
-                  )}
+
 
                   {/* Product Image */}
                   <div className="w-full aspect-square mb-4 rounded-lg overflow-hidden">
-                    <Image
-                      src={
-                        product.images_list?.[0]?.image || "/cart.png"
-                      }
-                      alt={product.name || "name"}
-                      width={300}
-                      height={300}
-                      className="w-full h-full object-cover"
-                    />
+                    {
+                      product.images_list?.[0]?.image &&
+                      <Image
+                        src={
+                          product.images_list?.[0]?.image
+                        }
+                        alt={product.name || "name"}
+                        width={300}
+                        height={300}
+                        className="w-full h-full object-cover"
+                      />
+                    }
                   </div>
 
                   {/* Product Info */}
-                  <h3 className="text-base text-[#1E1E1E] font-medium mb-2 line-clamp-2">
-                    {product.name}
-                  </h3>
-                  <p className="text-[#1E1E1E]/60 text-sm mb-1">
-                    <span className="font-semibold">Артикул:</span>{" "}
-                    {product.article || "Не указан"}
-                  </p>
-                  <p className="text-[#1E1E1E]/60 text-sm mb-1">
-                    <span className="font-semibold">Размер:</span>{" "}
-                    {getSizeString(product)}
-                  </p>
-                  <p className="text-[#1E1E1E]/60 text-sm mb-3">
-                    <span className="font-semibold">Категория:</span>{" "}
-                    {getCategoryName(product.category || product.category_id)}
-                  </p>
+                  {product.name &&
+                    <h3 className="text-base text-[#1E1E1E] font-medium mb-2 line-clamp-2">
+                      {product.name}
+                    </h3>
+                  }
+                  {product.article &&
+                    <p className="text-[#1E1E1E]/60 text-sm mb-1">
+                      <span className="font-semibold">Артикул:</span>{" "}
+                      {product.article}
+                    </p>
+                  }
+                  {getSizeString(product) &&
+                    <p className="text-[#1E1E1E]/60 text-sm mb-1">
+                      <span className="font-semibold">Размер:</span>{" "}
+                      {getSizeString(product)}
+                    </p>
+                  }
+                  {getCategoryName(product.category || product.category_id) &&
+                    <p className="text-[#1E1E1E]/60 text-sm mb-3">
+                      <span className="font-semibold">Категория:</span>{" "}
+                      {getCategoryName(product.category || product.category_id)}
+                    </p>
+                  }
 
-                  <div className="text-sm text-[#1E1E1E]/60">
-                    <span className="font-semibold">На складе:</span>{" "}
-                    {product.stock || 0} шт.
-                  </div>
+                  {product.stock &&
+                    <div className="text-sm text-[#1E1E1E]/60">
+                      <span className="font-semibold">На складе:</span>{" "}
+                      {product.stock || 0} шт.
+                    </div>
+                  }
                   {/* Price */}
-                  <div className="text-lg font-bold text-[#2C5AA0]">
-                    <span className="text-sm text-[#1E1E1E]/60">Цена:</span>{" "}
-                    {formatPrice(product.price)} ₽
-                  </div>
+                  {formatPrice(product.price) &&
+                    <div className="text-lg font-bold text-[#2C5AA0]">
+                      <span className="text-sm text-[#1E1E1E]/60">Цена:</span>{" "}
+                      {formatPrice(product.price)} ₽
+                    </div>
+                  }
                 </div>
               </div>
             ))}
@@ -1255,7 +1289,8 @@ export default function AdminTovar() {
             </div>
           )}
         </>
-      )}
-    </div>
+      )
+      }
+    </div >
   );
 }

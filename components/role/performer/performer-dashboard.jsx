@@ -9,6 +9,7 @@ import { FaEdit } from 'react-icons/fa';
 import { FiEdit2 } from 'react-icons/fi';
 import { useApiStore } from '@/store/useApiStore';
 import Loader from '@/components/Loader';
+import Link from 'next/link';
 
 export default function PerformerDashboard() {
     const { data, loading, error, getDataToken } = useApiStore();
@@ -60,12 +61,12 @@ export default function PerformerDashboard() {
                         Обзор текущей активности и задач на сегодня
                     </p>
                 </div>
-                <div className="w-[54px] h-[54px] flex items-center justify-center bg-[#C5C5C5]/50 rounded-[10px] relative !max-md:w-12 max-md:h-12">
+                {/* <div className="w-[54px] h-[54px] flex items-center justify-center bg-[#C5C5C5]/50 rounded-[10px] relative !max-md:w-12 max-md:h-12">
                     <IoNotifications className='text-[#1E1E1E]/50' size={24} />
                     <div className="absolute w-4.5 h-4.5 flex items-center justify-center my-0 border bg-[#E1E2E2] border-[#1E1E1E]/50 rounded-full top-2.5 right-2 text-[#1E1E1E]/50 text-[10px]">
                         3
                     </div>
-                </div>
+                </div> */}
             </div>
 
             <div className="grid grid-cols-3 gap-6 mt-6 max-md:grid-cols-1 max-md:gap-4">
@@ -98,10 +99,13 @@ export default function PerformerDashboard() {
                     <p className={`text-[#1E1E1E99] leading-[120%] grow max-md:text-sm mb-6`}>
                         Назначьте исполнителя на новую задачу или заявку для обслуживания объекта
                     </p>
-                    <Button
-                        text={'Перейти'}
-                        className='h-[66px] w-full max-md:h-[56px] max-md:text-sm'
-                    />
+                    <Link href={'performer?tab=requests'}>
+
+                        <Button
+                            text={'Перейти'}
+                            className='h-[66px] w-full max-md:h-[56px] max-md:text-sm'
+                        />
+                    </Link>
                 </div>
 
                 <div
@@ -111,13 +115,15 @@ export default function PerformerDashboard() {
                     <Title text={'Создать отчет'} color="text-[#2C5AA0]" size="text-lg max-md:text-base" cls={"mb-3"} />
                     <p className={`text-[#1E1E1E99] leading-[120%] grow max-md:text-sm mb-6`}>
                         Смотреть новые заявки <br className="max-md:hidden" />
-                        Смотреть новые заявки
+                        {/* Смотреть новые заявки */}
                     </p>
-                    <Button
-                        icon={<FiEdit2 />}
-                        text={'Заполнить журнал'}
-                        className='h-[66px] w-full max-md:h-[56px] max-md:text-sm gap-2 bg-[#E2E2E2] !text-[#8E8E8E]'
-                    />
+                    <Link href={'performer?tab=reports'}>
+                        <Button
+                            icon={<FiEdit2 />}
+                            text={'Заполнить журнал'}
+                            className='h-[66px] w-full max-md:h-[56px] max-md:text-sm gap-2 bg-[#E2E2E2] !text-[#8E8E8E]'
+                        />
+                    </Link>
                 </div>
             </div>
 

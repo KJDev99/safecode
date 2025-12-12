@@ -58,12 +58,12 @@ export default function InspectorsDashboard() {
                         Обзор текущей активности и задач на сегодня
                     </p>
                 </div>
-                <div className="w-[54px] h-[54px] flex items-center justify-center bg-[#C5C5C5]/50 rounded-[10px] relative !max-md:w-12 max-md:h-12">
+                {/* <div className="w-[54px] h-[54px] flex items-center justify-center bg-[#C5C5C5]/50 rounded-[10px] relative !max-md:w-12 max-md:h-12">
                     <IoNotifications className='text-[#1E1E1E]/50' size={24} />
                     <div className="absolute w-4.5 h-4.5 flex items-center justify-center my-0 border bg-[#E1E2E2] border-[#1E1E1E]/50 rounded-full top-2.5 right-2 text-[#1E1E1E]/50 text-[10px]">
                         3
                     </div>
-                </div>
+                </div> */}
             </div>
 
             <div className="grid grid-cols-3 gap-6 mt-6 max-md:grid-cols-1 max-md:gap-4">

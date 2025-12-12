@@ -10,16 +10,27 @@ import PerformerRequest from './performer-requeest';
 import PerformerReports from './performer-reports';
 import PerformerSettings from './performer-settings';
 import Badge from '@/components/ui/badge';
+import { useWebSocketNotification } from '@/components/ui/useWebSocketNotification';
+import NotificationDropdown from '@/components/ui/NotificationDropdown';
 
 export default function PerformerContent() {
     const router = useRouter();
     const searchParams = useSearchParams();
     const [activeItem, setActiveItem] = useState('dashboard');
 
+    // WebSocket notification hook'ni ishlatish
+    const {
+        notifications: wsNotifications,
+        unreadCount: wsUnreadCount,
+        isConnected,
+        clearNotifications: clearWsNotifications,
+        reconnect
+    } = useWebSocketNotification();
+
     // Barcha item'larni bitta massivga yig'ib olamiz
     const allItems = [
         { id: 'dashboard', text: 'Дашборд' },
-        { id: 'requests', text: 'Мои заявки' },
+        { id: 'requests', text: 'Все заявки' },
         { id: 'reports', text: 'Отчеты' },
         { id: 'notifications', text: 'Уведомления' },
         { id: 'settings', text: 'Настройки' },
@@ -45,13 +56,28 @@ export default function PerformerContent() {
         return activeItemData ? activeItemData.text : 'Дашборд';
     };
 
+    // Clear all notifications handler (faqat bu qoldi)
+    const handleClearAll = () => {
+        clearWsNotifications();
+    };
+
     return (
         <div>
-            <Badge
-                link2={getActiveItemText()}
-                adress2='roles/performer'
-                color={'text-[#1E1E1E]/60'}
-            />
+            <div className="flex justify-between items-center">
+
+                <Badge
+                    link2={getActiveItemText()}
+                    adress2='roles/performer'
+                    color={'text-[#1E1E1E]/60'}
+                />
+
+                <NotificationDropdown
+                    notifications={wsNotifications}
+                    unreadCount={wsUnreadCount}
+                    isConnected={isConnected}  // isConnected hali kerakmi? Agar yo'q bo'lsa, bu prop'ni o'chirishimiz mumkin
+                    onClearAll={handleClearAll}
+                />
+            </div>
             <div className="grid grid-cols-4 mt-8 gap-6 mb-[100px] max-md:grid-cols-1 max-md:gap-0 max-md:mb-[50px]">
                 <LayoutRole
                     sections={[

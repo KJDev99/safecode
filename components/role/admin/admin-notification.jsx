@@ -27,9 +27,9 @@ const ROLE_TAB_MAPPINGS = {
     },
     // Customer
     'customer': {
-        'bills': 'bills-cust',
+        'bills': '',
         'journals_and_acts': 'service-log',
-        'user_object': 'objects-cust',
+        'user_object': 'objects',
         'orders': 'orders-cust',
         'tasks': 'tasks-cust',
         'incidents': 'incidents-cust',
@@ -391,7 +391,7 @@ export default function AdminNotification() {
                 return (
                     <div
                         key={notification.id}
-                        className={`p-6 mt-6 rounded-xl flex justify-between items-center max-md:flex-col cursor-pointer transition-all duration-200 ${isRead ? 'opacity-80 hover:opacity-100' : 'hover:shadow-md'} ${markingAsRead ? 'pointer-events-none opacity-50' : ''}`}
+                        className={`p-6 mt-4 rounded-xl flex border border-blue-900 justify-between items-center max-md:flex-col cursor-pointer transition-all duration-200 ${isRead ? '' : 'hover:shadow-md'} ${markingAsRead ? 'pointer-events-none opacity-50' : ''}`}
                         style={{ boxShadow: "0px 0px 4px 0px #76767626" }}
                         onClick={() => handleNotificationClick(notification)}
                     >

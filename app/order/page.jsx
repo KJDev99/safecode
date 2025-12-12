@@ -169,7 +169,7 @@ export default function CheckoutPage() {
     if (cartItems.length === 0 && !showSuccessModal) {
         return (
             <div className="max-w-[1200px] mx-auto px-4 py-12">
-                <h1 className="text-3xl font-bold text-[#1E1E1E] mb-8">Оформление заказа</h1>
+                <h1 className="text-[24px] text-[#1E1E1E] mb-8">Оформление заказа</h1>
                 <div className="flex flex-col items-center justify-center py-20">
                     <h2 className="text-2xl font-semibold text-[#1E1E1E] mb-2">
                         Корзина пуста
@@ -219,23 +219,21 @@ export default function CheckoutPage() {
                 </div>
             )}
 
-            <h1 className="text-3xl font-bold text-[#1E1E1E] mb-8">Оформление заказа</h1>
+            <h1 className="text-[24px] text-[#1E1E1E] mb-8">Оформление заказа</h1>
 
-            <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+            <div className="grid grid-cols-1 lg:grid-cols-5 gap-6">
                 {/* Left Column - Profile Data */}
-                <div className="space-y-6">
+                <div className="space-y-6 lg:col-span-3 col-span-1">
                     {/* Personal Info */}
                     <div>
-                        <div className="flex justify-between items-center">
-                            <div className="flex flex-col">
-                                <Title text={"Заполните личные данные"} size={"text-[24px]"} cls="uppercase" />
-                                <p className="text-[#1E1E1E]/60 mt-3">
-                                    Проверьте правильность данных
-                                </p>
-                            </div>
-                        </div>
 
                         <div className="p-8 mt-6 rounded-2xl grid grid-cols-2 gap-4" style={{ boxShadow: "0px 0px 4px 0px #76767626" }}>
+                            <div className="flex justify-between items-center col-span-2">
+                                <div className="flex flex-col">
+                                    <Title text={"Заполните личные данные"} size={"text-[18px]"} cls="uppercase" />
+
+                                </div>
+                            </div>
                             <Input
                                 label='Имя'
                                 placeholder="Не указано"
@@ -269,18 +267,11 @@ export default function CheckoutPage() {
                                 type="tel"
                                 disabled
                             />
-                        </div>
-                    </div>
-
-                    {/* Address Info */}
-                    <div>
-                        <div className="flex justify-between items-center">
-                            <div className="flex flex-col mt-6">
-                                <Title text={"Заполните адрес"} size={"text-[24px]"} cls="uppercase" />
+                            <div className="flex justify-between items-center col-span-2 mt-6">
+                                <div className="flex flex-col">
+                                    <Title text={"Заполните адрес"} size={"text-[18px]"} cls="uppercase" />
+                                </div>
                             </div>
-                        </div>
-
-                        <div className="p-8 mt-6 rounded-2xl grid grid-cols-2 gap-4" style={{ boxShadow: "0px 0px 4px 0px #76767626" }}>
                             <div className="col-span-2">
                                 <Input
                                     label='Город'
@@ -323,74 +314,75 @@ export default function CheckoutPage() {
                                 onChange={(value) => setProfileData(prev => ({ ...prev, postal_index: value }))}
                                 disabled
                             />
-                        </div>
-
-
-                    </div>
-
-                    <div className="grid grid-cols-5 gap-4">
-                        {/* Delivery Methods */}
-                        <div className='col-span-2'>
-                            <Title text={"Способ доставки"} size={"text-[18px]"} cls="uppercase mb-4" />
-                            <div className="space-y-3">
-                                {deliveryMethods.map((method) => (
-                                    <div
-                                        key={method.id}
-                                        className={`p-4 rounded-xl cursor-pointer transition-all border-2 ${selectedDelivery === method.id
-                                            ? 'border-[#2C5AA0] bg-[#2C5AA0]/5'
-                                            : 'border-gray-200 hover:border-[#2C5AA0]/50'
-                                            }`}
-                                        onClick={() => setSelectedDelivery(method.id)}
-                                    >
-                                        <div className="flex justify-between items-start">
-                                            <div className="flex-1">
-                                                <h3 className="font-semibold text-[#1E1E1E] mb-1">
-                                                    {method.name}
-                                                </h3>
-                                                <p className="text-sm text-[#1E1E1E]/60">
-                                                    {method.details}
-                                                </p>
-                                            </div>
-                                            <div className="text-[#2C5AA0] font-bold">
-                                                {formatPrice(method.price)} ₽
-                                            </div>
+                            <div className="w-full col-span-2 mt-6">
+                                <div className="grid grid-cols-5 gap-4">
+                                    {/* Delivery Methods */}
+                                    <div className='col-span-2'>
+                                        <Title text={"Способ доставки"} size={"text-[18px]"} cls="uppercase mb-4" />
+                                        <div className="space-y-3">
+                                            {deliveryMethods.map((method) => (
+                                                <div
+                                                    key={method.id}
+                                                    className={`p-4 rounded-xl cursor-pointer transition-all border-2 ${selectedDelivery === method.id
+                                                        ? 'border-[#2C5AA0] bg-[#2C5AA0]/5'
+                                                        : 'border-gray-200 hover:border-[#2C5AA0]/50'
+                                                        }`}
+                                                    onClick={() => setSelectedDelivery(method.id)}
+                                                >
+                                                    <div className="flex justify-between items-start">
+                                                        <div className="flex-1">
+                                                            <h3 className="font-semibold text-[#1E1E1E] mb-1">
+                                                                {method.name}
+                                                            </h3>
+                                                            <p className="text-sm text-[#1E1E1E]/60 text-nowrap">
+                                                                {method.details}
+                                                            </p>
+                                                        </div>
+                                                        <div className="text-[#2C5AA0] font-bold ">
+                                                            {formatPrice(method.price)} ₽
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            ))}
                                         </div>
                                     </div>
-                                ))}
-                            </div>
-                        </div>
 
-                        {/* Payment Methods */}
-                        <div className='col-span-3'>
-                            <Title text={"Способ оплаты"} size={"text-[18px]"} cls="uppercase mb-4" />
-                            <div className="space-y-3">
-                                {paymentMethods.map((method) => (
-                                    <div
-                                        key={method.id}
-                                        className={`p-4 rounded-xl cursor-pointer transition-all border-2 ${selectedPayment === method.id
-                                            ? 'border-[#2C5AA0] bg-[#2C5AA0]/5'
-                                            : 'border-gray-200 hover:border-[#2C5AA0]/50'
-                                            }`}
-                                        onClick={() => setSelectedPayment(method.id)}
-                                    >
-                                        <h3 className="font-semibold text-[#1E1E1E] mb-1">
-                                            {method.name}
-                                        </h3>
-                                        <p className="text-sm text-[#1E1E1E]/60">
-                                            {method.details}
-                                        </p>
+                                    {/* Payment Methods */}
+                                    <div className='col-span-3'>
+                                        <Title text={"Способ оплаты"} size={"text-[18px]"} cls="uppercase mb-4" />
+                                        <div className="space-y-3">
+                                            {paymentMethods.map((method) => (
+                                                <div
+                                                    key={method.id}
+                                                    className={`p-4 rounded-xl cursor-pointer transition-all border-2 ${selectedPayment === method.id
+                                                        ? 'border-[#2C5AA0] bg-[#2C5AA0]/5'
+                                                        : 'border-gray-200 hover:border-[#2C5AA0]/50'
+                                                        }`}
+                                                    onClick={() => setSelectedPayment(method.id)}
+                                                >
+                                                    <h3 className="font-semibold text-[#1E1E1E] mb-1">
+                                                        {method.name}
+                                                    </h3>
+                                                    <p className="text-sm text-[#1E1E1E]/60">
+                                                        {method.details}
+                                                    </p>
+                                                </div>
+                                            ))}
+                                        </div>
                                     </div>
-                                ))}
+                                </div>
                             </div>
                         </div>
                     </div>
+
+
+
                 </div>
 
                 {/* Right Column - Cart Items & Summary */}
-                <div className="space-y-6">
+                <div className="space-y-6 lg:col-span-2 col-span-1">
                     {/* Cart Items */}
                     <div>
-                        <Title text={"Товары в заказе"} size={"text-[24px]"} cls="uppercase mb-4" />
                         <div className="space-y-3 max-h-[500px] overflow-y-auto pr-2">
                             {cartItems.map((item) => (
                                 <div
@@ -431,7 +423,7 @@ export default function CheckoutPage() {
                     <div className="p-6 rounded-2xl bg-[#2C5AA0]/5 sticky top-4">
                         <div className="space-y-3 mb-6">
                             <div className="flex justify-between text-[#1E1E1E]/60">
-                                <span>Товары ({cartItems.length}):</span>
+                                <span>Товары :</span>
                                 <span>{formatPrice(totalPrice)} ₽</span>
                             </div>
                             <div className="flex justify-between text-[#1E1E1E]/60">
@@ -440,8 +432,8 @@ export default function CheckoutPage() {
                             </div>
                             <div className="border-t border-gray-300 pt-3">
                                 <div className="flex justify-between items-center">
-                                    <span className="text-xl font-semibold text-[#1E1E1E]">
-                                        К оплате:
+                                    <span className="text-xl font-semibold text-[#1E1E1E]/50">
+                                        Итоговая сумма:
                                     </span>
                                     <span className="text-2xl font-bold text-[#2C5AA0]">
                                         {formatPrice(finalTotal)} ₽

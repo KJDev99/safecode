@@ -23,8 +23,8 @@ export default function CatalogBox() {
         const incoming = Array.isArray(response?.data)
           ? response.data
           : Array.isArray(response)
-          ? response
-          : [];
+            ? response
+            : [];
         setCategories(incoming);
       } catch (error) {
         setCategories([]);
@@ -84,7 +84,7 @@ export default function CatalogBox() {
         <p className="text-sm text-red-500 mb-4">{categoriesError}</p>
       )}
 
-      <div className="flex flex-wrap gap-3 mb-8 max-md:px-6">
+      {/* <div className="flex flex-wrap gap-3 mb-8 max-md:px-6">
         <button
           className={`px-4 py-2 rounded-full border transition-colors ${
             selectedCategory === ""
@@ -109,7 +109,7 @@ export default function CatalogBox() {
             {category.name}
           </button>
         ))}
-      </div>
+      </div> */}
 
       <CatalogCart selectedCategory={selectedCategory} />
     </div>

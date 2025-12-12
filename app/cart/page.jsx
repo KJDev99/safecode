@@ -95,8 +95,8 @@ export default function CartPage() {
         <div className="max-w-[1200px] mx-auto px-4 py-8 max-md:px-2">
             {/* Header */}
             <div className="flex justify-between items-center mb-8 max-md:flex-col max-md:items-start max-md:gap-4">
-                <h1 className="text-3xl font-bold text-[#1E1E1E] max-md:text-2xl">
-                    Корзина ({cartItems.length})
+                <h1 className="text-3xl font-bold text-[#1E1E1E] max-md:text-2xl flex">
+                    Корзина <p className="self-end text-base text-[#1E1E1E80] ml-6">{cartItems.length} товара</p>
                 </h1>
                 {cartItems.length > 0 && (
                     <button
@@ -133,25 +133,25 @@ export default function CartPage() {
                                 </div>
 
                                 {/* Product Info */}
-                                <div className="flex-1 flex flex-col justify-between">
+                                <div className="flex-1 flex  justify-between">
                                     <div>
                                         <h3
-                                            className="text-lg font-medium text-[#1E1E1E] mb-1 cursor-pointer hover:text-[#2C5AA0] transition-colors max-md:text-base"
+                                            className="text-lg font-medium text-[#1E1E1E] cursor-pointer hover:text-[#2C5AA0] transition-colors max-md:text-base"
                                             onClick={() => router.push(`/products/${item.id}`)}
                                         >
                                             {item.name}
                                         </h3>
-                                        <p className="text-sm text-[#1E1E1E]/60 max-md:text-xs">
+                                        <p className="text-sm text-[#2C5AA0] max-md:text-xs mt-1">
                                             Артикул: {item.article}
                                         </p>
-                                        <p className="text-sm text-[#1E1E1E]/60 max-md:text-xs">
+                                        <p className="text-sm text-[#2C5AA0] max-md:text-xs mt-1">
                                             Размер: {item.size}
                                         </p>
                                     </div>
 
-                                    <div className="flex items-center justify-between mt-3 max-md:flex-col max-md:items-start max-md:gap-3">
+                                    <div className="flex flex-col items-center mt-3 max-md:flex-col max-md:items-start max-md:gap-3">
                                         {/* Quantity Controls */}
-                                        <div className="border border-[#1E1E1E80] rounded-[8px] flex items-center justify-between h-[40px] px-3 gap-3 max-md:h-[36px]">
+                                        {/* <div className="border border-[#1E1E1E80] rounded-[8px] flex items-center justify-between h-[40px] px-3 gap-3 max-md:h-[36px]">
                                             <button
                                                 className={`text-lg font-medium transition-colors duration-200 max-md:text-base ${item.quantity <= 1
                                                     ? "text-[#1E1E1E80] cursor-not-allowed"
@@ -175,10 +175,10 @@ export default function CartPage() {
                                             >
                                                 <LuPlus />
                                             </button>
-                                        </div>
+                                        </div> */}
 
                                         {/* Price and Remove */}
-                                        <div className="flex items-center gap-4 max-md:w-full max-md:justify-between">
+                                        <div className="flex items-end gap-4 max-md:w-full max-md:justify-between  h-full ">
                                             <div className="text-right">
                                                 <p className="text-sm text-[#1E1E1E]/60 mb-1 max-md:text-xs">
                                                     {formatPrice(item.price)} ₽ / шт
@@ -214,7 +214,7 @@ export default function CartPage() {
 
                         <div className="space-y-3 mb-6">
                             <div className="flex justify-between text-[#1E1E1E]/60">
-                                <span>Товары ({cartItems.length}):</span>
+                                <span>Товары :</span>
                                 <span>{formatPrice(totalPrice)} ₽</span>
                             </div>
                             <div className="flex justify-between text-[#1E1E1E]/60">
@@ -223,8 +223,8 @@ export default function CartPage() {
                             </div>
                             <div className="border-t border-gray-200 pt-3">
                                 <div className="flex justify-between items-center">
-                                    <span className="text-lg font-semibold text-[#1E1E1E]">
-                                        К оплате:
+                                    <span className="text-lg font-semibold text-[#1E1E1E]/50">
+                                        Итоговая сумма
                                     </span>
                                     <span className="text-2xl font-bold text-[#2C5AA0]">
                                         {formatPrice(totalPrice)} ₽
