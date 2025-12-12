@@ -277,7 +277,7 @@ export default function Users() {
                             animate={{ scale: 1, opacity: 1 }}
                             exit={{ scale: 0.9, opacity: 0 }}
                             onClick={(e) => e.stopPropagation()}
-                            className="bg-white rounded-2xl p-6 w-full max-w-md shadow-2xl"
+                            className="bg-white rounded-2xl p-6 w-full max-w-2xl shadow-2xl"
                         >
                             <div className="text-center">
                                 <div className="w-16 h-16 bg-red-100 rounded-full flex items-center justify-center mx-auto mb-4">
@@ -325,7 +325,7 @@ export default function Users() {
                             animate={{ scale: 1, opacity: 1 }}
                             exit={{ scale: 0.9, opacity: 0 }}
                             onClick={(e) => e.stopPropagation()}
-                            className="bg-white rounded-2xl p-6 w-full max-w-md max-h-[90vh] overflow-y-auto"
+                            className="bg-white rounded-2xl p-6 w-full max-w-2xl max-h-[90vh] overflow-y-auto"
                         >
                             <div className="flex justify-between items-center mb-6">
                                 <h2 className="text-xl font-bold">Создание нового пользователя</h2>
@@ -443,7 +443,7 @@ export default function Users() {
                             animate={{ scale: 1, opacity: 1 }}
                             exit={{ scale: 0.9, opacity: 0 }}
                             onClick={(e) => e.stopPropagation()}
-                            className="bg-white rounded-2xl p-6 w-full max-w-md max-h-[90vh] overflow-y-auto"
+                            className="bg-white rounded-2xl p-6 w-full max-w-2xl max-h-[90vh] overflow-y-auto"
                         >
                             <div className="flex justify-between items-center mb-6">
                                 <h2 className="text-xl font-bold">Редактирование пользователя</h2>

@@ -335,7 +335,7 @@ export default function ManagerJurnalsv() {
                             animate={{ scale: 1, opacity: 1 }}
                             exit={{ scale: 0.9, opacity: 0 }}
                             onClick={(e) => e.stopPropagation()}
-                            className="bg-white rounded-2xl p-6 w-full max-w-md shadow-2xl"
+                            className="bg-white rounded-2xl p-6 w-full max-w-2xl shadow-2xl"
                         >
                             <div className="flex justify-between items-center mb-6">
                                 <Title text={"Создать документ"} size={"text-xl font-bold"} />
@@ -481,7 +481,7 @@ export default function ManagerJurnalsv() {
                             animate={{ scale: 1, opacity: 1 }}
                             exit={{ scale: 0.9, opacity: 0 }}
                             onClick={(e) => e.stopPropagation()}
-                            className="bg-white rounded-2xl p-6 w-full max-w-md shadow-2xl"
+                            className="bg-white rounded-2xl p-6 w-full max-w-2xl shadow-2xl"
                         >
                             <div className="flex justify-between items-center mb-6">
                                 <Title text={"Редактировать документ"} size={"text-xl font-bold"} />
@@ -649,7 +649,7 @@ export default function ManagerJurnalsv() {
                             animate={{ scale: 1, opacity: 1 }}
                             exit={{ scale: 0.9, opacity: 0 }}
                             onClick={(e) => e.stopPropagation()}
-                            className="bg-white rounded-2xl p-6 w-full max-w-md shadow-2xl"
+                            className="bg-white rounded-2xl p-6 w-full max-w-2xl shadow-2xl"
                         >
                             <div className="text-center">
                                 <div className="w-16 h-16 bg-red-100 rounded-full flex items-center justify-center mx-auto mb-4">

@@ -59,7 +59,7 @@ export default function CartPage() {
     if (cartItems.length === 0) {
         return (
             <div className="max-w-[1200px] mx-auto px-4 py-12 max-md:px-2">
-                <h1 className="text-3xl font-bold text-[#1E1E1E] mb-8 max-md:text-2xl">
+                <h1 className="text-[24px] text-[#1E1E1E] mb-8 max-md:text-2xl">
                     Корзина
                 </h1>
                 <div className="flex flex-col items-center justify-center py-20">
@@ -95,7 +95,7 @@ export default function CartPage() {
         <div className="max-w-[1200px] mx-auto px-4 py-8 max-md:px-2">
             {/* Header */}
             <div className="flex justify-between items-center mb-8 max-md:flex-col max-md:items-start max-md:gap-4">
-                <h1 className="text-3xl font-bold text-[#1E1E1E] max-md:text-2xl flex">
+                <h1 className="text-[24px] text-[#1E1E1E] max-md:text-2xl flex">
                     Корзина <p className="self-end text-base text-[#1E1E1E80] ml-6">{cartItems.length} товара</p>
                 </h1>
                 {cartItems.length > 0 && (

@@ -346,9 +346,9 @@ export default function AdminManagement() {
                                                 <span className="font-medium">Исполнители</span>
                                             </div>
                                             <div className="flex items-center">
-                                                <div className={`w-16 h-16 rounded-xl flex items-center justify-center shadow-lg ${workerCount > 0 ? 'bg-gradient-to-br from-emerald-500 to-green-600' : 'bg-gradient-to-br from-gray-400 to-gray-500'}`}>
+                                                <div className={`w-16 h-16 rounded-xl flex items-center justify-center shadow-lg relative ${workerCount > 0 ? 'bg-gradient-to-br from-emerald-500 to-green-600' : 'bg-gradient-to-br from-gray-400 to-gray-500'}`}>
                                                     <FaUsers className="text-white text-2xl" />
-                                                    <span className="absolute text-white font-bold text-xl mt-10">
+                                                    <span className="absolute text-white right-2 top-1 ">
                                                         {workerCount}
                                                     </span>
                                                 </div>
@@ -366,9 +366,9 @@ export default function AdminManagement() {
                                                 <span className="font-medium">Документы</span>
                                             </div>
                                             <div className="flex items-center">
-                                                <div className={`w-16 h-16 rounded-xl flex items-center justify-center shadow-lg ${docCount > 0 ? 'bg-gradient-to-br from-amber-500 to-orange-500' : 'bg-gradient-to-br from-gray-400 to-gray-500'}`}>
+                                                <div className={`w-16 h-16 rounded-xl flex items-center justify-center shadow-lg relative ${docCount > 0 ? 'bg-gradient-to-br from-amber-500 to-orange-500' : 'bg-gradient-to-br from-gray-400 to-gray-500'}`}>
                                                     <IoMdDocument className="text-white text-2xl" />
-                                                    <span className="absolute text-white font-bold text-xl mt-10">
+                                                    <span className="absolute text-white right-2 top-1 ">
                                                         {docCount}
                                                     </span>
                                                 </div>
@@ -544,11 +544,11 @@ export default function AdminManagement() {
                                                         <div className="mb-6">
                                                             <h5 className="text-sm font-semibold text-[#1E1E1E] mb-3 flex items-center gap-2">
                                                                 <FaUsers className="text-[#2C5AA0]" />
-                                                                Назначенные исполнители ({roleData.user_info.length})
+                                                                Назначенные исполнители
                                                             </h5>
                                                             <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
                                                                 {roleData.user_info.map((user) => (
-                                                                    <div key={user.id} className="p-4 bg-gradient-to-r from-[#2C5AA0]/5 to-blue-50 rounded-xl border-2 border-blue-200">
+                                                                    <div key={user.id} className="p-4 bg-gradient-to-r from-[#2C5AA0]/5 to-blue-50 rounded-xl border-2 border-blue-200 items-center col-span-2 grid grid-cols-3">
                                                                         <p className="font-semibold text-[#1E1E1E] text-base">
                                                                             {user.last_name} {user.first_name}
                                                                         </p>
@@ -565,9 +565,9 @@ export default function AdminManagement() {
                                                         <div>
                                                             <h5 className="text-sm font-semibold text-[#1E1E1E] mb-3 flex items-center gap-2">
                                                                 <IoMdDocument className="text-[#2C5AA0]" />
-                                                                Документы ({roleData.document_list.length})
+                                                                Документы
                                                             </h5>
-                                                            <div className="space-y-3">
+                                                            <div className="space-y-3 grid grid-cols-2 gap-4">
                                                                 {roleData.document_list.map((doc, docIndex) => (
                                                                     <div key={docIndex} className="p-4 bg-gray-50 rounded-xl border border-gray-200">
                                                                         {doc.comment && (
@@ -576,7 +576,7 @@ export default function AdminManagement() {
                                                                             </p>
                                                                         )}
                                                                         {doc.items && doc.items.length > 0 && (
-                                                                            <div className="space-y-2">
+                                                                            <div className="space-y-2 ">
                                                                                 {doc.items.map((item, itemIndex) => (
                                                                                     <div key={itemIndex} className="flex items-center justify-between p-3 bg-white rounded-lg border border-gray-200 hover:border-[#2C5AA0] transition-colors">
                                                                                         <div className="flex items-center gap-3 flex-1 min-w-0">
@@ -587,9 +587,7 @@ export default function AdminManagement() {
                                                                                                 <p className="text-sm font-medium text-[#1E1E1E] truncate">
                                                                                                     Документ {itemIndex + 1}
                                                                                                 </p>
-                                                                                                <p className="text-xs text-[#1E1E1E]/60 truncate">
-                                                                                                    {item.document_url.split('/').pop()}
-                                                                                                </p>
+
                                                                                             </div>
                                                                                         </div>
                                                                                         <div className="flex gap-2 flex-shrink-0">
@@ -854,7 +852,7 @@ export default function AdminManagement() {
                             exit={{ scale: 0.9, opacity: 0 }}
                             transition={{ type: "spring", duration: 0.5 }}
                             onClick={(e) => e.stopPropagation()}
-                            className="bg-white rounded-3xl w-full max-w-md overflow-hidden shadow-2xl"
+                            className="bg-white rounded-3xl w-full max-w-2xl overflow-hidden shadow-2xl"
                         >
                             <div className="p-6 border-b border-gray-200 bg-gradient-to-r from-[#2C5AA0] to-[#1e4073]">
                                 <div className="flex justify-between items-start">

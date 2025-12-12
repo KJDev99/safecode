@@ -182,7 +182,7 @@ function VerifyEmailCodeContent() {
 
     return (
         <div className="min-h-screen flex items-center justify-center bg-gray-50 p-4">
-            <div className="bg-white rounded-2xl shadow-lg p-8 max-w-md w-full">
+            <div className="bg-white rounded-2xl shadow-lg p-8 max-w-2xl w-full">
                 <div className="text-center mb-8">
                     <div className="w-20 h-20 bg-blue-100 rounded-full flex items-center justify-center mx-auto mb-4">
                         <svg

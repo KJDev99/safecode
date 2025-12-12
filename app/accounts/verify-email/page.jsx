@@ -73,7 +73,7 @@ function VerifyEmailContent() {
 
     return (
         <div className="min-h-screen flex items-center justify-center bg-gray-50 p-4">
-            <div className="bg-white rounded-2xl shadow-lg p-8 max-w-md w-full text-center">
+            <div className="bg-white rounded-2xl shadow-lg p-8 max-w-2xl w-full text-center">
                 {verificationStatus === 'success' ? (
                     <>
                         <div className="w-20 h-20 bg-green-100 rounded-full flex items-center justify-center mx-auto mb-6">

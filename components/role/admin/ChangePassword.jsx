@@ -83,7 +83,7 @@ export default function ChangePassword({ userId, onClose }) {
     }
 
     return (
-        <div className="bg-white rounded-2xl p-6 w-full max-w-md">
+        <div className="bg-white rounded-2xl p-6 w-full max-w-2xl">
             <h2 className="text-xl font-bold text-gray-900 mb-2">Изменение пароля</h2>
             <p className="text-gray-600 mb-6">Введите новый пароль для пользователя</p>
 

@@ -91,7 +91,7 @@ export default function LogOut({ redirtUrl = "/", setExitModalOpen }) {
                     transition={{ duration: 0.3 }}
                 >
                     <motion.div
-                        className="bg-white rounded-2xl p-8 max-w-md w-full mx-auto"
+                        className="bg-white rounded-2xl p-8 max-w-2xl w-full mx-auto"
                         initial={{ scale: 0.8, opacity: 0 }}
                         animate={{ scale: 1, opacity: 1 }}
                         exit={{ scale: 0.8, opacity: 0 }}
