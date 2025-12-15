@@ -47,11 +47,11 @@ export default function MobileNav({ show, setShow, role }) {
             h-[calc(100vh_-_75px)] w-full
             absolute left-0 top-[75px] !z-100"
         >
-          <div className="flex flex-col items-center">
+          <div className="flex flex-col items-center ">
             <Image alt='' src='/logodark.svg' width={200} height={57} className='mb-9' />
             {
               !isAuth
-                ? <Link href={'/auth/login'}>
+                ? <Link href={'/auth/login'} className='w-full'>
                   <Button text="Регистрация / Вход" className='w-full mb-[100px] h-[60px]' />
                 </Link>
                 : <div className="w-full mb-[100px] flex justify-center gap-2">
