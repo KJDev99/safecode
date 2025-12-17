@@ -83,7 +83,7 @@ export default function LogOut({ redirtUrl = "/", setExitModalOpen }) {
         <AnimatePresence>
             {isVisible && (
                 <motion.div
-                    className="fixed inset-0 bg-black/80 bg-opacity-50 flex items-center justify-center z-[1001] p-4"
+                    className="fixed inset-0 bg-black/80 bg-opacity-50 flex items-center justify-center z-[1010] p-4"
                     onClick={handleOverlayClick}
                     initial={{ opacity: 0 }}
                     animate={{ opacity: 1 }}

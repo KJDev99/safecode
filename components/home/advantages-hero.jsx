@@ -34,7 +34,7 @@ export default function AdvantagesHero() {
                     whileInView={{ opacity: 1, scale: 1 }}
                     viewport={{ once: true, margin: "-100px" }}
                     transition={{ duration: 0.8, delay: 0.2 }}
-                    className='row-span-3'
+                    className='row-span-3 max-md:order-1'
                 >
                     <Image
                         src={'/advantages-hero.png'}

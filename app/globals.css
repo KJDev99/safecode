@@ -1,1 +1,9 @@
 @import "tailwindcss";
+
+.leaflet-container {
+    z-index: 1;
+}
+
+.leaflet-container.modal-open {
+    z-index: 0 !important;
+}

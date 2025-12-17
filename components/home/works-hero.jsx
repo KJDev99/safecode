@@ -48,7 +48,7 @@ export default function WorksHero() {
                     <StepItem step={steps[1]} />
 
                     {/* Bo‘sh joy — 3 pastga tushishi uchun */}
-                    <div />
+                    <div className='max-md:hidden' />
 
                     {/* 3-qadam */}
                     <StepItem step={steps[2]} />
