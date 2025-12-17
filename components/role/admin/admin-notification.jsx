@@ -68,7 +68,7 @@ const ROLE_TAB_MAPPINGS = {
     'manager': {
         'bills': 'bills-manager',
         'journals_and_acts': 'service-log',
-        'user_object': 'main-objects',
+        'user_object': 'requests',
         'orders': 'orders-manager',
         'tasks': 'tasks-manager',
         'incidents': 'incidents-manager',

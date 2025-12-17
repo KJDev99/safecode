@@ -4,7 +4,7 @@ import Button from '@/components/ui/button';
 import Title from '@/components/ui/title';
 import 'leaflet/dist/leaflet.css';
 import dynamic from 'next/dynamic';
-import { FaPlus, FaSearch } from 'react-icons/fa';
+import { FaPlus, FaSearch, FaEye } from 'react-icons/fa';
 import { FiEdit2 } from "react-icons/fi";
 import { IoMdClose } from "react-icons/io";
 import toast from 'react-hot-toast';
@@ -24,7 +24,9 @@ export default function CustomerApplication() {
     const { data, loading, error, getDataToken, postDataToken, putDataToken, deleteDataToken } = useApiStore();
     const [showCreateModal, setShowCreateModal] = useState(false);
     const [showEditModal, setShowEditModal] = useState(false);
+    const [showDetailsModal, setShowDetailsModal] = useState(false);
     const [selectedObject, setSelectedObject] = useState(null);
+    const [selectedObjectDetails, setSelectedObjectDetails] = useState(null);
     const [searchQuery, setSearchQuery] = useState('');
     const [searchResults, setSearchResults] = useState([]);
     const [isSearching, setIsSearching] = useState(false);
@@ -210,6 +212,17 @@ export default function CustomerApplication() {
         setShowEditModal(true);
     };
 
+    // Yangi funksiya - Obyekt detallarini ko'rish
+    const openDetailsModal = (object) => {
+        setSelectedObjectDetails(object);
+        setShowDetailsModal(true);
+    };
+
+    const handleCloseDetailsModal = () => {
+        setShowDetailsModal(false);
+        setSelectedObjectDetails(null);
+    };
+
     const handleInputChange = (e) => {
         const { name, value } = e.target;
         setFormData(prev => ({
@@ -234,6 +247,13 @@ export default function CustomerApplication() {
                     <Button
                         className="h-[51px] w-[196px] bg-transparent max-md:w-full max-md:col-span-2 !text-[#8E8E8E] border border-[#8E8E8E]"
                         text={"На проверке"}
+                    />
+                );
+            case 'completed':
+                return (
+                    <Button
+                        className="h-[51px] w-[196px] bg-transparent max-md:w-full max-md:col-span-2 !text-[#10B981] border border-[#10B981]"
+                        text={"Завершено"}
                     />
                 );
             default:
@@ -561,6 +581,128 @@ export default function CustomerApplication() {
                 </div>
             )}
 
+            {/* Modal - Obyekt detallarini ko'rish */}
+            {showDetailsModal && selectedObjectDetails && (
+                <div className="fixed inset-0 bg-black/80 flex items-center justify-center z-[1010] p-4">
+                    <div className="bg-white p-6 w-full max-w-3xl max-h-[90vh] overflow-y-auto">
+                        <div className="flex justify-between items-center mb-6">
+                            <Title text={"Детали объекта"} size={"text-lg"} />
+                            <button onClick={handleCloseDetailsModal}>
+                                <IoMdClose className="text-2xl" />
+                            </button>
+                        </div>
+
+                        {/* Asosiy ma'lumotlar */}
+                        <div className="mb-6">
+                            <Title text={selectedObjectDetails.name} size={"text-xl"} cls="text-[#2C5AA0] mb-4" />
+
+                            {/* <div className="space-y-3">
+                                <div className="flex justify-between items-start border-b pb-2">
+                                    <span className="text-[#1E1E1E] font-medium">Адрес:</span>
+                                    <span className="text-[#1E1E1E]/60 text-right max-w-[60%]">{selectedObjectDetails.address}</span>
+                                </div>
+
+                                <div className="flex justify-between items-center border-b pb-2">
+                                    <span className="text-[#1E1E1E] font-medium">Размер:</span>
+                                    <span className="text-[#1E1E1E]/60">{selectedObjectDetails.size} м²</span>
+                                </div>
+
+                                <div className="flex justify-between items-center border-b pb-2">
+                                    <span className="text-[#1E1E1E] font-medium">Систем пожаротушения:</span>
+                                    <span className="text-[#1E1E1E]/60">{selectedObjectDetails.number_of_fire_extinguishing_systems}</span>
+                                </div>
+                            </div> */}
+                        </div>
+
+                        {/* Workers Document */}
+                        {selectedObjectDetails.workers_document && Object.keys(selectedObjectDetails.workers_document).length > 0 ? (
+                            <div className="mt-6">
+                                {/* <Title text="Информация о работниках" size={"text-lg"} cls="mb-4" /> */}
+
+                                {Object.entries(selectedObjectDetails.workers_document).map(([role, data], roleIndex) => (
+                                    <div key={roleIndex} className="mb-6 p-4 bg-gray-50 rounded-lg">
+                                        <h3 className="text-[#2C5AA0] font-semibold text-base mb-4">{role}</h3>
+
+                                        {/* User Info */}
+                                        {data.user_info && data.user_info.length > 0 && (
+                                            <div className="mb-4">
+                                                <p className="text-sm font-medium text-gray-700 mb-2">Пользователи:</p>
+                                                {data.user_info.map((user, userIndex) => (
+                                                    <div key={userIndex} className="bg-white p-3 rounded-lg mb-2 border border-gray-200">
+                                                        <div className="grid grid-cols-2 gap-2 text-sm">
+                                                            <div>
+                                                                <span className="text-gray-600">Имя:</span>
+                                                                <span className="ml-2 text-gray-900">{user.first_name} {user.last_name}</span>
+                                                            </div>
+                                                            <div>
+                                                                <span className="text-gray-600">Email:</span>
+                                                                <span className="ml-2 text-gray-900">{user.email}</span>
+                                                            </div>
+                                                            {user.phone_number && (
+                                                                <div>
+                                                                    <span className="text-gray-600">Телефон:</span>
+                                                                    <span className="ml-2 text-gray-900">{user.phone_number}</span>
+                                                                </div>
+                                                            )}
+                                                        </div>
+                                                    </div>
+                                                ))}
+                                            </div>
+                                        )}
+
+
+
+                                        {/* Documents */}
+                                        {data.document_list && data.document_list.length > 0 && (
+                                            <div>
+                                                <p className="text-sm font-medium text-gray-700 mb-2">Документы:</p>
+                                                {data.document_list.map((doc, docIndex) => (
+                                                    <div key={docIndex} className="bg-white p-3 rounded-lg mb-3 border border-gray-200">
+                                                        {doc.comment && (
+                                                            <p className="text-sm text-gray-700 mb-2">
+                                                                <span className="font-medium">Комментарий:</span> {doc.comment}
+                                                            </p>
+                                                        )}
+                                                        {doc.items && doc.items.length > 0 && (
+                                                            <div className="space-y-2">
+                                                                {doc.items.map((item, itemIndex) => (
+                                                                    <a
+                                                                        key={itemIndex}
+                                                                        href={item.document_url}
+                                                                        target="_blank"
+                                                                        rel="noopener noreferrer"
+                                                                        className="flex items-center text-sm text-[#2C5AA0] hover:underline"
+                                                                    >
+                                                                        📄 Документ {itemIndex + 1}
+                                                                    </a>
+                                                                ))}
+                                                            </div>
+                                                        )}
+                                                    </div>
+                                                ))}
+                                            </div>
+                                        )}
+                                    </div>
+                                ))}
+                            </div>
+                        ) : (
+                            <div className="mt-6 p-4 bg-gray-50 rounded-lg text-center text-gray-500">
+                                Информация о работниках отсутствует
+                            </div>
+                        )}
+
+                        <div className="flex justify-end mt-6">
+                            <Button
+                                type="button"
+                                className="h-[45px] w-[150px]"
+                                text="Закрыть"
+                                onClick={handleCloseDetailsModal}
+                            />
+                        </div>
+                    </div>
+                </div>
+            )}
+
             {/* Asosiy kontent */}
             <div className="flex justify-between md:items-center max-md:mt-6 max-md:flex-col">
                 <div className="flex flex-col ">
@@ -617,13 +759,20 @@ export default function CustomerApplication() {
                             <div className="flex gap-x-3 items-center max-md:mt-6 max-md:grid max-md:grid-cols-2">
                                 {getStatusButton(object)}
                                 <button
-                                    className="w-[51px] rounded-xl h-[51px] max-md:w-full max-md:mt-3 bg-[#C5C5C5]/50 flex items-center justify-center"
+                                    className="w-[51px] rounded-xl h-[51px] max-md:w-full bg-[#2C5AA0]/10 flex items-center justify-center hover:bg-[#2C5AA0]/20 transition-colors"
+                                    onClick={() => openDetailsModal(object)}
+                                    title="Просмотр деталей"
+                                >
+                                    <FaEye className="text-[20px] text-[#2C5AA0]" />
+                                </button>
+                                <button
+                                    className="w-[51px] rounded-xl h-[51px] max-md:w-full bg-[#C5C5C5]/50 flex items-center justify-center"
                                     onClick={() => openEditModal(object)}
                                 >
                                     <FiEdit2 className="text-[20px] text-[#1E1E1E]/60" />
                                 </button>
                                 <button
-                                    className="w-[51px] rounded-xl h-[51px] max-md:w-full max-md:mt-3 bg-[#E87D7D] flex items-center justify-center"
+                                    className="w-[51px] rounded-xl h-[51px] max-md:w-full max-md:col-span-2 bg-[#E87D7D] flex items-center justify-center"
                                     onClick={() => handleDeleteObject(object.id)}
                                 >
                                     <IoMdClose className="text-[20px] text-[#fff]" />

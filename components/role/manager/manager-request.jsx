@@ -5,7 +5,7 @@ import Title from '@/components/ui/title';
 import { IoMdClose } from 'react-icons/io';
 import { MdCheck } from 'react-icons/md';
 import { RiQuestionMark } from 'react-icons/ri';
-import { FaChevronLeft, FaChevronRight } from 'react-icons/fa';
+import { FaChevronLeft, FaChevronRight, FaEye } from 'react-icons/fa';
 import 'leaflet/dist/leaflet.css';
 import dynamic from 'next/dynamic';
 import { useApiStore } from '@/store/useApiStore';
@@ -26,6 +26,8 @@ export default function ManagerRequest() {
     const [currentPage, setCurrentPage] = useState(1);
     const [objects, setObjects] = useState([]);
     const [pagination, setPagination] = useState(null);
+    const [showDetailsModal, setShowDetailsModal] = useState(false);
+    const [selectedObjectDetails, setSelectedObjectDetails] = useState(null);
 
     useEffect(() => {
         loadObjects(currentPage);
@@ -40,6 +42,17 @@ export default function ManagerRequest() {
 
     const loadObjects = async (page = 1) => {
         await getDataToken(`/user_objects/?page=${page}`);
+    };
+
+    // Obyekt detallarini ko'rish
+    const openDetailsModal = (object) => {
+        setSelectedObjectDetails(object);
+        setShowDetailsModal(true);
+    };
+
+    const handleCloseDetailsModal = () => {
+        setShowDetailsModal(false);
+        setSelectedObjectDetails(null);
     };
 
     // Status bo'yicha icon va rang
@@ -122,6 +135,104 @@ export default function ManagerRequest() {
 
     return (
         <div>
+            {/* Modal - Worker Documents */}
+            {showDetailsModal && selectedObjectDetails && (
+                <div className="fixed inset-0 bg-black/80 flex items-center justify-center z-[1010] p-4">
+                    <div className="bg-white p-6 w-full max-w-3xl max-h-[90vh] overflow-y-auto">
+                        <div className="flex justify-between items-center mb-6">
+                            <Title text={"Информация о работниках"} size={"text-lg"} />
+                            <button onClick={handleCloseDetailsModal}>
+                                <IoMdClose className="text-2xl" />
+                            </button>
+                        </div>
+
+                        {/* Workers Document */}
+                        {selectedObjectDetails.workers_document && Object.keys(selectedObjectDetails.workers_document).length > 0 ? (
+                            <div className="space-y-6">
+                                {Object.entries(selectedObjectDetails.workers_document).map(([role, data], roleIndex) => (
+                                    <div key={roleIndex} className="p-4 bg-gray-50 rounded-lg">
+                                        <h3 className="text-[#2C5AA0] font-semibold text-base mb-4">{role}</h3>
+
+                                        {/* User Info */}
+                                        {data.user_info && data.user_info.length > 0 && (
+                                            <div className="mb-4">
+                                                <p className="text-sm font-medium text-gray-700 mb-2">Пользователи:</p>
+                                                {data.user_info.map((user, userIndex) => (
+                                                    <div key={userIndex} className="bg-white p-3 rounded-lg mb-2 border border-gray-200">
+                                                        <div className="grid grid-cols-2 gap-2 text-sm">
+                                                            <div>
+                                                                <span className="text-gray-600">Имя:</span>
+                                                                <span className="ml-2 text-gray-900">{user.first_name} {user.last_name}</span>
+                                                            </div>
+                                                            <div>
+                                                                <span className="text-gray-600">Email:</span>
+                                                                <span className="ml-2 text-gray-900">{user.email}</span>
+                                                            </div>
+                                                            {user.phone_number && (
+                                                                <div>
+                                                                    <span className="text-gray-600">Телефон:</span>
+                                                                    <span className="ml-2 text-gray-900">{user.phone_number}</span>
+                                                                </div>
+                                                            )}
+                                                        </div>
+                                                    </div>
+                                                ))}
+                                            </div>
+                                        )}
+
+
+
+                                        {/* Documents */}
+                                        {data.document_list && data.document_list.length > 0 && (
+                                            <div>
+                                                <p className="text-sm font-medium text-gray-700 mb-2">Документы:</p>
+                                                {data.document_list.map((doc, docIndex) => (
+                                                    <div key={docIndex} className="bg-white p-3 rounded-lg mb-3 border border-gray-200">
+                                                        {doc.comment && (
+                                                            <p className="text-sm text-gray-700 mb-2">
+                                                                <span className="font-medium">Комментарий:</span> {doc.comment}
+                                                            </p>
+                                                        )}
+                                                        {doc.items && doc.items.length > 0 && (
+                                                            <div className="space-y-2">
+                                                                {doc.items.map((item, itemIndex) => (
+                                                                    <a
+                                                                        key={itemIndex}
+                                                                        href={item.document_url}
+                                                                        target="_blank"
+                                                                        rel="noopener noreferrer"
+                                                                        className="flex items-center text-sm text-[#2C5AA0] hover:underline"
+                                                                    >
+                                                                        📄 Документ {itemIndex + 1}
+                                                                    </a>
+                                                                ))}
+                                                            </div>
+                                                        )}
+                                                    </div>
+                                                ))}
+                                            </div>
+                                        )}
+                                    </div>
+                                ))}
+                            </div>
+                        ) : (
+                            <div className="p-4 bg-gray-50 rounded-lg text-center text-gray-500">
+                                Информация о работниках отсутствует
+                            </div>
+                        )}
+
+                        <div className="flex justify-end mt-6">
+                            <Button
+                                type="button"
+                                className="h-[45px] w-[150px]"
+                                text="Закрыть"
+                                onClick={handleCloseDetailsModal}
+                            />
+                        </div>
+                    </div>
+                </div>
+            )}
+
             <div className="flex justify-between md:items-center max-md:flex-col">
                 <div className="flex flex-col">
                     <Title text={"Заявки"} size={"text-[24px] max-md:text-[22px]"} cls="uppercase" />
@@ -189,14 +300,21 @@ export default function ManagerRequest() {
                                                 <span>📍 {object.address}</span>
                                                 <span>📏 {object.size} м²</span>
                                             </div>
-
                                         </div>
                                     </div>
-                                    <Button
-                                        className={`${statusInfo.buttonClass} max-md:w-full`}
-                                        text={statusInfo.buttonText}
-                                    // onClick={() => toast.info('Функция в разработке')}
-                                    />
+                                    <div className="flex gap-3 items-center max-md:flex-col max-md:w-full">
+                                        <button
+                                            className="w-[51px] h-[51px] rounded-xl bg-[#2C5AA0]/10 flex items-center justify-center hover:bg-[#2C5AA0]/20 transition-colors max-md:w-full"
+                                            onClick={() => openDetailsModal(object)}
+                                            title="Просмотр информации о работниках"
+                                        >
+                                            <FaEye className="text-[20px] text-[#2C5AA0]" />
+                                        </button>
+                                        <Button
+                                            className={`${statusInfo.buttonClass} max-md:w-full`}
+                                            text={statusInfo.buttonText}
+                                        />
+                                    </div>
                                 </div>
                             </div>
                         );
